@@ -1,9 +1,10 @@
 package cz.ttcup.system.module
 
 import cz.ttcup.admin.routing.userRoutes
-import cz.ttcup.capture.routes.captureRoutes
+import cz.ttcup.capture.routing.captureRoutes
 import cz.ttcup.context.service.interceptContext
 import cz.ttcup.openapi.routing.openApiRouting
+import cz.ttcup.player.routing.playerRoutes
 import io.ktor.http.*
 import io.ktor.server.application.*
 import io.ktor.server.auth.*
@@ -28,6 +29,9 @@ fun Application.configureRouting() {
             }
             route("capture") {
                 captureRoutes()
+            }
+            route("players") {
+                playerRoutes()
             }
             openApiRouting()
             get("{...}") {
