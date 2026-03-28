@@ -1,0 +1,33 @@
+steps:
+  # Docker Build
+  - name: 'gcr.io/cloud-builders/docker'
+    args: [
+      'build',
+      '-t',
+      'europe-west1-docker.pkg.dev/mhd-online/cloud-run-source-deploy/mhd-online-api:${SHORT_SHA}',
+      '-t',
+      'europe-west1-docker.pkg.dev/mhd-online/cloud-run-source-deploy/mhd-online-api:latest',
+      '--cache-from',
+      'europe-west1-docker.pkg.dev/mhd-online/cloud-run-source-deploy/mhd-online-api:latest',
+      '.'
+    ]
+
+  # Docker push to Google Artifact Registry
+  - name: 'gcr.io/cloud-builders/docker'
+    args: [ 'push',  'europe-west1-docker.pkg.dev/mhd-online/cloud-run-source-deploy/mhd-online-api:latest' ]
+
+  # Deploy image to Cloud Run
+  - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
+    entrypoint: gcloud
+    args: [
+      'run',
+      'deploy', 'mhd-online',
+      '--image', 'europe-west1-docker.pkg.dev/mhd-online/cloud-run-source-deploy/mhd-online-api:latest',
+      '--region', 'europe-west1'
+    ]
+
+
+# Store images in Google Artifact Registry
+images:
+  - europe-west1-docker.pkg.dev/mhd-online/cloud-run-source-deploy/mhd-online-api:${SHORT_SHA}
+  - europe-west1-docker.pkg.dev/mhd-online/cloud-run-source-deploy/mhd-online-api:latest

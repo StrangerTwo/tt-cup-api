@@ -1,0 +1,14 @@
+version: '2'
+services:
+  tt-cup-api:
+    image: tt-cup-api:latest
+    ports:
+      - "6957:8080"
+    networks:
+      - docker-mongo_network_mongo
+    container_name: tt-cup-api
+    env_file: .env
+    restart: always
+networks:
+  docker-mongo_network_mongo:
+    external: true

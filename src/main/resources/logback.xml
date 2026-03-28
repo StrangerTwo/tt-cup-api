@@ -1,0 +1,20 @@
+<configuration>
+    <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder>
+            <pattern>%d{YYYY-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger{55} - %msg%n</pattern>
+        </encoder>
+    </appender>
+    <root level="trace">
+        <appender-ref ref="STDOUT"/>
+    </root>
+    <logger name="org.eclipse.jetty" level="INFO"/>
+    <logger name="io.netty" level="INFO"/>
+    <logger name="org.mongodb.driver" level="ERROR"/>
+    <logger name="org.apache.hc" level="ERROR"/>
+    <logger name="io.ktor.server.routing.Routing" level="INFO"/>
+    <logger name="io.ktor.server.plugins" level="INFO"/>
+    <logger name="io.ktor.server.auth" level="INFO"/>
+    <logger name="io.ktor.client.plugins" level="INFO"/>
+    <logger name="dev.kord" level="ERROR"/>
+    <logger name="[R]:[KTOR]:[ExclusionRequestRateLimiter]" level="ERROR"/>
+</configuration>
