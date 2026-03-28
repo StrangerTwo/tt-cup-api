@@ -16,10 +16,12 @@ fun Application.configureCORS() {
         allowHeader(HttpHeaders.AccessControlAllowOrigin)
         allowHeader(HttpHeaders.ContentType)
 
-        // DEV
-        allowHost("localhost:5463")
-
-        // PROD
-        allowHost("ttcup.dev.mhdonline.cz", listOf("https"))
+//        // DEV
+//        allowHost("localhost:5463")
+//
+//        // PROD
+//        allowHost("ttcup.dev.mhdonline.cz", listOf("https"))
+        // TODO: ideally only for capture URL
+        anyHost()
     }
 }
