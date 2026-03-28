@@ -1,6 +1,7 @@
 package cz.ttcup.system.module
 
 import cz.ttcup.admin.routing.userRoutes
+import cz.ttcup.capture.routes.captureRoutes
 import cz.ttcup.context.service.interceptContext
 import cz.ttcup.openapi.routing.openApiRouting
 import io.ktor.http.*
@@ -25,6 +26,9 @@ fun Application.configureRouting() {
             route("user") {
                 userRoutes()
             }
+            route("capture") {
+                captureRoutes()
+            }
             openApiRouting()
             get("{...}") {
                 call.respondText("Hello from ${call.request.uri}", ContentType.Text.Html)
@@ -32,3 +36,4 @@ fun Application.configureRouting() {
         }
     }
 }
+
