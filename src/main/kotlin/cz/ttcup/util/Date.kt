@@ -1,9 +1,6 @@
 package cz.ttcup.util
 
-import java.time.LocalDateTime
-import java.time.LocalTime
-import java.time.ZoneId
-import java.time.ZoneOffset
+import java.time.*
 import java.time.format.DateTimeFormatter
 import java.time.format.DateTimeFormatterBuilder
 import java.time.temporal.ChronoField
@@ -19,6 +16,12 @@ fun String.toLocalDateTime(): LocalDateTime {
 
 fun String.toLocalTime(pattern: String): LocalTime {
     return LocalTime.parse(
+        this, DateTimeFormatter.ofPattern(pattern).withZone(ZoneId.of("Europe/Prague"))
+    )
+}
+
+fun String.toLocalDate(pattern: String): LocalDate {
+    return LocalDate.parse(
         this, DateTimeFormatter.ofPattern(pattern).withZone(ZoneId.of("Europe/Prague"))
     )
 }

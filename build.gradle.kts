@@ -30,6 +30,7 @@ dependencies {
 
     implementation("io.ktor:ktor-server-core")
     implementation("io.ktor:ktor-server-netty:$ktor_version")
+    implementation("org.jsoup:jsoup:1.14.3")
 
     implementation("io.ktor:ktor-server-auth:$ktor_version")
     implementation("io.ktor:ktor-server-host-common:${ktor_version}")

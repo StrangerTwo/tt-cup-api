@@ -21,6 +21,10 @@ infix fun <T> KProperty1<*, T>.set(value: T): Bson {
     return Updates.set(fieldName, value)
 }
 
+infix fun <T> KProperty1<*, T>.`in`(value: List<T>): Bson {
+    return Filters.`in`(fieldName, value);
+}
+
 infix fun <T> KProperty1<*, T>.elemMatch(value: Bson): Bson {
     return Filters.elemMatch(fieldName, value);
 }
