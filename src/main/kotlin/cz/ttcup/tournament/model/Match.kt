@@ -1,13 +1,13 @@
 package cz.ttcup.tournament.model
 
-import cz.ttcup.util.serializer.LocalTimeSerializer
+import cz.ttcup.util.serializer.LocalDateTimeSerializer
 import kotlinx.serialization.Serializable
-import java.time.LocalTime
+import java.time.LocalDateTime
 
 @Serializable
 data class Match(
-    @Serializable(with = LocalTimeSerializer::class)
-    val time: LocalTime,
+    @Serializable(with = LocalDateTimeSerializer::class)
+    val time: LocalDateTime,
     val playerUids: List<String>,
     var sets: List<Int>? = null,
     var points: List<String>? = null,

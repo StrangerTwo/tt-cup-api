@@ -11,7 +11,7 @@ import cz.ttcup.util.toLocalTime
 import org.jsoup.Jsoup
 
 suspend fun captureSchedule(capture: CaptureDto, restOfUrl: String) {
-    val (dateStr, place) = "(\\d{2}\\.\\d{2}\\.\\d{4})/(\\w:\\d+)".toRegex().find(restOfUrl)!!.destructured
+    val (dateStr, place) = "(\\d{2}\\.\\d{2}\\.\\d{4})/(\\w:\\d+)".toRegex().find(restOfUrl)?.destructured ?: return
     val date = dateStr.toLocalDate("dd.MM.yyyy")
     logger.info("Captured a schedule page ${capture.url}")
     val doc = Jsoup.parse(capture.html)
@@ -21,9 +21,9 @@ suspend fun captureSchedule(capture: CaptureDto, restOfUrl: String) {
         val time = row.child(1).text().trim().toLocalTime("HH:mm")
 
         val vsLink = row.child(2).selectFirst("a")!!.attr("href")
-        val (player1Uid, player2Uid) = ".+/(.+)/vs/(.+)".toRegex().find(vsLink)!!.destructured
+        val (player1Uid, player2Uid) = ".+/([^\\/]+)/vs/([^\\/]+)".toRegex().find(vsLink)!!.destructured
 
-        val match = Match(time, listOf(player1Uid, player2Uid))
+        val match = Match(date.atTime(time), listOf(player1Uid, player2Uid))
 
         val sets = row.child(3).text().trim();
         val setsFind = "(\\d+):(\\d+)".toRegex().find(sets)
