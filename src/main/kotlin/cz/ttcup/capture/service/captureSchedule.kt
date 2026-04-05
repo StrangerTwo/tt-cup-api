@@ -48,7 +48,9 @@ suspend fun captureSchedule(capture: CaptureDto, restOfUrl: String) {
     if (players.isEmpty()) return;
 
     val tournament = Tournament(date, place, matches);
-    logger.info("Saving tournament ${tournament.date}/${tournament.place} for players ${players.joinToString { ", " }}")
+    logger.info(
+        "Saving tournament ${tournament.date}/${tournament.place} for players ${players.joinToString(", ") { it.uid }}"
+    )
 
     saveTournament(tournament)
 }

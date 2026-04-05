@@ -21,14 +21,21 @@ object LocalDateSerializer : KSerializer<LocalDate> {
 
     override fun serialize(encoder: Encoder, value: LocalDate) {
         when (encoder) {
-            is BsonEncoder -> encoder.encodeBsonValue(BsonDateTime(value.toEpochDay()))
+            is BsonEncoder -> encoder.encodeBsonValue(
+                BsonDateTime(
+                    value.atStartOfDay().toInstant(ZoneOffset.UTC).toEpochMilli()
+                )
+            )
+
             else -> encoder.encodeString(value.format(DateTimeFormatter.ISO_DATE))
         }
     }
 
     override fun deserialize(decoder: Decoder): LocalDate {
         return when (decoder) {
-            is BsonDecoder -> LocalDate.ofEpochDay(decoder.decodeBsonValue().asDateTime().value)
+            is BsonDecoder -> Instant.ofEpochMilli(decoder.decodeBsonValue().asDateTime().value).atZone(ZoneOffset.UTC)
+                .toLocalDate()
+
             else -> LocalDate.parse(decoder.decodeString())
         }
     }

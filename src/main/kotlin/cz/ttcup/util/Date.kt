@@ -29,3 +29,7 @@ fun String.toLocalDate(pattern: String): LocalDate {
 fun LocalTime.toString(pattern: String): String {
     return this.format(DateTimeFormatter.ofPattern(pattern).withZone(ZoneId.of("Europe/Prague")))
 }
+
+fun LocalDate.toString(pattern: String): String {
+    return this.format(DateTimeFormatter.ofPattern(pattern).withZone(ZoneId.of("Europe/Prague")))
+}

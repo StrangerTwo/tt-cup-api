@@ -1,6 +1,7 @@
 package cz.ttcup.capture.service
 
 import cz.ttcup.capture.model.CaptureDto
+import cz.ttcup.crawl.service.deleteCrawlPage
 
 suspend fun capturePage(capture: CaptureDto) {
     when {
@@ -12,4 +13,5 @@ suspend fun capturePage(capture: CaptureDto) {
             captureSchedule(capture, capture.url.substring("https://ttcup.com/players/".length))
         }
     }
+    deleteCrawlPage(capture.url)
 }

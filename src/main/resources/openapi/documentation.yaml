@@ -35,6 +35,22 @@ paths:
             '*/*':
               schema:
                 type: "object"
+  /crawl:
+    get:
+      description: "getPagesToCrawl"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/GetPagesToCrawlRequest"
+        required: true
+      responses:
+        "200":
+          description: "OK"
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/Unit"
   /openapi.yaml:
     get:
       description: "getOpenapi"
@@ -138,6 +154,34 @@ components:
       required:
         - "url"
         - "html"
+    PageInfoRequest:
+      type: "object"
+      properties:
+        page:
+          type: "integer"
+          format: "int32"
+        size:
+          type: "integer"
+          format: "int32"
+          default: "20"
+        sort:
+          type: "array"
+          nullable: true
+          items:
+            type: "string"
+      required:
+        - "page"
+        - "size"
+    GetPagesToCrawlRequest:
+      type: "object"
+      properties:
+        pageInfo:
+          $ref: "#/components/schemas/PageInfoRequest"
+      required:
+        - "pageInfo"
+    Unit:
+      type: "object"
+      properties: { }
     Player:
       type: "object"
       properties:
