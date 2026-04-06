@@ -21,7 +21,7 @@ suspend fun getNeuralNetworkMatchData(): List<NeuralNetworkMatchData> {
     }
     val allPlayers = getAllPlayers()
 
-    val playerHistory: MutableMap<Pair<String, String>, ArrayDeque<Byte>> = mutableMapOf()
+    val playerHistory: MutableMap<Pair<String, String>, ArrayDeque<Int>> = mutableMapOf()
     val result = mutableListOf<NeuralNetworkMatchData>()
 
     tournaments.forEach { tournament ->
@@ -56,13 +56,19 @@ suspend fun getNeuralNetworkMatchData(): List<NeuralNetworkMatchData> {
             result.add(
                 NeuralNetworkMatchData(
                     history = history.toMutableList(),
-                    alreadyQualified = alreadyQualified.toByte(),
-                    isFinals = isFinals.toByte(),
-                    result = isWin.toByte(),
+                    alreadyQualified = alreadyQualified.toInt(),
+                    isFinals = isFinals.toInt(),
+                    lastMatchesWon = history
+                        .filter { it != -1 }
+                        .let {
+                            if (it.isEmpty()) return@let 0.5
+                            return@let it.sum().toDouble() / 5
+                        },
+                    result = isWin.toInt(),
                 )
             )
             history.removeFirst()
-            history.addLast(isWin.toByte())
+            history.addLast(isWin.toInt())
         }
     }
 
@@ -77,6 +83,6 @@ private fun getMatchIsWin(sets: List<Int>, playerUids: List<String>, forUid: Str
     return if (isA) aWon else !aWon;
 }
 
-private fun Boolean.toByte(): Byte {
+private fun Boolean.toInt(): Int {
     return if (this) 1 else 0
 }
