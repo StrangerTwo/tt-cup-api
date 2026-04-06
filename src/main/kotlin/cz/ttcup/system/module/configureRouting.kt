@@ -4,6 +4,7 @@ import cz.ttcup.admin.routing.userRoutes
 import cz.ttcup.capture.routing.captureRoutes
 import cz.ttcup.context.service.interceptContext
 import cz.ttcup.crawl.routing.crawlRoutes
+import cz.ttcup.nn.routing.neuralNetworkRoutes
 import cz.ttcup.openapi.routing.openApiRouting
 import cz.ttcup.player.routing.playerRoutes
 import io.ktor.http.*
@@ -36,6 +37,9 @@ fun Application.configureRouting() {
             }
             route("crawl") {
                 crawlRoutes()
+            }
+            route("nn") {
+                neuralNetworkRoutes();
             }
             openApiRouting()
             get("{...}") {

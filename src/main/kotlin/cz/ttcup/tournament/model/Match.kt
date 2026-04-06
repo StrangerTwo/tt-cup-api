@@ -9,6 +9,6 @@ data class Match(
     @Serializable(with = LocalDateTimeSerializer::class)
     val time: LocalDateTime,
     val playerUids: List<String>,
-    var sets: List<Int>? = null,
-    var points: List<String>? = null,
+    val sets: List<Int>? = null,
+    val points: List<String>? = null,
 )

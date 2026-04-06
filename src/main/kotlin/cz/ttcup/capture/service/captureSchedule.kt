@@ -17,31 +17,36 @@ suspend fun captureSchedule(capture: CaptureDto, restOfUrl: String) {
     val doc = Jsoup.parse(capture.html)
     val table = doc.selectFirst("table.table tbody") ?: return;
 
-    val matches = table.select("tr:not(.table-date)").map { row ->
+    val matches = table.select("tr:not(.table-date)").mapNotNull { row ->
         val time = row.child(1).text().trim().toLocalTime("HH:mm")
 
         val vsLink = row.child(2).selectFirst("a")!!.attr("href")
-        val (player1Uid, player2Uid) = ".+/([^\\/]+)/vs/([^\\/]+)".toRegex().find(vsLink)!!.destructured
+        val (player1Uid, player2Uid) = ".+/([^\\/]+)/vs/([^\\/]+)".toRegex().find(vsLink)?.destructured
+            ?: return@mapNotNull null
 
-        val match = Match(date.atTime(time), listOf(player1Uid, player2Uid))
-
-        val sets = row.child(3).text().trim();
-        val setsFind = "(\\d+):(\\d+)".toRegex().find(sets)
+        val setsText = row.child(3).text().trim();
+        val setsFind = "(\\d+):(\\d+)".toRegex().find(setsText)
+        var sets: List<Int>? = null
         if (setsFind != null) {
             val (sets1, sets2) = setsFind.destructured;
-            match.sets = listOf(sets1.toInt(), sets2.toInt())
+            sets = listOf(sets1.toInt(), sets2.toInt())
         }
 
-        val points = row.child(4).text().trim();
-        val pointFind = "(\\d+):(\\d+)".toRegex().findAll(points).toList();
+        val pointsText = row.child(4).text().trim();
+        val pointFind = "(\\d+):(\\d+)".toRegex().findAll(pointsText).toList();
+        var points: List<String>? = null
         if (pointFind.isNotEmpty()) {
-            match.points = pointFind.map {
+            points = pointFind.map {
                 val (points1, points2) = it.destructured;
                 return@map "${points1.toInt()}:${points2.toInt()}"
             }
         }
 
-        return@map match;
+        return@mapNotNull Match(
+            date.atTime(time),
+            listOf(player1Uid, player2Uid),
+            sets, points
+        );
     }
 
     val players = getPlayers(matches.flatMap { it.playerUids })
