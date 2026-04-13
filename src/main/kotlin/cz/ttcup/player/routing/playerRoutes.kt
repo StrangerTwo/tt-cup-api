@@ -2,6 +2,8 @@ package cz.ttcup.player.routing
 
 import cz.ttcup.crawl.model.CrawlPage
 import cz.ttcup.crawl.service.saveCrawlPages
+import cz.ttcup.match.service.getPlayerMatches
+import cz.ttcup.player.context.player
 import cz.ttcup.player.model.NewPlayer
 import cz.ttcup.player.service.getAllPlayers
 import cz.ttcup.player.service.saveNewPlayer
@@ -24,5 +26,18 @@ fun Route.playerRoutes() {
             .let { call.respond(Status(it.insertedId != null)) }
         saveCrawlPages(listOf(CrawlPage("https://ttcup.com/players/${player.uid}/")))
     }
+    route("{playerUid}") {
+        // getPlayer
+        get {
+            player().let { call.respond(it) }
+        }
+        route("matches") {
+            // getPlayerMatches
+            get {
+                val player = player();
+                getPlayerMatches(player)
+                    .let { call.respond(it) }
+            }
+        }
+    }
 }
-

@@ -12,16 +12,17 @@ internal fun modifyOpenApiYaml(map: Map<*, *>) {
     // remove "Any" Object
     schemas.remove("Object")
 
-    // remove mongo objectId
-    schemas.remove("ObjectId")
+    // mongo objectId
+    schemas["ObjectId"] = mutableMapOf("type" to "string")
 
-    schemas.values.forEach { schema ->
-        val properties = schema["properties"] as MutableMap<String, *>?
-        properties?.let {
-            // remove mongo objectId
-            it.remove("objectId")
-        }
-    }
+//    schemas.values.forEach { schema ->
+//        val properties = schema["properties"] as MutableMap<String, *>?
+//        properties?.let {
+//            // remove mongo objectId
+//            it.remove("objectId")
+//            it.entries.removeIf { (key, value) -> (value as MutableMap<String, String>)["\$ref"] == "#/components/schemas/ObjectId" }
+//        }
+//    }
 
     // use description as operationId
     paths.values.forEach { methodMap ->

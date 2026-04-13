@@ -2,7 +2,6 @@ package cz.ttcup.util.serializer
 
 import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.KSerializer
-import kotlinx.serialization.SerializationException
 import kotlinx.serialization.descriptors.PrimitiveKind
 import kotlinx.serialization.descriptors.PrimitiveSerialDescriptor
 import kotlinx.serialization.descriptors.SerialDescriptor
@@ -19,14 +18,14 @@ object ObjectIdSerializer : KSerializer<ObjectId> {
     override fun serialize(encoder: Encoder, value: ObjectId) {
         when (encoder) {
             is BsonEncoder -> encoder.encodeObjectId(value)
-            else -> encoder.encodeNull()
+            else -> encoder.encodeString(value.toString())
         }
     }
 
     override fun deserialize(decoder: Decoder): ObjectId {
         return when (decoder) {
             is BsonDecoder -> decoder.decodeBsonValue().asObjectId().value
-            else -> throw SerializationException("ObjectId is not supported by ${decoder::class}")
+            else -> ObjectId(decoder.decodeString())
         }
     }
 
