@@ -2,8 +2,8 @@ package cz.ttcup.capture.service
 
 import cz.ttcup.capture.model.CaptureDto
 import cz.ttcup.logs.service.logger
+import cz.ttcup.match.model.Match
 import cz.ttcup.player.service.getPlayers
-import cz.ttcup.tournament.model.Match
 import cz.ttcup.tournament.model.Tournament
 import cz.ttcup.tournament.service.saveTournament
 import cz.ttcup.util.toLocalDate
@@ -52,10 +52,10 @@ suspend fun captureSchedule(capture: CaptureDto, restOfUrl: String) {
     val players = getPlayers(matches.flatMap { it.playerUids })
     if (players.isEmpty()) return;
 
-    val tournament = Tournament(date, place, matches);
+    val tournament = Tournament(date, place);
     logger.info(
         "Saving tournament ${tournament.date}/${tournament.place} for players ${players.joinToString(", ") { it.uid }}"
     )
 
-    saveTournament(tournament)
+    saveTournament(tournament, matches)
 }

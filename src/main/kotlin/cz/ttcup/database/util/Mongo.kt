@@ -21,6 +21,10 @@ infix fun <T> KProperty1<*, T>.set(value: T): Bson {
     return Updates.set(fieldName, value)
 }
 
+fun <T> KProperty1<*, T>.unset(): Bson {
+    return Updates.unset(fieldName)
+}
+
 infix fun <T> KProperty1<*, T>.`in`(value: List<T>): Bson {
     return Filters.`in`(fieldName, value);
 }

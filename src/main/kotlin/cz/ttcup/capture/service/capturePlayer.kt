@@ -11,16 +11,16 @@ import org.jsoup.Jsoup
 suspend fun capturePlayer(capture: CaptureDto, restOfUrl: String) {
     val uid = restOfUrl.substring(0, restOfUrl.indexOf("/"))
     val player = getPlayer(uid) ?: return
-    val isFirstTime = player.name == null;
+    val recrawlPages = player.name == null || player.recrawl == true;
 
-    logger.info("Captured player $uid page ${capture.url}, first time: $isFirstTime")
+    logger.info("Captured player $uid page ${capture.url}, recrawl: $recrawlPages")
 
     val doc = Jsoup.parse(capture.html)
     doc.selectFirst("h1.h2")?.let { player.name = it.text().trim() }
     doc.selectFirst(".single-players-info--top--content .red")?.let { player.elo = it.text().trim().toInt() }
 
     updatePlayer(player);
-    if (isFirstTime) {
+    if (recrawlPages) {
         addTournamentsPagesToCrawl(doc, player)
     }
 

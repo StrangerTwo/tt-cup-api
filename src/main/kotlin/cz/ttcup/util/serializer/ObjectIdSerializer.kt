@@ -9,6 +9,7 @@ import kotlinx.serialization.descriptors.SerialDescriptor
 import kotlinx.serialization.encoding.Decoder
 import kotlinx.serialization.encoding.Encoder
 import org.bson.codecs.kotlinx.BsonDecoder
+import org.bson.codecs.kotlinx.BsonEncoder
 import org.bson.types.ObjectId
 
 object ObjectIdSerializer : KSerializer<ObjectId> {
@@ -16,7 +17,10 @@ object ObjectIdSerializer : KSerializer<ObjectId> {
 
     @OptIn(ExperimentalSerializationApi::class)
     override fun serialize(encoder: Encoder, value: ObjectId) {
-        encoder.encodeNull()
+        when (encoder) {
+            is BsonEncoder -> encoder.encodeObjectId(value)
+            else -> encoder.encodeNull()
+        }
     }
 
     override fun deserialize(decoder: Decoder): ObjectId {
