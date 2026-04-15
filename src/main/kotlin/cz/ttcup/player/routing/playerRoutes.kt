@@ -2,10 +2,10 @@ package cz.ttcup.player.routing
 
 import cz.ttcup.crawl.model.CrawlPage
 import cz.ttcup.crawl.service.saveCrawlPages
-import cz.ttcup.match.service.getPlayerMatches
 import cz.ttcup.player.context.player
+import cz.ttcup.player.model.GetPlayersRequest
 import cz.ttcup.player.model.NewPlayer
-import cz.ttcup.player.service.getAllPlayers
+import cz.ttcup.player.service.getPlayers
 import cz.ttcup.player.service.saveNewPlayer
 import cz.ttcup.util.model.Status
 import io.ktor.server.request.*
@@ -14,8 +14,10 @@ import io.ktor.server.routing.*
 
 fun Route.playerRoutes() {
     // getPlayers
-    get() {
-        getAllPlayers()
+    post {
+        val request = call.receive<GetPlayersRequest>()
+
+        getPlayers(request)
             .let { call.respond(it) }
     }
     // newPlayer
@@ -30,14 +32,6 @@ fun Route.playerRoutes() {
         // getPlayer
         get {
             player().let { call.respond(it) }
-        }
-        route("matches") {
-            // getPlayerMatches
-            get {
-                val player = player();
-                getPlayerMatches(player)
-                    .let { call.respond(it) }
-            }
         }
     }
 }

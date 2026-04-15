@@ -29,6 +29,14 @@ infix fun <T> KProperty1<*, T>.`in`(value: List<T>): Bson {
     return Filters.`in`(fieldName, value);
 }
 
+infix fun <T> KProperty1<*, T>.contains(value: String): Bson {
+    return this.regex(".*$value.*".toRegex(RegexOption.IGNORE_CASE))
+}
+
+infix fun <T> KProperty1<*, T>.regex(value: Regex): Bson {
+    return Filters.regex(fieldName, value.toPattern())
+}
+
 infix fun <T> KProperty1<*, T>.elemMatch(value: Bson): Bson {
     return Filters.elemMatch(fieldName, value);
 }

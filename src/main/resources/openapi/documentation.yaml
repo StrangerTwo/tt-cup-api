@@ -60,6 +60,22 @@ paths:
             '*/*':
               schema:
                 $ref: "#/components/schemas/PaginatedQueryResult_CrawlPage"
+  /match:
+    post:
+      description: "getMatches"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/GetMatchesRequest"
+        required: true
+      responses:
+        "200":
+          description: "OK"
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/PaginatedQueryResult_Match"
   /openapi.yaml:
     get:
       description: "getOpenapi"
@@ -79,19 +95,23 @@ paths:
               examples:
                 Example#1:
                   value: ""
-  /players:
-    get:
+  /player:
+    post:
       description: "getPlayers"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/GetPlayersRequest"
+        required: true
       responses:
         "200":
           description: "OK"
           content:
             '*/*':
               schema:
-                type: "array"
-                items:
-                  $ref: "#/components/schemas/Player"
-  /players/{playerUid}:
+                $ref: "#/components/schemas/PaginatedQueryResult_Player"
+  /player/{playerUid}:
     get:
       description: "getPlayer"
       parameters:
@@ -122,40 +142,7 @@ paths:
             '*/*':
               schema:
                 $ref: "#/components/schemas/Player"
-  /players/{playerUid}/matches:
-    get:
-      description: "getPlayerMatches"
-      parameters:
-        - name: "playerUid"
-          in: "path"
-          required: true
-          schema:
-            type: "string"
-      responses:
-        "400":
-          description: "Bad Request"
-          content:
-            '*/*':
-              schema:
-                type: "string"
-        "500":
-          description: "Internal Server Error"
-          content:
-            text/plain:
-              schema:
-                type: "string"
-              examples:
-                Example#1:
-                  value: ""
-        "200":
-          description: "OK"
-          content:
-            '*/*':
-              schema:
-                type: "array"
-                items:
-                  $ref: "#/components/schemas/Match"
-  /players/new:
+  /player/new:
     post:
       description: "newPlayer"
       requestBody:
@@ -304,23 +291,16 @@ components:
           $ref: "#/components/schemas/PageInfoRequest"
       required:
         - "pageInfo"
-    Player:
+    GetMatchesRequest:
       type: "object"
       properties:
-        uid:
-          type: "string"
-        name:
+        playerUid:
           type: "string"
           nullable: true
-        elo:
-          type: "integer"
-          format: "int32"
-          nullable: true
-        recrawl:
-          type: "boolean"
-          nullable: true
+        pageInfo:
+          $ref: "#/components/schemas/PageInfoRequest"
       required:
-        - "uid"
+        - "pageInfo"
     ObjectId:
       type: "object"
       properties:
@@ -358,6 +338,51 @@ components:
       required:
         - "time"
         - "playerUids"
+    PaginatedQueryResult_Match:
+      type: "object"
+      properties:
+        results:
+          type: "array"
+          items:
+            $ref: "#/components/schemas/Match"
+        pageInfo:
+          $ref: "#/components/schemas/PageInfo"
+    GetPlayersRequest:
+      type: "object"
+      properties:
+        search:
+          type: "string"
+          nullable: true
+        pageInfo:
+          $ref: "#/components/schemas/PageInfoRequest"
+      required:
+        - "pageInfo"
+    Player:
+      type: "object"
+      properties:
+        uid:
+          type: "string"
+        name:
+          type: "string"
+          nullable: true
+        elo:
+          type: "integer"
+          format: "int32"
+          nullable: true
+        recrawl:
+          type: "boolean"
+          nullable: true
+      required:
+        - "uid"
+    PaginatedQueryResult_Player:
+      type: "object"
+      properties:
+        results:
+          type: "array"
+          items:
+            $ref: "#/components/schemas/Player"
+        pageInfo:
+          $ref: "#/components/schemas/PageInfo"
     NewPlayer:
       type: "object"
       properties:
