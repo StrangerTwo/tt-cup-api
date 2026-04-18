@@ -22,7 +22,9 @@ fun Route.playerRoutes() {
     }
     // newPlayer
     post("new") {
-        val player = call.receive<NewPlayer>()
+        val player = call.receive<NewPlayer>().let {
+            it.copy(uid = it.uid.trim())
+        }
 
         saveNewPlayer(player)
             .let { call.respond(Status(it.insertedId != null)) }
