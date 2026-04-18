@@ -7,5 +7,6 @@ data class Player(
     val uid: String,
     var name: String? = null,
     var elo: Int? = null,
-    var recrawl: Boolean? = null
+    var recrawl: Boolean? = null,
+    var favourite: Boolean? = null,
 )

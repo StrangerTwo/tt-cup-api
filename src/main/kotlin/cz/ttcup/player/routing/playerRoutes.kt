@@ -7,6 +7,7 @@ import cz.ttcup.player.model.GetPlayersRequest
 import cz.ttcup.player.model.NewPlayer
 import cz.ttcup.player.service.getPlayers
 import cz.ttcup.player.service.saveNewPlayer
+import cz.ttcup.player.service.setPlayerFavourite
 import cz.ttcup.util.model.Status
 import io.ktor.server.request.*
 import io.ktor.server.response.*
@@ -34,6 +35,14 @@ fun Route.playerRoutes() {
         // getPlayer
         get {
             player().let { call.respond(it) }
+        }
+        // setPlayerFavourite
+        patch("favourite") {
+            val request = call.receive<Status>()
+            val player = player()
+
+            setPlayerFavourite(player, request.status)
+                .let { call.respond(Status(it.modifiedCount == 1L)) }
         }
     }
 }

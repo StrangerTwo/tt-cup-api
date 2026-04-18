@@ -127,21 +127,52 @@ paths:
             '*/*':
               schema:
                 type: "string"
-        "500":
-          description: "Internal Server Error"
+        "404":
+          description: "Not Found"
           content:
-            text/plain:
+            '*/*':
               schema:
-                type: "string"
-              examples:
-                Example#1:
-                  value: ""
+                type: "object"
         "200":
           description: "OK"
           content:
             '*/*':
               schema:
                 $ref: "#/components/schemas/Player"
+  /player/{playerUid}/favourite:
+    patch:
+      description: "setPlayerFavourite"
+      parameters:
+        - name: "playerUid"
+          in: "path"
+          required: true
+          schema:
+            type: "string"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Status"
+        required: true
+      responses:
+        "400":
+          description: "Bad Request"
+          content:
+            '*/*':
+              schema:
+                type: "string"
+        "404":
+          description: "Not Found"
+          content:
+            '*/*':
+              schema:
+                type: "object"
+        "200":
+          description: "OK"
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/Status"
   /player/new:
     post:
       description: "newPlayer"
@@ -372,6 +403,9 @@ components:
         recrawl:
           type: "boolean"
           nullable: true
+        favourite:
+          type: "boolean"
+          nullable: true
       required:
         - "uid"
     PaginatedQueryResult_Player:
@@ -383,13 +417,6 @@ components:
             $ref: "#/components/schemas/Player"
         pageInfo:
           $ref: "#/components/schemas/PageInfo"
-    NewPlayer:
-      type: "object"
-      properties:
-        uid:
-          type: "string"
-      required:
-        - "uid"
     Status:
       type: "object"
       properties:
@@ -397,6 +424,13 @@ components:
           type: "boolean"
       required:
         - "status"
+    NewPlayer:
+      type: "object"
+      properties:
+        uid:
+          type: "string"
+      required:
+        - "uid"
     User:
       type: "object"
       properties:
