@@ -24,6 +24,7 @@ fun Route.playerRoutes() {
         val player = call.receive<NewPlayer>().let {
             it.copy(uid = it.uid.trim())
         }
+        if (player.uid.isBlank() || player.uid.length < 5) throw IllegalArgumentException("Invalid uid")
 
         saveNewPlayer(player)
             .let { call.respond(Status(it.insertedId != null)) }

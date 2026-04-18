@@ -36,6 +36,7 @@ internal fun Application.connectToMongoDB(): MongoClient {
         settings = MongoClientSettings
             .builder()
             .applyConnectionString(ConnectionString(uri))
+            .codecRegistry(codecRegistry())
             .build()
     )
 

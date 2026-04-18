@@ -1,5 +1,7 @@
 package cz.ttcup.openapi.service
 
+import cz.ttcup.player.model.Location
+
 internal fun modifyOpenApiYaml(map: Map<*, *>) {
     // replace server url
     ((map["servers"] as List<*>)[0] as MutableMap<String, String>)["url"] = "https://api.ttcup.dev.mhdonline.cz"
@@ -25,6 +27,13 @@ internal fun modifyOpenApiYaml(map: Map<*, *>) {
             mapOf("type" to "integer", "format" to "int32"),
             mapOf("type" to "integer", "format" to "int32")
         )
+
+    createCustomEnum<Location>(
+        schemas,
+        listOf("GetPlayersRequest", "properties", "location"),
+        listOf("Player", "properties", "location"),
+        listOf("NewPlayer", "properties", "location"),
+    )
 
     schemas.entries.forEach { (schemaName, schema) ->
         val properties = schema["properties"] as MutableMap<String, *>?

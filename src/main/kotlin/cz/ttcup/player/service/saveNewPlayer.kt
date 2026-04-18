@@ -16,6 +16,7 @@ suspend fun saveNewPlayer(player: NewPlayer): InsertOneResult {
             .insertOne(
                 Player(
                     uid = player.uid,
+                    location = player.location,
                 )
             )
     }

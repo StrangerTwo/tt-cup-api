@@ -95,6 +95,8 @@ paths:
               examples:
                 Example#1:
                   value: ""
+                Example#2:
+                  value: ""
   /player:
     post:
       description: "getPlayers"
@@ -442,6 +444,13 @@ components:
         search:
           type: "string"
           nullable: true
+        location:
+          type: "string"
+          nullable: true
+          enum:
+            - "HAVLICKUV_BROD"
+            - "PRAHA"
+            - "HAVIROV"
         pageInfo:
           $ref: "#/components/schemas/PageInfoRequest"
       required:
@@ -464,6 +473,13 @@ components:
         favourite:
           type: "boolean"
           nullable: true
+        location:
+          type: "string"
+          nullable: true
+          enum:
+            - "HAVLICKUV_BROD"
+            - "PRAHA"
+            - "HAVIROV"
       required:
         - "uid"
     PaginatedQueryResult_Player:
@@ -546,6 +562,13 @@ components:
       properties:
         uid:
           type: "string"
+        location:
+          type: "string"
+          nullable: true
+          enum:
+            - "HAVLICKUV_BROD"
+            - "PRAHA"
+            - "HAVIROV"
       required:
         - "uid"
     User:

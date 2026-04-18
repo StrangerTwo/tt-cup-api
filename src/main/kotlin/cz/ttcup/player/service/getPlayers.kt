@@ -1,7 +1,9 @@
 package cz.ttcup.player.service
 
+import com.mongodb.client.model.Filters
 import cz.ttcup.context.service.withDatabase
 import cz.ttcup.database.util.contains
+import cz.ttcup.database.util.eq
 import cz.ttcup.database.util.`in`
 import cz.ttcup.player.model.GetPlayersRequest
 import cz.ttcup.player.model.Player
@@ -23,7 +25,14 @@ suspend fun getPlayers(request: GetPlayersRequest): PaginatedQueryResult<Player>
         return database.players
             .queryPaginated(
                 request.pageInfo,
-                request.search?.let { Player::name contains it }
+                listOfNotNull(
+                    request.search?.let { Player::name contains it },
+                    request.location?.let { Player::location eq it },
+                ).takeIf {
+                    it.isNotEmpty()
+                }?.let {
+                    Filters.and(it)
+                }
             )
     }
 }
