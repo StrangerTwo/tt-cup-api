@@ -1,7 +1,7 @@
 package cz.ttcup.match.service
 
 import cz.ttcup.context.service.withDatabase
-import cz.ttcup.database.util.eq
+import cz.ttcup.database.util.all
 import cz.ttcup.match.model.GetMatchesRequest
 import cz.ttcup.match.model.Match
 import cz.ttcup.match.schema.matches
@@ -13,7 +13,7 @@ suspend fun getMatches(request: GetMatchesRequest): PaginatedQueryResult<Match> 
         return database.matches
             .queryPaginated(
                 request.pageInfo,
-                request.playerUid?.let { Match::playerUids eq request.playerUid },
+                request.playerUids?.let { Match::playerUids all it },
             )
     }
 }

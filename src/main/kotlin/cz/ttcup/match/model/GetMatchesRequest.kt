@@ -5,6 +5,6 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class GetMatchesRequest(
-    val playerUid: String? = null,
+    val playerUids: List<String>? = null,
     val pageInfo: PageInfoRequest
 )

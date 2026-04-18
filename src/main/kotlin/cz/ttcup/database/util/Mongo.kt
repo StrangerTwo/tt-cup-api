@@ -42,6 +42,10 @@ infix fun <T> KProperty1<*, T>.elemMatch(value: Bson): Bson {
     return Filters.elemMatch(fieldName, value);
 }
 
+infix fun <T> KProperty1<*, T>.all(values: Iterable<Any>): Bson {
+    return Filters.all(fieldName, values);
+}
+
 infix fun <T> KProperty1<*, T>.gte(value: Any): Bson {
     return Filters.gte(fieldName, value);
 }
