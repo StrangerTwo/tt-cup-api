@@ -5,6 +5,7 @@ import cz.ttcup.crawl.service.saveCrawlPages
 import cz.ttcup.player.context.player
 import cz.ttcup.player.model.GetPlayersRequest
 import cz.ttcup.player.model.NewPlayer
+import cz.ttcup.player.service.getPlayerMatchesSummary
 import cz.ttcup.player.service.getPlayers
 import cz.ttcup.player.service.saveNewPlayer
 import cz.ttcup.player.service.setPlayerFavourite
@@ -43,6 +44,13 @@ fun Route.playerRoutes() {
 
             setPlayerFavourite(player, request.status)
                 .let { call.respond(Status(it.modifiedCount == 1L)) }
+        }
+        // getPlayerMatchesSummary
+        get("summary") {
+            val player = player()
+
+            getPlayerMatchesSummary(player)
+                .let { call.respond(it) }
         }
     }
 }

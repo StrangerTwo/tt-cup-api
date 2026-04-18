@@ -1,6 +1,7 @@
 package cz.ttcup.database.util
 
 import com.mongodb.client.model.Filters
+import com.mongodb.client.model.Sorts
 import com.mongodb.client.model.Updates
 import kotlinx.serialization.SerialName
 import org.bson.*
@@ -65,4 +66,59 @@ infix fun <T> KProperty1<*, T>.el(value: BsonDocument): BsonElement {
     return BsonElement(fieldName, value)
 }
 
+fun <T> KProperty1<*, List<T?>?>.first(): Document {
+    return Document("\$arrayElemAt", listOf("\$$fieldName", 0))
+}
+
+fun <T> KProperty1<*, List<T?>?>.last(): Document {
+    return Document("\$arrayElemAt", listOf("\$$fieldName", -1))
+}
+
+fun <T> KProperty1<*, List<T?>?>.size(): Document {
+    return Document("\$size", "\$$fieldName")
+}
+
+fun <T> KProperty1<*, T>.asc(): Bson {
+    return Sorts.ascending(fieldName)
+}
+
+fun <T> KProperty1<*, T>.desc(): Bson {
+    return Sorts.descending(fieldName)
+}
+
 fun List<BsonElement>.toDocument(): BsonDocument = BsonDocument(this)
+
+fun eq(valueA: Any, valueB: Any): Document {
+    return Document(
+        "\$eq",
+        listOf(valueA, valueB),
+    )
+}
+
+fun gt(valueA: Any, valueB: Any): Document {
+    return Document(
+        "\$gt",
+        listOf(valueA, valueB),
+    )
+}
+
+fun lt(valueA: Any, valueB: Any): Document {
+    return Document(
+        "\$lt",
+        listOf(valueA, valueB),
+    )
+}
+
+fun cond(condition: Any, ifTrue: Any, ifFalse: Any): Document {
+    return Document(
+        "\$cond",
+        listOf(condition, ifTrue, ifFalse),
+    )
+}
+
+fun not(value: Any): Document {
+    return Document(
+        "\$not",
+        value
+    )
+}

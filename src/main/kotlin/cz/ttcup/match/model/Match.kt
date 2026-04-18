@@ -21,4 +21,10 @@ data class Match(
     @SerialName("_id")
     @Serializable(with = ObjectIdSerializer::class)
     val objectId: ObjectId? = null
-)
+) {
+    fun isWin(playerUid: String): Boolean? {
+        return if (playerUids.first() == playerUid)
+            sets?.let { it.first() > it.last() } else
+            sets?.let { it.last() > it.first() }
+    }
+}

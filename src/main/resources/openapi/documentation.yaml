@@ -173,6 +173,34 @@ paths:
             '*/*':
               schema:
                 $ref: "#/components/schemas/Status"
+  /player/{playerUid}/summary:
+    get:
+      description: "getPlayerMatchesSummary"
+      parameters:
+        - name: "playerUid"
+          in: "path"
+          required: true
+          schema:
+            type: "string"
+      responses:
+        "400":
+          description: "Bad Request"
+          content:
+            '*/*':
+              schema:
+                type: "string"
+        "404":
+          description: "Not Found"
+          content:
+            '*/*':
+              schema:
+                type: "object"
+        "200":
+          description: "OK"
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/MatchesSummary"
   /player/new:
     post:
       description: "newPlayer"
@@ -424,6 +452,34 @@ components:
           type: "boolean"
       required:
         - "status"
+    MatchesSummary:
+      type: "object"
+      properties:
+        matchesWon:
+          type: "integer"
+          format: "int32"
+        matchesLost:
+          type: "integer"
+          format: "int32"
+        longestWinStreak:
+          type: "integer"
+          format: "int32"
+        longestLoseStreak:
+          type: "integer"
+          format: "int32"
+        currentWinStreak:
+          type: "integer"
+          format: "int32"
+        currentLoseStreak:
+          type: "integer"
+          format: "int32"
+      required:
+        - "matchesWon"
+        - "matchesLost"
+        - "longestWinStreak"
+        - "longestLoseStreak"
+        - "currentWinStreak"
+        - "currentLoseStreak"
     NewPlayer:
       type: "object"
       properties:
