@@ -5,10 +5,7 @@ import cz.ttcup.crawl.service.saveCrawlPages
 import cz.ttcup.player.context.player
 import cz.ttcup.player.model.GetPlayersRequest
 import cz.ttcup.player.model.NewPlayer
-import cz.ttcup.player.service.getPlayerMatchesSummary
-import cz.ttcup.player.service.getPlayers
-import cz.ttcup.player.service.saveNewPlayer
-import cz.ttcup.player.service.setPlayerFavourite
+import cz.ttcup.player.service.*
 import cz.ttcup.util.model.Status
 import io.ktor.server.request.*
 import io.ktor.server.response.*
@@ -50,6 +47,13 @@ fun Route.playerRoutes() {
             val player = player()
 
             getPlayerMatchesSummary(player)
+                .let { call.respond(it) }
+        }
+        // getPlayerRivals
+        get("rivals") {
+            val player = player()
+
+            getPlayerRivals(player)
                 .let { call.respond(it) }
         }
     }

@@ -27,4 +27,8 @@ data class Match(
             sets?.let { it.first() > it.last() } else
             sets?.let { it.last() > it.first() }
     }
+
+    fun opponent(playerUid: String): String {
+        return playerUids.first { it != playerUid }
+    }
 }
