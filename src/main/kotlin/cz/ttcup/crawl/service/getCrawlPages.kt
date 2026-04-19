@@ -13,6 +13,7 @@ import cz.ttcup.player.schema.players
 import cz.ttcup.util.model.PaginatedQueryResult
 import cz.ttcup.util.model.plus
 import cz.ttcup.util.service.queryPaginated
+import java.time.LocalDate
 import kotlin.math.min
 
 suspend fun getCrawlPages(request: GetPagesToCrawlRequest): PaginatedQueryResult<CrawlPage> {
@@ -30,6 +31,13 @@ suspend fun getCrawlPages(request: GetPagesToCrawlRequest): PaginatedQueryResult
                     it.pageInfo
                 )
             }
+
+        result += database.crawlPages
+            .queryPaginated(
+                request.pageInfo,
+                CrawlPage::url regex "https://ttcup.com/schedule/.*${LocalDate.now().year}/.*".toRegex()
+            )
+        if (result.results.size >= request.pageInfo.size) return result
 
         result += database.crawlPages
             .queryPaginated(
