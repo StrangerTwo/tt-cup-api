@@ -19,6 +19,7 @@ infix fun <T> KProperty1<*, T>.eq(value: T): Bson {
 }
 
 infix fun <T> KProperty1<*, T>.set(value: T): Bson {
+    if (value == null) return unset()
     return Updates.set(fieldName, value)
 }
 
