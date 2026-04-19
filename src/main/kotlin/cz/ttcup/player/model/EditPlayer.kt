@@ -6,5 +6,5 @@ import kotlinx.serialization.Serializable
 data class EditPlayer(
     val location: Location? = null,
     val note: String? = null,
-    val stisUrl: String? = null,
+    val stisId: String? = null,
 )

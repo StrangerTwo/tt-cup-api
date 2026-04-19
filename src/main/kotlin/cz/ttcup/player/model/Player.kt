@@ -12,7 +12,7 @@ data class Player(
     val favourite: Boolean? = null,
     val location: Location? = null,
     val note: String? = null,
-    val stisUrl: String? = null,
+    val stisId: String? = null,
 
     val recrawl: Boolean? = null,
 )

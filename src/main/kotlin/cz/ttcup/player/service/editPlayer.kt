@@ -17,7 +17,7 @@ suspend fun editPlayer(player: Player, request: EditPlayer): UpdateResult {
                 Updates.combine(
                     Player::location set request.location,
                     Player::note set request.note,
-                    Player::stisUrl set request.stisUrl,
+                    Player::stisId set request.stisId,
                 )
             )
     }
