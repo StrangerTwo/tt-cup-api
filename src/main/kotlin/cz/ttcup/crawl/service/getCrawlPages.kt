@@ -13,6 +13,7 @@ import cz.ttcup.player.schema.players
 import cz.ttcup.util.model.PaginatedQueryResult
 import cz.ttcup.util.model.plus
 import cz.ttcup.util.service.queryPaginated
+import kotlin.math.min
 
 suspend fun getCrawlPages(request: GetPagesToCrawlRequest): PaginatedQueryResult<CrawlPage> {
     withDatabase {
@@ -41,7 +42,12 @@ suspend fun getCrawlPages(request: GetPagesToCrawlRequest): PaginatedQueryResult
                 request.pageInfo,
                 CrawlPage::url notRegex "https://ttcup.com/schedule/.*".toRegex()
             )
-        return result;
+        return result.copy(
+            results = result.results.subList(0, request.pageInfo.size),
+            pageInfo = result.pageInfo.copy(
+                size = min(request.pageInfo.size, result.results.size),
+            )
+        );
     }
 }
 
