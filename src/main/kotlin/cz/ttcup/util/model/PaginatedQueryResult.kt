@@ -10,7 +10,7 @@ data class PaginatedQueryResult<T>(
 }
 
 infix operator fun <T> PaginatedQueryResult<T>.plus(other: PaginatedQueryResult<T>) =
-    PaginatedQueryResult<T>(
+    PaginatedQueryResult(
         this.results + other.results,
         PageInfo(
             this.pageInfo.page,
