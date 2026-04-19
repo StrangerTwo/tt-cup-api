@@ -17,7 +17,7 @@ suspend fun capturePlayer(capture: CaptureDto, restOfUrl: String) {
 
     val doc = Jsoup.parse(capture.html)
     doc.selectFirst("h1.h2")?.let { player.name = it.text().trim() }
-    doc.selectFirst(".single-players-info--top--content .red")?.let { player.elo = it.text().trim().toInt() }
+    doc.selectFirst(".single-players-info--top--content .red")?.let { player.ranking = it.text().trim().toInt() }
 
     updatePlayer(player);
     if (recrawlPages) {

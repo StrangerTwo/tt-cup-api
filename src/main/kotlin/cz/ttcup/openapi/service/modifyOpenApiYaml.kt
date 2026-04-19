@@ -33,6 +33,7 @@ internal fun modifyOpenApiYaml(map: Map<*, *>) {
         listOf("GetPlayersRequest", "properties", "location"),
         listOf("Player", "properties", "location"),
         listOf("NewPlayer", "properties", "location"),
+        listOf("EditPlayer", "properties", "location"),
     )
 
     schemas.entries.forEach { (schemaName, schema) ->

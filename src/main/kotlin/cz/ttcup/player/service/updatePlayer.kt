@@ -16,7 +16,7 @@ suspend fun updatePlayer(player: Player): UpdateResult {
                 Player::uid eq player.uid,
                 Updates.combine(
                     Player::name set player.name,
-                    Player::elo set player.elo,
+                    Player::ranking set player.ranking,
                     Player::recrawl.unset()
                 )
             )

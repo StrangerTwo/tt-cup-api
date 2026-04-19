@@ -141,6 +141,39 @@ paths:
             '*/*':
               schema:
                 $ref: "#/components/schemas/Player"
+    patch:
+      description: "editPlayer"
+      parameters:
+        - name: "playerUid"
+          in: "path"
+          required: true
+          schema:
+            type: "string"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/EditPlayer"
+        required: true
+      responses:
+        "400":
+          description: "Bad Request"
+          content:
+            '*/*':
+              schema:
+                type: "string"
+        "404":
+          description: "Not Found"
+          content:
+            '*/*':
+              schema:
+                type: "object"
+        "200":
+          description: "OK"
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/Status"
   /player/{playerUid}/favourite:
     patch:
       description: "setPlayerFavourite"
@@ -554,6 +587,9 @@ components:
             - "HAVLICKUV_BROD"
             - "PRAHA"
             - "HAVIROV"
+        note:
+          type: "string"
+          nullable: true
       required:
         - "uid"
     PaginatedQueryResult_Player:
@@ -565,6 +601,19 @@ components:
             $ref: "#/components/schemas/Player"
         pageInfo:
           $ref: "#/components/schemas/PageInfo"
+    EditPlayer:
+      type: "object"
+      properties:
+        location:
+          type: "string"
+          nullable: true
+          enum:
+            - "HAVLICKUV_BROD"
+            - "PRAHA"
+            - "HAVIROV"
+        note:
+          type: "string"
+          nullable: true
     Status:
       type: "object"
       properties:

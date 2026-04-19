@@ -3,6 +3,7 @@ package cz.ttcup.player.routing
 import cz.ttcup.crawl.model.CrawlPage
 import cz.ttcup.crawl.service.saveCrawlPages
 import cz.ttcup.player.context.player
+import cz.ttcup.player.model.EditPlayer
 import cz.ttcup.player.model.GetPlayersRequest
 import cz.ttcup.player.model.NewPlayer
 import cz.ttcup.player.service.*
@@ -48,6 +49,14 @@ fun Route.playerRoutes() {
             setPlayerFavourite(player, request.status)
                 .let { call.respond(Status(it.modifiedCount == 1L)) }
         }
+        // editPlayer
+        patch {
+            val player = player()
+            val request = call.receive<EditPlayer>()
+
+            editPlayer(player, request)
+                .let { call.respond(Status(it.modifiedCount == 1L)) }
+        }
         // getPlayerMatchesSummary
         get("summary") {
             val player = player()
@@ -64,3 +73,4 @@ fun Route.playerRoutes() {
         }
     }
 }
+
