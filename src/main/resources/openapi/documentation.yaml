@@ -570,12 +570,13 @@ components:
         name:
           type: "string"
           nullable: true
-        elo:
+        ranking:
           type: "integer"
           format: "int32"
           nullable: true
-        recrawl:
-          type: "boolean"
+        elo:
+          type: "integer"
+          format: "int32"
           nullable: true
         favourite:
           type: "boolean"
@@ -589,6 +590,12 @@ components:
             - "HAVIROV"
         note:
           type: "string"
+          nullable: true
+        stisUrl:
+          type: "string"
+          nullable: true
+        recrawl:
+          type: "boolean"
           nullable: true
       required:
         - "uid"
@@ -612,6 +619,9 @@ components:
             - "PRAHA"
             - "HAVIROV"
         note:
+          type: "string"
+          nullable: true
+        stisUrl:
           type: "string"
           nullable: true
     Status:

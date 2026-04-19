@@ -37,12 +37,16 @@ internal fun modifyOpenApiYaml(map: Map<*, *>) {
     )
 
     schemas.entries.forEach { (schemaName, schema) ->
-        val properties = schema["properties"] as MutableMap<String, Any>?
+        val properties = schema["properties"] as MutableMap<String, MutableMap<String, *>>?
         properties?.let {
             // rename mongo objectId
             it["objectId"]?.let { objectId ->
                 it["_id"] = objectId
                 it.remove("objectId")
+            }
+
+            it.values.forEach { property ->
+                property.remove("nullable")
             }
 //            it.entries.removeIf { (key, value) -> (value as MutableMap<String, String>)["\$ref"] == "#/components/schemas/ObjectId" }
         }
