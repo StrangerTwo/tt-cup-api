@@ -29,14 +29,12 @@ suspend fun getCrawlPages(request: GetPagesToCrawlRequest): PaginatedQueryResult
                     it.pageInfo
                 )
             }
-        if (result.pageInfo.size >= request.pageInfo.size) return result;
 
         result += database.crawlPages
             .queryPaginated(
                 request.pageInfo,
                 CrawlPage::url regex "https://ttcup.com/schedule/.*".toRegex()
             )
-        if (result.pageInfo.size >= request.pageInfo.size) return result;
 
         result += database.crawlPages
             .queryPaginated(
