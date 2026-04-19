@@ -36,12 +36,20 @@ internal fun modifyOpenApiYaml(map: Map<*, *>) {
     )
 
     schemas.entries.forEach { (schemaName, schema) ->
-        val properties = schema["properties"] as MutableMap<String, *>?
-//        properties?.let {
-//            // remove mongo objectId
-//            it.remove("objectId")
+        val properties = schema["properties"] as MutableMap<String, Any>?
+        properties?.let {
+            // rename mongo objectId
+            it["objectId"]?.let { objectId ->
+                it["_id"] = objectId
+                it.remove("objectId")
+            }
 //            it.entries.removeIf { (key, value) -> (value as MutableMap<String, String>)["\$ref"] == "#/components/schemas/ObjectId" }
-//        }
+        }
+        val required = schema["required"] as MutableList<String>?
+        required?.apply {
+            val index = indexOf("objectId")
+            if (index != -1) set(index, "_id")
+        }
 
         if (schemaName.startsWith("PaginatedQueryResult_")) {
             schema["required"] = listOf("results", "pageInfo")

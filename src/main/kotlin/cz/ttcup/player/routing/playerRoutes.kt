@@ -7,6 +7,7 @@ import cz.ttcup.player.model.GetPlayersRequest
 import cz.ttcup.player.model.NewPlayer
 import cz.ttcup.player.service.*
 import cz.ttcup.util.model.Status
+import io.ktor.http.*
 import io.ktor.server.request.*
 import io.ktor.server.response.*
 import io.ktor.server.routing.*
@@ -33,7 +34,11 @@ fun Route.playerRoutes() {
     route("{playerUid}") {
         // getPlayer
         get {
-            player().let { call.respond(it) }
+            try {
+                player().let { call.respond(it) }
+            } catch (e: Exception) {
+                call.respond(HttpStatusCode.NotFound)
+            }
         }
         // setPlayerFavourite
         patch("favourite") {

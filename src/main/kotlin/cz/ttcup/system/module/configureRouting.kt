@@ -7,6 +7,7 @@ import cz.ttcup.crawl.routing.crawlRoutes
 import cz.ttcup.match.routing.matchRoutes
 import cz.ttcup.openapi.routing.openApiRouting
 import cz.ttcup.player.routing.playerRoutes
+import cz.ttcup.tournament.routing.tournamentRoutes
 import io.ktor.http.*
 import io.ktor.server.application.*
 import io.ktor.server.auth.*
@@ -37,6 +38,9 @@ fun Application.configureRouting() {
             }
             route("match") {
                 matchRoutes()
+            }
+            route("tournament") {
+                tournamentRoutes()
             }
             route("crawl") {
                 crawlRoutes()

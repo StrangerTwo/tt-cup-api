@@ -255,6 +255,78 @@ paths:
             '*/*':
               schema:
                 $ref: "#/components/schemas/Status"
+  /tournament:
+    post:
+      description: "getTournaments"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/GetTournamentsRequest"
+        required: true
+      responses:
+        "200":
+          description: "OK"
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/PaginatedQueryResult_Tournament"
+  /tournament/{tournamentId}:
+    get:
+      description: "getTournament"
+      parameters:
+        - name: "tournamentId"
+          in: "path"
+          required: true
+          schema:
+            type: "string"
+      responses:
+        "400":
+          description: "Bad Request"
+          content:
+            '*/*':
+              schema:
+                type: "string"
+        "404":
+          description: "Not Found"
+          content:
+            '*/*':
+              schema:
+                type: "object"
+        "200":
+          description: "OK"
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/Tournament"
+  /tournament/{tournamentId}/full:
+    get:
+      description: "getTournamentFull"
+      parameters:
+        - name: "tournamentId"
+          in: "path"
+          required: true
+          schema:
+            type: "string"
+      responses:
+        "400":
+          description: "Bad Request"
+          content:
+            '*/*':
+              schema:
+                type: "string"
+        "404":
+          description: "Not Found"
+          content:
+            '*/*':
+              schema:
+                type: "object"
+        "200":
+          description: "OK"
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/TournamentFull"
   /user:
     get:
       description: "getUser"
@@ -573,6 +645,55 @@ components:
             - "HAVIROV"
       required:
         - "uid"
+    GetTournamentsRequest:
+      type: "object"
+      properties:
+        pageInfo:
+          $ref: "#/components/schemas/PageInfoRequest"
+      required:
+        - "pageInfo"
+    Tournament:
+      type: "object"
+      properties:
+        date:
+          type: "string"
+          format: "date"
+        place:
+          type: "string"
+        objectId:
+          nullable: true
+          $ref: "#/components/schemas/ObjectId"
+      required:
+        - "date"
+        - "place"
+    PaginatedQueryResult_Tournament:
+      type: "object"
+      properties:
+        results:
+          type: "array"
+          items:
+            $ref: "#/components/schemas/Tournament"
+        pageInfo:
+          $ref: "#/components/schemas/PageInfo"
+    TournamentFull:
+      type: "object"
+      properties:
+        date:
+          type: "string"
+          format: "date"
+        place:
+          type: "string"
+        matches:
+          type: "array"
+          items:
+            $ref: "#/components/schemas/Match"
+        objectId:
+          $ref: "#/components/schemas/ObjectId"
+      required:
+        - "date"
+        - "place"
+        - "matches"
+        - "objectId"
     User:
       type: "object"
       properties:
