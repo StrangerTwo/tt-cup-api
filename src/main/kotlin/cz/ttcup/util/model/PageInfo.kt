@@ -1,5 +1,6 @@
 package cz.ttcup.util.model
 
+import cz.ttcup.util.service.IntPaginatedQueryResult
 import kotlinx.serialization.Serializable
 import kotlin.math.ceil
 
@@ -11,11 +12,11 @@ data class PageInfo(
     val totalPages: Int,
     val sort: List<String>? = null,
 ) {
-    constructor(pageInfo: PageInfoRequest, totalElements: Long) : this(
+    constructor(pageInfo: PageInfoRequest, result: IntPaginatedQueryResult) : this(
         pageInfo.page,
-        pageInfo.size,
-        totalElements,
-        ceil(totalElements.toDouble() / pageInfo.size).toInt(),
+        result.results.size,
+        result.totalElements ?: 0,
+        ceil((result.totalElements ?: 0).toDouble() / pageInfo.size).toInt(),
         pageInfo.sort
     )
 }

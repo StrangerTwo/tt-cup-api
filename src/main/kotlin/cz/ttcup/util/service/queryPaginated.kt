@@ -60,7 +60,7 @@ suspend inline fun <reified T : Any> MongoCollection<T>.queryPaginated(
     return PaginatedQueryResult(
         result.results
             .map { codec.decode(BsonDocumentReader(it), DecoderContext.builder().build()) },
-        PageInfo(pageInfo, result.totalElements ?: 0)
+        PageInfo(pageInfo, result)
     )
 }
 
