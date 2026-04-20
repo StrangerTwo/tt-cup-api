@@ -42,14 +42,15 @@ suspend fun getCrawlPages(request: GetPagesToCrawlRequest): PaginatedQueryResult
         result += database.crawlPages
             .queryPaginated(
                 request.pageInfo,
-                CrawlPage::url regex "https://ttcup.com/schedule/.*".toRegex()
+                CrawlPage::url notRegex "https://ttcup.com/schedule/.*".toRegex()
             )
 
         result += database.crawlPages
             .queryPaginated(
                 request.pageInfo,
-                CrawlPage::url notRegex "https://ttcup.com/schedule/.*".toRegex()
+                CrawlPage::url regex "https://ttcup.com/schedule/.*".toRegex()
             )
+
         return result.copy(
             results = result.results.subList(0, request.pageInfo.size),
             pageInfo = result.pageInfo.copy(
