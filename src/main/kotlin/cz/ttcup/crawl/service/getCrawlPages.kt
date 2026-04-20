@@ -38,7 +38,6 @@ suspend fun getCrawlPages(request: GetPagesToCrawlRequest): PaginatedQueryResult
                 request.pageInfo,
                 CrawlPage::url regex thisYearSchedulesRegex
             )
-        if (result.results.size >= request.pageInfo.size) return result
 
         result += database.crawlPages
             .queryPaginated(
