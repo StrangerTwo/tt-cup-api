@@ -29,7 +29,11 @@ fun Route.playerRoutes() {
         if (player.uid.isBlank() || player.uid.length < 5) throw IllegalArgumentException("Invalid uid")
 
         saveNewPlayer(player)
-            .let { call.respond(Status(it.insertedId != null)) }
+            .let {
+                call.respond(
+                    it.insertedId?.asObjectId()?.value ?: throw IllegalStateException("Player not created")
+                )
+            }
         saveCrawlPages(listOf(CrawlPage("https://ttcup.com/players/${player.uid}/")))
     }
     route("{playerUid}") {

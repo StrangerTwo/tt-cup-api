@@ -7,5 +7,6 @@ import kotlinx.serialization.Serializable
 data class GetPlayersRequest(
     val search: String? = null,
     val location: Location? = null,
+    val uids: List<String>? = null,
     val pageInfo: PageInfoRequest
 )

@@ -29,20 +29,18 @@ internal fun modifyOpenApiYaml(map: Map<*, *>) {
         )
 
     createCustomEnum<Location>(
-        schemas,
-        listOf("GetPlayersRequest", "properties", "location"),
-        listOf("Player", "properties", "location"),
-        listOf("NewPlayer", "properties", "location"),
-        listOf("EditPlayer", "properties", "location"),
+        schemas
     )
 
     schemas.entries.forEach { (schemaName, schema) ->
         val properties = schema["properties"] as MutableMap<String, MutableMap<String, *>>?
+        val required = schema["required"] as MutableList<String>?
         properties?.let {
             // rename mongo objectId
             it["objectId"]?.let { objectId ->
                 it["_id"] = objectId
                 it.remove("objectId")
+                required?.add("_id")
             }
 
             it.values.forEach { property ->
@@ -50,7 +48,6 @@ internal fun modifyOpenApiYaml(map: Map<*, *>) {
             }
 //            it.entries.removeIf { (key, value) -> (value as MutableMap<String, String>)["\$ref"] == "#/components/schemas/ObjectId" }
         }
-        val required = schema["required"] as MutableList<String>?
         required?.apply {
             val index = indexOf("objectId")
             if (index != -1) set(index, "_id")

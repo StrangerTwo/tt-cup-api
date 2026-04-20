@@ -95,8 +95,71 @@ paths:
               examples:
                 Example#1:
                   value: ""
-                Example#2:
+  /place:
+    post:
+      description: "getPlaces"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/GetPlacesRequest"
+        required: true
+      responses:
+        "200":
+          description: "OK"
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/PaginatedQueryResult_Place"
+  /place/by-tournament:
+    post:
+      description: "createPlaceByTournament"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CreatePlaceByTournament"
+        required: true
+      responses:
+        "404":
+          description: "Not Found"
+          content:
+            '*/*':
+              schema:
+                type: "object"
+        "400":
+          description: "Bad Request"
+          content:
+            '*/*':
+              schema:
+                type: "string"
+        "200":
+          description: "OK"
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/ObjectId"
+        "500":
+          description: "Internal Server Error"
+          content:
+            text/plain:
+              schema:
+                type: "string"
+              examples:
+                Example#1:
                   value: ""
+  /place/recommendations:
+    get:
+      description: "getPlaceRecommendations"
+      responses:
+        "200":
+          description: "OK"
+          content:
+            '*/*':
+              schema:
+                type: "array"
+                items:
+                  $ref: "#/components/schemas/TournamentFull"
   /player:
     post:
       description: "getPlayers"
@@ -287,7 +350,16 @@ paths:
           content:
             '*/*':
               schema:
-                $ref: "#/components/schemas/Status"
+                $ref: "#/components/schemas/ObjectId"
+        "500":
+          description: "Internal Server Error"
+          content:
+            text/plain:
+              schema:
+                type: "string"
+              examples:
+                Example#1:
+                  value: ""
   /tournament:
     post:
       description: "getTournaments"
@@ -545,6 +617,83 @@ components:
             $ref: "#/components/schemas/Match"
         pageInfo:
           $ref: "#/components/schemas/PageInfo"
+    GetPlacesRequest:
+      type: "object"
+      properties:
+        search:
+          type: "string"
+          nullable: true
+        location:
+          type: "string"
+          nullable: true
+          enum:
+            - "HAVLICKUV_BROD"
+            - "PRAHA"
+            - "HAVIROV"
+        pageInfo:
+          $ref: "#/components/schemas/PageInfoRequest"
+      required:
+        - "pageInfo"
+    Place:
+      type: "object"
+      properties:
+        uid:
+          type: "string"
+        location:
+          type: "string"
+          nullable: true
+          enum:
+            - "HAVLICKUV_BROD"
+            - "PRAHA"
+            - "HAVIROV"
+        lastUpdate:
+          type: "string"
+          format: "date-time"
+      required:
+        - "uid"
+        - "lastUpdate"
+    PaginatedQueryResult_Place:
+      type: "object"
+      properties:
+        results:
+          type: "array"
+          items:
+            $ref: "#/components/schemas/Place"
+        pageInfo:
+          $ref: "#/components/schemas/PageInfo"
+    CreatePlaceByTournament:
+      type: "object"
+      properties:
+        tournamentId:
+          type: "string"
+        location:
+          type: "string"
+          nullable: true
+          enum:
+            - "HAVLICKUV_BROD"
+            - "PRAHA"
+            - "HAVIROV"
+      required:
+        - "tournamentId"
+    TournamentFull:
+      type: "object"
+      properties:
+        date:
+          type: "string"
+          format: "date"
+        place:
+          type: "string"
+        matches:
+          type: "array"
+          items:
+            $ref: "#/components/schemas/Match"
+        objectId:
+          $ref: "#/components/schemas/ObjectId"
+      required:
+        - "date"
+        - "place"
+        - "matches"
+        - "objectId"
     GetPlayersRequest:
       type: "object"
       properties:
@@ -558,6 +707,11 @@ components:
             - "HAVLICKUV_BROD"
             - "PRAHA"
             - "HAVIROV"
+        uids:
+          type: "array"
+          nullable: true
+          items:
+            type: "string"
         pageInfo:
           $ref: "#/components/schemas/PageInfoRequest"
       required:
@@ -734,25 +888,6 @@ components:
             $ref: "#/components/schemas/Tournament"
         pageInfo:
           $ref: "#/components/schemas/PageInfo"
-    TournamentFull:
-      type: "object"
-      properties:
-        date:
-          type: "string"
-          format: "date"
-        place:
-          type: "string"
-        matches:
-          type: "array"
-          items:
-            $ref: "#/components/schemas/Match"
-        objectId:
-          $ref: "#/components/schemas/ObjectId"
-      required:
-        - "date"
-        - "place"
-        - "matches"
-        - "objectId"
     User:
       type: "object"
       properties:

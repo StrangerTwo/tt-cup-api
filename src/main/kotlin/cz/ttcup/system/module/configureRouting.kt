@@ -6,6 +6,7 @@ import cz.ttcup.context.service.interceptContext
 import cz.ttcup.crawl.routing.crawlRoutes
 import cz.ttcup.match.routing.matchRoutes
 import cz.ttcup.openapi.routing.openApiRouting
+import cz.ttcup.place.routing.placeRoutes
 import cz.ttcup.player.routing.playerRoutes
 import cz.ttcup.tournament.routing.tournamentRoutes
 import io.ktor.http.*
@@ -44,6 +45,9 @@ fun Application.configureRouting() {
             }
             route("crawl") {
                 crawlRoutes()
+            }
+            route("place") {
+                placeRoutes()
             }
             openApiRouting()
             get("{...}") {

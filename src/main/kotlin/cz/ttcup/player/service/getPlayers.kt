@@ -28,6 +28,7 @@ suspend fun getPlayers(request: GetPlayersRequest): PaginatedQueryResult<Player>
                 listOfNotNull(
                     request.search?.let { Player::name contains it },
                     request.location?.let { Player::location eq it },
+                    request.uids?.let { Player::uid `in` it },
                 ).takeIf {
                     it.isNotEmpty()
                 }?.let {
