@@ -17,6 +17,7 @@ import org.bson.conversions.Bson
 suspend inline fun <reified T : Any> MongoCollection<T>.queryPaginated(
     pageInfo: PageInfoRequest,
     filter: Bson? = null,
+    random: Boolean = false,
 ): PaginatedQueryResult<T> {
     val result = this
         .aggregate<IntPaginatedQueryResult>(
@@ -36,8 +37,12 @@ suspend inline fun <reified T : Any> MongoCollection<T>.queryPaginated(
                 Aggregates.facet(
                     Facet(
                         "results",
-                        Aggregates.skip(pageInfo.page * pageInfo.size),
-                        Aggregates.limit(pageInfo.size)
+                        if (random) listOf(
+                            Aggregates.sample(pageInfo.size)
+                        ) else listOf(
+                            Aggregates.skip(pageInfo.page * pageInfo.size),
+                            Aggregates.limit(pageInfo.size)
+                        )
                     ),
                     Facet(
                         "totalElements",

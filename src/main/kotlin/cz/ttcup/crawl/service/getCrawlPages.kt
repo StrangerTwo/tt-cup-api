@@ -32,23 +32,19 @@ suspend fun getCrawlPages(request: GetPagesToCrawlRequest): PaginatedQueryResult
                 )
             }
 
+        val thisYearSchedulesRegex = "https://ttcup.com/schedule/.*${LocalDate.now().year}/.*".toRegex()
         result += database.crawlPages
             .queryPaginated(
                 request.pageInfo,
-                CrawlPage::url regex "https://ttcup.com/schedule/.*${LocalDate.now().year}/.*".toRegex()
+                CrawlPage::url regex thisYearSchedulesRegex
             )
         if (result.results.size >= request.pageInfo.size) return result
 
         result += database.crawlPages
             .queryPaginated(
                 request.pageInfo,
-                CrawlPage::url notRegex "https://ttcup.com/schedule/.*".toRegex()
-            )
-
-        result += database.crawlPages
-            .queryPaginated(
-                request.pageInfo,
-                CrawlPage::url regex "https://ttcup.com/schedule/.*".toRegex()
+                CrawlPage::url notRegex thisYearSchedulesRegex,
+                random = true
             )
 
         return result.copy(
