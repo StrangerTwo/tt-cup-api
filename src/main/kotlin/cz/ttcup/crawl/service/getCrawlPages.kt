@@ -33,16 +33,25 @@ suspend fun getCrawlPages(request: GetPagesToCrawlRequest): PaginatedQueryResult
             }
 
         val thisYearSchedulesRegex = "https://ttcup.com/schedule/.*${LocalDate.now().year}/.*".toRegex()
+        val first10PagesOfPlayersRegex = "https://ttcup.com/players/.*/[1-6]/".toRegex()
         result += database.crawlPages
             .queryPaginated(
                 request.pageInfo,
                 CrawlPage::url regex thisYearSchedulesRegex
             )
+        result += database.crawlPages
+            .queryPaginated(
+                request.pageInfo,
+                CrawlPage::url regex first10PagesOfPlayersRegex
+            )
 
         result += database.crawlPages
             .queryPaginated(
                 request.pageInfo,
-                CrawlPage::url notRegex thisYearSchedulesRegex,
+                Filters.and(
+                    CrawlPage::url notRegex thisYearSchedulesRegex,
+                    CrawlPage::url notRegex first10PagesOfPlayersRegex,
+                ),
                 random = true
             )
 
