@@ -7,6 +7,9 @@ data class PaginatedQueryResult<T>(
     val results: List<T>,
     val pageInfo: PageInfo,
 ) {
+    fun <R> map(fn: (item: T) -> R): PaginatedQueryResult<R> {
+        return PaginatedQueryResult(results.map(fn), pageInfo)
+    }
 }
 
 infix operator fun <T> PaginatedQueryResult<T>.plus(other: PaginatedQueryResult<T>) =

@@ -18,6 +18,10 @@ infix fun <T> KProperty1<*, T>.eq(value: T): Bson {
     return Filters.eq(fieldName, value);
 }
 
+infix fun <T> KProperty1<*, T>.ne(value: T): Bson {
+    return Filters.ne(fieldName, value);
+}
+
 infix fun <T> KProperty1<*, T>.set(value: T): Bson {
     if (value == null) return unset()
     return Updates.set(fieldName, value)

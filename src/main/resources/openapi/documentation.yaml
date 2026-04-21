@@ -271,11 +271,50 @@ paths:
             '*/*':
               schema:
                 $ref: "#/components/schemas/Status"
-  /player/{playerUid}/rivals:
-    get:
+  /player/{playerUid}/rival:
+    post:
       description: "getPlayerRivals"
       parameters:
         - name: "playerUid"
+          in: "path"
+          required: true
+          schema:
+            type: "string"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/GetPlayerRivalsRequest"
+        required: true
+      responses:
+        "400":
+          description: "Bad Request"
+          content:
+            '*/*':
+              schema:
+                type: "string"
+        "404":
+          description: "Not Found"
+          content:
+            '*/*':
+              schema:
+                type: "object"
+        "200":
+          description: "OK"
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/PaginatedQueryResult_RivalMatchesSummary"
+  /player/{playerUid}/rival/{rivalUid}:
+    get:
+      description: "getPlayerRival"
+      parameters:
+        - name: "playerUid"
+          in: "path"
+          required: true
+          schema:
+            type: "string"
+        - name: "rivalUid"
           in: "path"
           required: true
           schema:
@@ -298,9 +337,7 @@ paths:
           content:
             '*/*':
               schema:
-                type: "array"
-                items:
-                  $ref: "#/components/schemas/RivalMatchesSummary"
+                $ref: "#/components/schemas/RivalMatchesSummary"
   /player/{playerUid}/summary:
     get:
       description: "getPlayerMatchesSummary"
@@ -379,34 +416,6 @@ paths:
   /tournament/{tournamentId}:
     get:
       description: "getTournament"
-      parameters:
-        - name: "tournamentId"
-          in: "path"
-          required: true
-          schema:
-            type: "string"
-      responses:
-        "400":
-          description: "Bad Request"
-          content:
-            '*/*':
-              schema:
-                type: "string"
-        "404":
-          description: "Not Found"
-          content:
-            '*/*':
-              schema:
-                type: "object"
-        "200":
-          description: "OK"
-          content:
-            '*/*':
-              schema:
-                $ref: "#/components/schemas/Tournament"
-  /tournament/{tournamentId}/full:
-    get:
-      description: "getTournamentFull"
       parameters:
         - name: "tournamentId"
           in: "path"
@@ -785,37 +794,23 @@ components:
           type: "boolean"
       required:
         - "status"
-    RivalMatchesSummary:
+    GetPlayerRivalsRequest:
       type: "object"
       properties:
-        rivalUid:
+        search:
           type: "string"
-        matchesWon:
-          type: "integer"
-          format: "int32"
-        matchesLost:
-          type: "integer"
-          format: "int32"
-        longestWinStreak:
-          type: "integer"
-          format: "int32"
-        longestLoseStreak:
-          type: "integer"
-          format: "int32"
-        currentWinStreak:
-          type: "integer"
-          format: "int32"
-        currentLoseStreak:
-          type: "integer"
-          format: "int32"
+          nullable: true
+        location:
+          type: "string"
+          nullable: true
+          enum:
+            - "HAVLICKUV_BROD"
+            - "PRAHA"
+            - "HAVIROV"
+        pageInfo:
+          $ref: "#/components/schemas/PageInfoRequest"
       required:
-        - "rivalUid"
-        - "matchesWon"
-        - "matchesLost"
-        - "longestWinStreak"
-        - "longestLoseStreak"
-        - "currentWinStreak"
-        - "currentLoseStreak"
+        - "pageInfo"
     MatchesSummary:
       type: "object"
       properties:
@@ -844,6 +839,28 @@ components:
         - "longestLoseStreak"
         - "currentWinStreak"
         - "currentLoseStreak"
+    RivalMatchesSummary:
+      type: "object"
+      properties:
+        rivalUid:
+          type: "string"
+        rival:
+          nullable: true
+          $ref: "#/components/schemas/Player"
+        matchesSummary:
+          $ref: "#/components/schemas/MatchesSummary"
+      required:
+        - "rivalUid"
+        - "matchesSummary"
+    PaginatedQueryResult_RivalMatchesSummary:
+      type: "object"
+      properties:
+        results:
+          type: "array"
+          items:
+            $ref: "#/components/schemas/RivalMatchesSummary"
+        pageInfo:
+          $ref: "#/components/schemas/PageInfo"
     NewPlayer:
       type: "object"
       properties:

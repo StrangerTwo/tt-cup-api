@@ -1,14 +1,11 @@
 package cz.ttcup.match.model
 
+import cz.ttcup.player.model.Player
 import kotlinx.serialization.Serializable
 
 @Serializable
 data class RivalMatchesSummary(
     val rivalUid: String,
-    val matchesWon: Int,
-    val matchesLost: Int,
-    val longestWinStreak: Int,
-    val longestLoseStreak: Int,
-    val currentWinStreak: Int,
-    val currentLoseStreak: Int,
+    val rival: Player? = null,
+    val matchesSummary: MatchesSummary,
 )

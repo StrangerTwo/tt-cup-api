@@ -17,11 +17,14 @@ import org.bson.conversions.Bson
 suspend inline fun <reified T : Any> MongoCollection<T>.queryPaginated(
     pageInfo: PageInfoRequest,
     filter: Bson? = null,
+    aggregate: List<Bson> = emptyList(),
+    postSortAggregate: List<Bson> = emptyList(),
     random: Boolean = false,
 ): PaginatedQueryResult<T> {
     val result = this
         .aggregate<IntPaginatedQueryResult>(
             listOfNotNull(
+                *aggregate.toTypedArray(),
                 filter?.let { Aggregates.match(it) },
                 pageInfo.sort?.let {
                     Aggregates.sort(
@@ -34,6 +37,7 @@ suspend inline fun <reified T : Any> MongoCollection<T>.queryPaginated(
                         )
                     )
                 },
+                *postSortAggregate.toTypedArray(),
                 Aggregates.facet(
                     Facet(
                         "results",

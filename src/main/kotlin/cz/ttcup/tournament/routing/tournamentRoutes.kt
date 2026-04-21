@@ -1,6 +1,5 @@
 package cz.ttcup.tournament.routing
 
-import cz.ttcup.tournament.context.tournament
 import cz.ttcup.tournament.context.tournamentFull
 import cz.ttcup.tournament.model.GetTournamentsRequest
 import cz.ttcup.tournament.service.getTournaments
@@ -19,10 +18,6 @@ fun Route.tournamentRoutes() {
     route("{tournamentId}") {
         // getTournament
         get {
-            tournament().let { call.respond(it) }
-        }
-        // getTournamentFull
-        get("full") {
             tournamentFull().let { call.respond(it) }
         }
     }

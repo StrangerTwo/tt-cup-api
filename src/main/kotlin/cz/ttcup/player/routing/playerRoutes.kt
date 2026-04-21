@@ -4,6 +4,7 @@ import cz.ttcup.crawl.model.CrawlPage
 import cz.ttcup.crawl.service.saveCrawlPages
 import cz.ttcup.player.context.player
 import cz.ttcup.player.model.EditPlayer
+import cz.ttcup.player.model.GetPlayerRivalsRequest
 import cz.ttcup.player.model.GetPlayersRequest
 import cz.ttcup.player.model.NewPlayer
 import cz.ttcup.player.service.*
@@ -68,12 +69,24 @@ fun Route.playerRoutes() {
             getPlayerMatchesSummary(player)
                 .let { call.respond(it) }
         }
-        // getPlayerRivals
-        get("rivals") {
-            val player = player()
+        route("rival") {
+            // getPlayerRivals
+            post {
+                val player = player()
+                val request = call.receive<GetPlayerRivalsRequest>()
 
-            getPlayerRivals(player)
-                .let { call.respond(it) }
+                getPlayerRivals(player, request)
+                    .let { call.respond(it) }
+            }
+            // getPlayerRival
+            get("{rivalUid}") {
+                val player = player()
+                val rivalUid = call.parameters["rivalUid"] ?: throw IllegalArgumentException("Rival uid not provided")
+                val rival = getPlayer(rivalUid) ?: throw IllegalArgumentException("Rival not found")
+
+                getPlayerRival(player, rival)
+                    .let { call.respond(it) }
+            }
         }
     }
 }
