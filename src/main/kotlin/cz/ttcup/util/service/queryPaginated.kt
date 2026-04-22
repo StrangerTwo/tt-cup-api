@@ -21,6 +21,7 @@ suspend inline fun <reified T : Any> MongoCollection<T>.queryPaginated(
     aggregate: List<Bson> = emptyList(),
     postSortAggregate: List<Bson> = emptyList(),
     random: Boolean = false,
+    logDebug: Boolean = false,
 ): PaginatedQueryResult<T> {
     val result = this
         .aggregate<IntPaginatedQueryResult>(
@@ -65,7 +66,7 @@ suspend inline fun <reified T : Any> MongoCollection<T>.queryPaginated(
                     )
                 )
             ).let {
-                println(it.joinToString(",\n") { it.toBsonDocument().toJson() })
+                if (logDebug) println(it.joinToString(",\n") { it.toBsonDocument().toJson() })
                 it
             },
         ).first()

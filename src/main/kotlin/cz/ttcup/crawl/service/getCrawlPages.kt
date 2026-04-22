@@ -5,12 +5,8 @@ import cz.ttcup.context.service.withDatabase
 import cz.ttcup.crawl.model.CrawlPage
 import cz.ttcup.crawl.model.GetPagesToCrawlRequest
 import cz.ttcup.crawl.schema.crawlPages
-import cz.ttcup.database.util.eq
 import cz.ttcup.database.util.notRegex
 import cz.ttcup.database.util.regex
-import cz.ttcup.place.service.getOutdatedPlaces
-import cz.ttcup.player.model.Player
-import cz.ttcup.player.schema.players
 import cz.ttcup.util.model.PaginatedQueryResult
 import cz.ttcup.util.model.plus
 import cz.ttcup.util.service.queryPaginated
@@ -19,28 +15,21 @@ import kotlin.math.min
 
 suspend fun getCrawlPages(request: GetPagesToCrawlRequest): PaginatedQueryResult<CrawlPage> {
     withDatabase {
-        var result = database.players
+        val newPlayerRegex = "https://ttcup.com/players/[^/]+/$".toRegex()
+        val stisPlayerRegex = "https://stis.ping-pong.cz/hrac-.*".toRegex()
+        val thisYearSchedulesRegex = "https://ttcup.com/schedule/.*${LocalDate.now().year}/.*".toRegex()
+        val firstPagesOfPlayersRegex = "https://ttcup.com/players/.*/[1-6]/".toRegex()
+
+        var result = database.crawlPages
             .queryPaginated(
                 request.pageInfo,
-                Filters.or(
-                    Player::recrawl eq true,
-                    Player::name eq null,
-                )
-            ).let {
-                PaginatedQueryResult(
-                    it.results.map { CrawlPage("https://ttcup.com/players/${it.uid}") },
-                    it.pageInfo
-                )
-            }
-
-        result += PaginatedQueryResult(
-            getOutdatedPlaces().map {
-                CrawlPage(it.updateUrl)
-            }
-        )
-
-        val thisYearSchedulesRegex = "https://ttcup.com/schedule/.*${LocalDate.now().year}/.*".toRegex()
-        val first10PagesOfPlayersRegex = "https://ttcup.com/players/.*/[1-6]/".toRegex()
+                CrawlPage::url regex newPlayerRegex
+            )
+        result += database.crawlPages
+            .queryPaginated(
+                request.pageInfo,
+                CrawlPage::url regex stisPlayerRegex
+            )
         result += database.crawlPages
             .queryPaginated(
                 request.pageInfo,
@@ -49,15 +38,17 @@ suspend fun getCrawlPages(request: GetPagesToCrawlRequest): PaginatedQueryResult
         result += database.crawlPages
             .queryPaginated(
                 request.pageInfo,
-                CrawlPage::url regex first10PagesOfPlayersRegex
+                CrawlPage::url regex firstPagesOfPlayersRegex
             )
 
         result += database.crawlPages
             .queryPaginated(
                 request.pageInfo,
                 Filters.and(
+                    CrawlPage::url notRegex newPlayerRegex,
+                    CrawlPage::url notRegex stisPlayerRegex,
                     CrawlPage::url notRegex thisYearSchedulesRegex,
-                    CrawlPage::url notRegex first10PagesOfPlayersRegex,
+                    CrawlPage::url notRegex firstPagesOfPlayersRegex,
                 ),
                 random = true
             )

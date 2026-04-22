@@ -103,6 +103,10 @@ infix fun <T> KProperty1<*, T>.notRegex(value: Regex): Bson {
     return Document(fieldName, not(BsonRegularExpression(value.toPattern().pattern())))
 }
 
+fun <T> KProperty1<*, T>.exists(): Bson {
+    return Filters.exists(fieldName)
+}
+
 fun <T> KProperty1<*, T>.asc(): Bson {
     return Sorts.ascending(fieldName)
 }

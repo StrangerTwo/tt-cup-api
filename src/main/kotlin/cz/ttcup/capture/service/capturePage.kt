@@ -12,6 +12,11 @@ suspend fun capturePage(capture: CaptureDto) {
         capture.url.startsWith("https://ttcup.com/schedule/") -> {
             captureSchedule(capture, capture.url.substring("https://ttcup.com/players/".length))
         }
+
+        capture.url.startsWith("https://stis.ping-pong.cz/hrac-") -> {
+            capturePlayerStis(capture, capture.url.substring("https://stis.ping-pong.cz/hrac-".length))
+        }
     }
     deleteCrawlPage(capture.url)
 }
+

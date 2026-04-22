@@ -10,7 +10,7 @@ import io.ktor.server.routing.*
 
 fun Route.captureRoutes() {
     // capturePage
-    post() {
+    post {
         val capture = call.receive<CaptureDto>()
 
         logger.info("Received html for url ${capture.url}: ${capture.html.length} chars")

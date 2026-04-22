@@ -16,10 +16,15 @@ suspend fun capturePlayer(capture: CaptureDto, restOfUrl: String) {
     logger.info("Captured player $uid page ${capture.url}, recrawl: $recrawlPages")
 
     val doc = Jsoup.parse(capture.html)
-    doc.selectFirst("h1.h2")?.let { player.name = it.text().trim() }
-    doc.selectFirst(".single-players-info--top--content .red")?.let { player.ranking = it.text().trim().toInt() }
+    val name = doc.selectFirst("h1.h2")?.text()?.trim()
+    val ranking = doc.selectFirst(".single-players-info--top--content .red")?.text()?.trim()?.toInt()
 
-    updatePlayer(player);
+    if (name == null && ranking == null) return;
+    updatePlayer(
+        uid,
+        name = name,
+        ranking = ranking,
+    );
     if (recrawlPages) {
         addTournamentsPagesToCrawl(doc, player)
     }

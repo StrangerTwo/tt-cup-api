@@ -9,16 +9,28 @@ import cz.ttcup.database.util.unset
 import cz.ttcup.player.model.Player
 import cz.ttcup.player.schema.players
 
-suspend fun updatePlayer(player: Player): UpdateResult {
+suspend fun updatePlayer(
+    uid: String,
+    name: String? = null,
+    ranking: Int? = null,
+    elo: Int? = null,
+): UpdateResult {
     withDatabase {
         return database.players
             .updateOne(
-                Player::uid eq player.uid,
-                Updates.combine(
-                    Player::name set player.name,
-                    Player::ranking set player.ranking,
-                    Player::recrawl.unset()
-                )
+                Player::uid eq uid,
+                listOfNotNull(
+                    name?.let { Player::name set it },
+                    ranking?.let { Player::ranking set it },
+                    elo?.let { Player::elo set it },
+                ).takeIf {
+                    it.isNotEmpty()
+                }?.let {
+                    Updates.combine(
+                        *it.toTypedArray(),
+                        Player::recrawl.unset()
+                    )
+                } ?: throw IllegalArgumentException("No fields to update"),
             )
     }
 }

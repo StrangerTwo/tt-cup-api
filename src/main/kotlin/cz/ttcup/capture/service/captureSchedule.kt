@@ -2,7 +2,6 @@ package cz.ttcup.capture.service
 
 import cz.ttcup.capture.model.CaptureDto
 import cz.ttcup.logs.service.logger
-import cz.ttcup.place.service.disablePlace
 import cz.ttcup.util.toLocalDate
 import org.jsoup.Jsoup
 
@@ -15,8 +14,6 @@ suspend fun captureSchedule(capture: CaptureDto, restOfUrl: String) {
 
     if (table != null) {
         captureTournament(table, date, place)
-    } else if (capture.html.contains("404 PAGE NOT FOUND")) {
-        disablePlace(place, date)
     }
 }
 

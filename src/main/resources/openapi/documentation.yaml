@@ -29,6 +29,12 @@ paths:
               $ref: "#/components/schemas/CaptureDto"
         required: true
       responses:
+        "400":
+          description: "Bad Request"
+          content:
+            '*/*':
+              schema:
+                type: "string"
         "200":
           description: "OK"
           content:
@@ -46,7 +52,7 @@ paths:
               schema:
                 $ref: "#/components/schemas/PaginatedQueryResult_CrawlPage"
     post:
-      description: ""
+      description: "postPagesToCrawl"
       requestBody:
         content:
           application/json:
@@ -674,6 +680,9 @@ components:
         lastUpdate:
           type: "string"
           format: "date"
+        disabled:
+          type: "boolean"
+          nullable: true
       required:
         - "uid"
         - "lastUpdate"
