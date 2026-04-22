@@ -16,7 +16,7 @@ suspend fun captureSchedule(capture: CaptureDto, restOfUrl: String) {
     if (table != null) {
         captureTournament(table, date, place)
     } else if (capture.html.contains("404 PAGE NOT FOUND")) {
-        disablePlace(place)
+        disablePlace(place, date)
     }
 }
 

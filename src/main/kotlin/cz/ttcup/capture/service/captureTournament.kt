@@ -2,6 +2,7 @@ package cz.ttcup.capture.service
 
 import cz.ttcup.logs.service.logger
 import cz.ttcup.match.model.Match
+import cz.ttcup.place.service.placeUpdated
 import cz.ttcup.player.service.getPlayers
 import cz.ttcup.tournament.model.Tournament
 import cz.ttcup.tournament.service.saveTournament
@@ -51,4 +52,6 @@ suspend fun captureTournament(table: Element, date: LocalDate, place: String) {
     )
 
     saveTournament(tournament, matches)
+    placeUpdated(place, tournament)
 }
+
