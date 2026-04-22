@@ -15,7 +15,7 @@ suspend fun getPlayerRivals(
 
     return rivalMatchesPage.map { (rivalUid, rival, matches) ->
         RivalMatchesSummary(
-            rivalUid.toString(),
+            rivalUid,
             rival,
             calculateMatchesSummary(matches, player)
         )
