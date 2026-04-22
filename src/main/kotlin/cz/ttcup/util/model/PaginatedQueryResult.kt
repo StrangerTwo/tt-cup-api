@@ -10,6 +10,8 @@ data class PaginatedQueryResult<T>(
     fun <R> map(fn: (item: T) -> R): PaginatedQueryResult<R> {
         return PaginatedQueryResult(results.map(fn), pageInfo)
     }
+
+    constructor(results: List<T>) : this(results, PageInfo(0, results.size, results.size.toLong(), 1))
 }
 
 infix operator fun <T> PaginatedQueryResult<T>.plus(other: PaginatedQueryResult<T>) =

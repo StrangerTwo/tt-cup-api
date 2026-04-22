@@ -67,8 +67,8 @@ infix fun <T> KProperty1<*, T>.gte(value: Any): Bson {
     return Filters.gte(fieldName, value);
 }
 
-infix fun <T> KProperty1<*, T>.lte(value: Any): Bson {
-    return Filters.lte(fieldName, value);
+infix fun <T> KProperty1<*, T>.lt(value: Any): Bson {
+    return Filters.lt(fieldName, value);
 }
 
 infix fun <T> KProperty1<*, T>.el(value: Int): BsonElement {

@@ -9,6 +9,9 @@ import cz.ttcup.place.model.Place
 import cz.ttcup.place.schema.places
 import cz.ttcup.util.model.PaginatedQueryResult
 import cz.ttcup.util.service.queryPaginated
+import kotlinx.coroutines.flow.toList
+import org.bson.BsonDocument
+import org.bson.conversions.Bson
 
 suspend fun getPlaces(request: GetPlacesRequest): PaginatedQueryResult<Place> {
     withDatabase {
@@ -25,4 +28,10 @@ suspend fun getPlaces(request: GetPlacesRequest): PaginatedQueryResult<Place> {
                 }
             )
     }
+}
+
+suspend fun getPlaces(filter: Bson?): List<Place> = withDatabase {
+    return database.places
+        .find(filter ?: BsonDocument())
+        .toList()
 }

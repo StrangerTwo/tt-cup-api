@@ -8,6 +8,7 @@ import cz.ttcup.crawl.schema.crawlPages
 import cz.ttcup.database.util.eq
 import cz.ttcup.database.util.notRegex
 import cz.ttcup.database.util.regex
+import cz.ttcup.place.service.getOutdatedPlaces
 import cz.ttcup.player.model.Player
 import cz.ttcup.player.schema.players
 import cz.ttcup.util.model.PaginatedQueryResult
@@ -31,6 +32,12 @@ suspend fun getCrawlPages(request: GetPagesToCrawlRequest): PaginatedQueryResult
                     it.pageInfo
                 )
             }
+
+        result += PaginatedQueryResult(
+            getOutdatedPlaces().map {
+                CrawlPage(it.updateUrl)
+            }
+        )
 
         val thisYearSchedulesRegex = "https://ttcup.com/schedule/.*${LocalDate.now().year}/.*".toRegex()
         val first10PagesOfPlayersRegex = "https://ttcup.com/players/.*/[1-6]/".toRegex()

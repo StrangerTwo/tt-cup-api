@@ -21,7 +21,7 @@ suspend fun createPlaceFromTournament(request: CreatePlaceByTournament): InsertO
                 Place(
                     uid = tournament.place,
                     location = request.location,
-                    lastUpdate = tournament.matches.maxOf { it.time }
+                    lastUpdate = tournament.matches.maxOf { it.time }.toLocalDate()
                 )
             )
     }

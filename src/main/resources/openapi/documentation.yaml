@@ -151,6 +151,15 @@ paths:
   /place/outdated:
     get:
       description: "getOutdatedPlaces"
+      responses:
+        "200":
+          description: "OK"
+          content:
+            '*/*':
+              schema:
+                type: "array"
+                items:
+                  $ref: "#/components/schemas/OutdatedPlace"
   /place/recommendations:
     post:
       description: "getPlaceRecommendations"
@@ -664,7 +673,7 @@ components:
             - "HAVIROV"
         lastUpdate:
           type: "string"
-          format: "date-time"
+          format: "date"
       required:
         - "uid"
         - "lastUpdate"
@@ -691,6 +700,16 @@ components:
             - "HAVIROV"
       required:
         - "tournamentId"
+    OutdatedPlace:
+      type: "object"
+      properties:
+        place:
+          $ref: "#/components/schemas/Place"
+        updateUrl:
+          type: "string"
+      required:
+        - "place"
+        - "updateUrl"
     GetPlaceRecommendationsRequest:
       type: "object"
       properties:

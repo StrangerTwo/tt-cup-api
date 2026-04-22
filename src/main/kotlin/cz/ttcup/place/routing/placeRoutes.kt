@@ -4,6 +4,7 @@ import cz.ttcup.place.model.CreatePlaceByTournament
 import cz.ttcup.place.model.GetPlaceRecommendationsRequest
 import cz.ttcup.place.model.GetPlacesRequest
 import cz.ttcup.place.service.createPlaceFromTournament
+import cz.ttcup.place.service.getOutdatedPlaces
 import cz.ttcup.place.service.getPlaceRecommendations
 import cz.ttcup.place.service.getPlaces
 import io.ktor.server.request.*
@@ -38,7 +39,8 @@ fun Route.placeRoutes() {
     }
     // getOutdatedPlaces
     get("outdated") {
-
+        getOutdatedPlaces()
+            .let { call.respond(it) }
     }
 }
 
