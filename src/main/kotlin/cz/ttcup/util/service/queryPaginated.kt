@@ -17,6 +17,7 @@ import org.bson.conversions.Bson
 suspend inline fun <reified T : Any> MongoCollection<T>.queryPaginated(
     pageInfo: PageInfoRequest,
     filter: Bson? = null,
+    preFilterAggregate: List<Bson> = emptyList(),
     aggregate: List<Bson> = emptyList(),
     postSortAggregate: List<Bson> = emptyList(),
     random: Boolean = false,
@@ -24,8 +25,9 @@ suspend inline fun <reified T : Any> MongoCollection<T>.queryPaginated(
     val result = this
         .aggregate<IntPaginatedQueryResult>(
             listOfNotNull(
-                *aggregate.toTypedArray(),
+                *preFilterAggregate.toTypedArray(),
                 filter?.let { Aggregates.match(it) },
+                *aggregate.toTypedArray(),
                 pageInfo.sort?.let {
                     Aggregates.sort(
                         Sorts.orderBy(
@@ -62,7 +64,10 @@ suspend inline fun <reified T : Any> MongoCollection<T>.queryPaginated(
                         )
                     )
                 )
-            ),
+            ).let {
+                println(it.joinToString(",\n") { it.toBsonDocument().toJson() })
+                it
+            },
         ).first()
 
     val codec = codecRegistry.get(T::class.java)

@@ -22,7 +22,7 @@ suspend fun getRivalMatches(
     database.getCollection<RivalMatches>(MATCHES)
         .queryPaginated(
             request.pageInfo,
-            aggregate = listOf(
+            preFilterAggregate = listOf(
                 Aggregates.match(Match::playerUids eq player.uid),
                 Aggregates.unwind("$${Match::playerUids.fieldName}"),
                 Aggregates.match(Match::playerUids ne player.uid),
@@ -38,12 +38,12 @@ suspend fun getRivalMatches(
                 ),
             ),
             filter = listOfNotNull(
-                request.search?.let { Player::name contains it },
-                request.location?.let { Player::location eq it },
+                request.search?.let { "rival.${Player::name.fieldName}" contains it },
+                request.location?.let { "rival.${Player::location.fieldName}" eq it },
             ).takeIf {
                 it.isNotEmpty()
             }?.let {
-                Aggregates.match(Filters.and(it))
+                Filters.and(it)
             },
             postSortAggregate = listOf(
                 Document(

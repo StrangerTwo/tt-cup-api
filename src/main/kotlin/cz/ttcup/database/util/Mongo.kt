@@ -18,6 +18,10 @@ infix fun <T> KProperty1<*, T>.eq(value: T): Bson {
     return Filters.eq(fieldName, value);
 }
 
+infix fun String.eq(value: Any): Bson {
+    return Filters.eq(this, value);
+}
+
 infix fun <T> KProperty1<*, T>.ne(value: T): Bson {
     return Filters.ne(fieldName, value);
 }
@@ -41,6 +45,14 @@ infix fun <T> KProperty1<*, T>.contains(value: String): Bson {
 
 infix fun <T> KProperty1<*, T>.regex(value: Regex): Bson {
     return Filters.regex(fieldName, value.toPattern())
+}
+
+infix fun String.contains(value: String): Bson {
+    return this regex ".*$value.*".toRegex(RegexOption.IGNORE_CASE)
+}
+
+infix fun String.regex(value: Regex): Bson {
+    return Filters.regex(this, value.toPattern())
 }
 
 infix fun <T> KProperty1<*, T>.elemMatch(value: Bson): Bson {

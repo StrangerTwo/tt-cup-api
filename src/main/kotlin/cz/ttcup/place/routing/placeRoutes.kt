@@ -1,6 +1,7 @@
 package cz.ttcup.place.routing
 
 import cz.ttcup.place.model.CreatePlaceByTournament
+import cz.ttcup.place.model.GetPlaceRecommendationsRequest
 import cz.ttcup.place.model.GetPlacesRequest
 import cz.ttcup.place.service.createPlaceFromTournament
 import cz.ttcup.place.service.getPlaceRecommendations
@@ -18,8 +19,10 @@ fun Route.placeRoutes() {
             .let { call.respond(it) }
     }
     // getPlaceRecommendations
-    get("recommendations") {
-        getPlaceRecommendations()
+    post("recommendations") {
+        val request = call.receive<GetPlaceRecommendationsRequest>()
+
+        getPlaceRecommendations(request)
             .let { call.respond(it) }
     }
     // createPlaceByTournament
@@ -32,6 +35,10 @@ fun Route.placeRoutes() {
                     it.insertedId?.asObjectId()?.value ?: throw IllegalStateException("Place not created")
                 )
             }
+    }
+    // getOutdatedPlaces
+    get("outdated") {
+
     }
 }
 

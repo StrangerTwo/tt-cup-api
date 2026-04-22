@@ -148,18 +148,25 @@ paths:
               examples:
                 Example#1:
                   value: ""
-  /place/recommendations:
+  /place/outdated:
     get:
+      description: "getOutdatedPlaces"
+  /place/recommendations:
+    post:
       description: "getPlaceRecommendations"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/GetPlaceRecommendationsRequest"
+        required: true
       responses:
         "200":
           description: "OK"
           content:
             '*/*':
               schema:
-                type: "array"
-                items:
-                  $ref: "#/components/schemas/TournamentFull"
+                $ref: "#/components/schemas/PaginatedQueryResult_TournamentFull"
   /player:
     post:
       description: "getPlayers"
@@ -684,6 +691,16 @@ components:
             - "HAVIROV"
       required:
         - "tournamentId"
+    GetPlaceRecommendationsRequest:
+      type: "object"
+      properties:
+        search:
+          type: "string"
+          nullable: true
+        pageInfo:
+          $ref: "#/components/schemas/PageInfoRequest"
+      required:
+        - "pageInfo"
     TournamentFull:
       type: "object"
       properties:
@@ -703,6 +720,15 @@ components:
         - "place"
         - "matches"
         - "objectId"
+    PaginatedQueryResult_TournamentFull:
+      type: "object"
+      properties:
+        results:
+          type: "array"
+          items:
+            $ref: "#/components/schemas/TournamentFull"
+        pageInfo:
+          $ref: "#/components/schemas/PageInfo"
     GetPlayersRequest:
       type: "object"
       properties:
