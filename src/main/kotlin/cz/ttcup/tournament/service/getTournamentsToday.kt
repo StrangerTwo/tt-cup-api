@@ -50,7 +50,7 @@ suspend fun getTournamentsToday(request: GetTournamentsRequest): PaginatedQueryR
                             mapOf(
                                 "from" to TOURNAMENTS,
                                 "localField" to "place.uid",
-                                "foreignField" to Tournament::place,
+                                "foreignField" to Tournament::place.fieldName,
                                 "as" to "tournaments",
                                 "pipeline" to listOf(
                                     Aggregates.match(Tournament::date gte LocalDate.now()),
@@ -63,7 +63,7 @@ suspend fun getTournamentsToday(request: GetTournamentsRequest): PaginatedQueryR
                             Projections.include("place"),
                             Projections.computed(
                                 PlaceTournamentMatches::tournament.fieldName,
-                                Document("\$first", "tournaments")
+                                Document("\$first", "\$tournaments")
                             ),
                         )
                     ),
