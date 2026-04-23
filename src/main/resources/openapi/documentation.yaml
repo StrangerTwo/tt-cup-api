@@ -117,6 +117,68 @@ paths:
             '*/*':
               schema:
                 $ref: "#/components/schemas/PaginatedQueryResult_Place"
+  /place/{placeUid}:
+    get:
+      description: "getPlace"
+      parameters:
+        - name: "placeUid"
+          in: "path"
+          required: true
+          schema:
+            type: "string"
+      responses:
+        "400":
+          description: "Bad Request"
+          content:
+            '*/*':
+              schema:
+                type: "string"
+        "404":
+          description: "Not Found"
+          content:
+            '*/*':
+              schema:
+                type: "object"
+        "200":
+          description: "OK"
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/Place"
+  /place/{placeUid}/enabled:
+    patch:
+      description: "setPlaceEnabled"
+      parameters:
+        - name: "placeUid"
+          in: "path"
+          required: true
+          schema:
+            type: "string"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Status"
+        required: true
+      responses:
+        "400":
+          description: "Bad Request"
+          content:
+            '*/*':
+              schema:
+                type: "string"
+        "404":
+          description: "Not Found"
+          content:
+            '*/*':
+              schema:
+                type: "object"
+        "200":
+          description: "OK"
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/Status"
   /place/by-tournament:
     post:
       description: "createPlaceByTournament"
@@ -695,6 +757,13 @@ components:
             $ref: "#/components/schemas/Place"
         pageInfo:
           $ref: "#/components/schemas/PageInfo"
+    Status:
+      type: "object"
+      properties:
+        status:
+          type: "boolean"
+      required:
+        - "status"
     CreatePlaceByTournament:
       type: "object"
       properties:
@@ -841,13 +910,6 @@ components:
         stisId:
           type: "string"
           nullable: true
-    Status:
-      type: "object"
-      properties:
-        status:
-          type: "boolean"
-      required:
-        - "status"
     GetPlayerRivalsRequest:
       type: "object"
       properties:
