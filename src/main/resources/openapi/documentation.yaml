@@ -525,6 +525,22 @@ paths:
             '*/*':
               schema:
                 $ref: "#/components/schemas/TournamentFull"
+  /tournament/today:
+    post:
+      description: "getTournamentsToday"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/GetTournamentsRequest"
+        required: true
+      responses:
+        "200":
+          description: "OK"
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/PaginatedQueryResult_PlaceTournamentMatches"
   /user:
     get:
       description: "getUser"
@@ -994,6 +1010,13 @@ components:
     GetTournamentsRequest:
       type: "object"
       properties:
+        location:
+          type: "string"
+          nullable: true
+          enum:
+            - "HAVLICKUV_BROD"
+            - "PRAHA"
+            - "HAVIROV"
         pageInfo:
           $ref: "#/components/schemas/PageInfoRequest"
       required:
@@ -1019,6 +1042,30 @@ components:
           type: "array"
           items:
             $ref: "#/components/schemas/Tournament"
+        pageInfo:
+          $ref: "#/components/schemas/PageInfo"
+    PlaceTournamentMatches:
+      type: "object"
+      properties:
+        place:
+          $ref: "#/components/schemas/Place"
+        tournament:
+          nullable: true
+          $ref: "#/components/schemas/Tournament"
+        matches:
+          type: "array"
+          items:
+            $ref: "#/components/schemas/Match"
+      required:
+        - "place"
+        - "matches"
+    PaginatedQueryResult_PlaceTournamentMatches:
+      type: "object"
+      properties:
+        results:
+          type: "array"
+          items:
+            $ref: "#/components/schemas/PlaceTournamentMatches"
         pageInfo:
           $ref: "#/components/schemas/PageInfo"
     User:
