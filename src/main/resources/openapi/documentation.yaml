@@ -350,7 +350,7 @@ paths:
           content:
             '*/*':
               schema:
-                $ref: "#/components/schemas/PaginatedQueryResult_TournamentFull"
+                $ref: "#/components/schemas/PaginatedQueryResult_TournamentMatches"
   /player:
     post:
       description: "getPlayers"
@@ -1019,33 +1019,25 @@ components:
         - "date"
         - "place"
         - "objectId"
-    TournamentFull:
+    TournamentMatches:
       type: "object"
       properties:
-        place:
-          nullable: true
-          $ref: "#/components/schemas/Place"
         tournament:
           $ref: "#/components/schemas/Tournament"
         matches:
           type: "array"
           items:
             $ref: "#/components/schemas/Match"
-        bets:
-          type: "array"
-          items:
-            $ref: "#/components/schemas/Bet"
       required:
         - "tournament"
         - "matches"
-        - "bets"
-    PaginatedQueryResult_TournamentFull:
+    PaginatedQueryResult_TournamentMatches:
       type: "object"
       properties:
         results:
           type: "array"
           items:
-            $ref: "#/components/schemas/TournamentFull"
+            $ref: "#/components/schemas/TournamentMatches"
         pageInfo:
           $ref: "#/components/schemas/PageInfo"
     GetPlayersRequest:
@@ -1236,6 +1228,26 @@ components:
             $ref: "#/components/schemas/Tournament"
         pageInfo:
           $ref: "#/components/schemas/PageInfo"
+    TournamentFull:
+      type: "object"
+      properties:
+        place:
+          nullable: true
+          $ref: "#/components/schemas/Place"
+        tournament:
+          $ref: "#/components/schemas/Tournament"
+        matches:
+          type: "array"
+          items:
+            $ref: "#/components/schemas/Match"
+        bets:
+          type: "array"
+          items:
+            $ref: "#/components/schemas/Bet"
+      required:
+        - "tournament"
+        - "matches"
+        - "bets"
     TournamentToday:
       type: "object"
       properties:
