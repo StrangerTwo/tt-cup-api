@@ -1,6 +1,7 @@
 package cz.ttcup.system.module
 
 import cz.ttcup.admin.routing.userRoutes
+import cz.ttcup.bet.routing.betRoutes
 import cz.ttcup.capture.routing.captureRoutes
 import cz.ttcup.context.service.interceptContext
 import cz.ttcup.crawl.routing.crawlRoutes
@@ -48,6 +49,9 @@ fun Application.configureRouting() {
             }
             route("place") {
                 placeRoutes()
+            }
+            route("bet") {
+                betRoutes()
             }
             openApiRouting()
             get("{...}") {

@@ -33,3 +33,7 @@ fun LocalTime.toString(pattern: String): String {
 fun LocalDate.toString(pattern: String): String {
     return this.format(DateTimeFormatter.ofPattern(pattern).withZone(ZoneId.of("Europe/Prague")))
 }
+
+fun LocalDateTime.toString(pattern: String): String {
+    return this.format(DateTimeFormatter.ofPattern(pattern).withZone(ZoneId.of("Europe/Prague")))
+}

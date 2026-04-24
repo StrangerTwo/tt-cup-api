@@ -1,5 +1,6 @@
 package cz.ttcup.openapi.service
 
+import cz.ttcup.bet.model.BetType
 import cz.ttcup.player.model.Location
 
 internal fun modifyOpenApiYaml(map: Map<*, *>) {
@@ -29,6 +30,9 @@ internal fun modifyOpenApiYaml(map: Map<*, *>) {
         )
 
     createCustomEnum<Location>(
+        schemas
+    )
+    createCustomEnum<BetType>(
         schemas
     )
 

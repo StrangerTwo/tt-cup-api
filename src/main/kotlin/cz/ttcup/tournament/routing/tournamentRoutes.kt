@@ -16,18 +16,18 @@ fun Route.tournamentRoutes() {
         getTournaments(request)
             .let { call.respond(it) }
     }
+    route("{tournamentId}") {
+        // getTournament
+        get {
+            tournamentFull().let { call.respond(it) }
+        }
+    }
     // getTournamentsToday
     post("today") {
         val request = call.receive<GetTournamentsRequest>()
 
         getTournamentsToday(request)
             .let { call.respond(it) }
-    }
-    route("{tournamentId}") {
-        // getTournament
-        get {
-            tournamentFull().let { call.respond(it) }
-        }
     }
 }
 

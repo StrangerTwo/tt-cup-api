@@ -7,10 +7,12 @@ import cz.ttcup.player.service.getPlayers
 import cz.ttcup.tournament.model.Tournament
 import cz.ttcup.tournament.service.saveTournament
 import cz.ttcup.util.toLocalTime
+import org.bson.types.ObjectId
 import org.jsoup.nodes.Element
 import java.time.LocalDate
 
 suspend fun captureTournament(table: Element, date: LocalDate, place: String) {
+    val tournamentId = ObjectId()
     val matches = table.select("tr:not(.table-date)").mapNotNull { row ->
         val time = row.child(1).text().trim().toLocalTime("HH:mm")
 
@@ -39,14 +41,14 @@ suspend fun captureTournament(table: Element, date: LocalDate, place: String) {
         return@mapNotNull Match(
             date.atTime(time),
             listOf(player1Uid, player2Uid),
-            sets, points
+            sets, points, tournamentId, ObjectId()
         );
     }
 
     val players = getPlayers(matches.flatMap { it.playerUids })
     if (players.isEmpty()) return;
 
-    val tournament = Tournament(date, place);
+    val tournament = Tournament(date, place, tournamentId);
     logger.info(
         "Saving tournament ${tournament.date}/${tournament.place} for players ${players.joinToString(", ") { it.uid }}"
     )

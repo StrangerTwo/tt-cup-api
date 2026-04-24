@@ -8,5 +8,5 @@ import io.ktor.server.routing.*
 suspend fun RoutingContext.player(): Player {
     val playerUid = call.parameters["playerUid"] ?: throw IllegalArgumentException("playerUid can't be null")
 
-    return getPlayer(playerUid) ?: throw NotFoundException()
+    return getPlayer(playerUid) ?: throw NotFoundException("Player not found")
 }

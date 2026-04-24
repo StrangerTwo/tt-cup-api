@@ -7,10 +7,12 @@ import cz.ttcup.tournament.schema.tournaments
 import kotlinx.coroutines.flow.firstOrNull
 import org.bson.types.ObjectId
 
-suspend fun getTournament(tournamentId: String): Tournament? {
+suspend fun getTournament(tournamentId: String): Tournament? = getTournament(ObjectId(tournamentId))
+
+suspend fun getTournament(tournamentId: ObjectId): Tournament? {
     withDatabase {
         return database.tournaments
-            .find(Tournament::objectId eq ObjectId(tournamentId))
+            .find(Tournament::objectId eq tournamentId)
             .firstOrNull()
     }
 }

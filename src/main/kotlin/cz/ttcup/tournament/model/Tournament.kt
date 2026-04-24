@@ -15,5 +15,5 @@ data class Tournament(
 
     @SerialName("_id")
     @Serializable(with = ObjectIdSerializer::class)
-    val objectId: ObjectId? = null
+    val objectId: ObjectId
 )

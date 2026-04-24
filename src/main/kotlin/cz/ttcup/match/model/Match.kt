@@ -16,11 +16,11 @@ data class Match(
     val points: List<String>? = null,
 
     @Serializable(with = ObjectIdSerializer::class)
-    val tournamentId: ObjectId? = null,
+    val tournamentId: ObjectId,
 
     @SerialName("_id")
     @Serializable(with = ObjectIdSerializer::class)
-    val objectId: ObjectId? = null
+    val objectId: ObjectId
 ) {
     fun isWin(playerUid: String): Boolean? {
         return if (playerUids.first() == playerUid)

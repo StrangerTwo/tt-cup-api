@@ -19,6 +19,113 @@ paths:
               examples:
                 Example#1:
                   value: ""
+  /bet:
+    post:
+      description: "getBets"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/GetBetsRequest"
+        required: true
+      responses:
+        "200":
+          description: "OK"
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/PaginatedQueryResult_Bet"
+  /bet/{matchId}:
+    get:
+      description: "getBet"
+      parameters:
+        - name: "matchId"
+          in: "path"
+          required: true
+          schema:
+            type: "string"
+      responses:
+        "400":
+          description: "Bad Request"
+          content:
+            '*/*':
+              schema:
+                type: "string"
+        "404":
+          description: "Not Found"
+          content:
+            '*/*':
+              schema:
+                type: "object"
+        "200":
+          description: "OK"
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/Bet"
+    patch:
+      description: "setBet"
+      parameters:
+        - name: "matchId"
+          in: "path"
+          required: true
+          schema:
+            type: "string"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/NewBet"
+        required: true
+      responses:
+        "400":
+          description: "Bad Request"
+          content:
+            '*/*':
+              schema:
+                type: "string"
+        "404":
+          description: "Not Found"
+          content:
+            '*/*':
+              schema:
+                type: "object"
+        "200":
+          description: "OK"
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/Bet"
+  /bet/{tournamentId}:
+    get:
+      description: "getTournamentBets"
+      parameters:
+        - name: "tournamentId"
+          in: "path"
+          required: true
+          schema:
+            type: "string"
+      responses:
+        "400":
+          description: "Bad Request"
+          content:
+            '*/*':
+              schema:
+                type: "string"
+        "404":
+          description: "Not Found"
+          content:
+            '*/*':
+              schema:
+                type: "object"
+        "200":
+          description: "OK"
+          content:
+            '*/*':
+              schema:
+                type: "array"
+                items:
+                  $ref: "#/components/schemas/Bet"
   /capture:
     post:
       description: "capturePage"
@@ -540,7 +647,7 @@ paths:
           content:
             '*/*':
               schema:
-                $ref: "#/components/schemas/PaginatedQueryResult_PlaceTournamentMatches"
+                $ref: "#/components/schemas/PaginatedQueryResult_TournamentToday"
   /user:
     get:
       description: "getUser"
@@ -581,23 +688,95 @@ paths:
                   value: ""
 components:
   schemas:
-    CaptureDto:
+    PageInfoRequest:
       type: "object"
       properties:
-        url:
-          type: "string"
-        html:
-          type: "string"
+        page:
+          type: "integer"
+          format: "int32"
+        size:
+          type: "integer"
+          format: "int32"
+          default: "20"
+        sort:
+          type: "array"
+          nullable: true
+          items:
+            type: "string"
       required:
-        - "url"
-        - "html"
-    CrawlPage:
+        - "page"
+        - "size"
+    GetBetsRequest:
       type: "object"
       properties:
-        url:
+        location:
           type: "string"
+          nullable: true
+          enum:
+            - "HAVLICKUV_BROD"
+            - "PRAHA"
+            - "HAVIROV"
+        tournamentId:
+          type: "string"
+          nullable: true
+        matchId:
+          type: "string"
+          nullable: true
+        playerUids:
+          type: "array"
+          nullable: true
+          items:
+            type: "string"
+        type:
+          type: "string"
+          nullable: true
+          enum:
+            - "NO_BET"
+            - "WIN_1"
+            - "WIN_2"
+        pageInfo:
+          $ref: "#/components/schemas/PageInfoRequest"
       required:
-        - "url"
+        - "pageInfo"
+    ObjectId:
+      type: "object"
+      properties:
+        timestamp:
+          type: "integer"
+          format: "int32"
+          nullable: true
+    Bet:
+      type: "object"
+      properties:
+        location:
+          type: "string"
+          nullable: true
+          enum:
+            - "HAVLICKUV_BROD"
+            - "PRAHA"
+            - "HAVIROV"
+        tournamentId:
+          $ref: "#/components/schemas/ObjectId"
+        matchId:
+          $ref: "#/components/schemas/ObjectId"
+        playerUids:
+          type: "array"
+          items:
+            type: "string"
+        type:
+          type: "string"
+          enum:
+            - "NO_BET"
+            - "WIN_1"
+            - "WIN_2"
+        objectId:
+          $ref: "#/components/schemas/ObjectId"
+      required:
+        - "tournamentId"
+        - "matchId"
+        - "playerUids"
+        - "type"
+        - "objectId"
     PageInfo:
       type: "object"
       properties:
@@ -634,6 +813,43 @@ components:
       required:
         - "results"
         - "pageInfo"
+    PaginatedQueryResult_Bet:
+      type: "object"
+      properties:
+        results:
+          type: "array"
+          items:
+            $ref: "#/components/schemas/Bet"
+        pageInfo:
+          $ref: "#/components/schemas/PageInfo"
+    NewBet:
+      type: "object"
+      properties:
+        type:
+          type: "string"
+          enum:
+            - "NO_BET"
+            - "WIN_1"
+            - "WIN_2"
+      required:
+        - "type"
+    CaptureDto:
+      type: "object"
+      properties:
+        url:
+          type: "string"
+        html:
+          type: "string"
+      required:
+        - "url"
+        - "html"
+    CrawlPage:
+      type: "object"
+      properties:
+        url:
+          type: "string"
+      required:
+        - "url"
     PaginatedQueryResult_CrawlPage:
       type: "object"
       properties:
@@ -643,24 +859,6 @@ components:
             $ref: "#/components/schemas/CrawlPage"
         pageInfo:
           $ref: "#/components/schemas/PageInfo"
-    PageInfoRequest:
-      type: "object"
-      properties:
-        page:
-          type: "integer"
-          format: "int32"
-        size:
-          type: "integer"
-          format: "int32"
-          default: "20"
-        sort:
-          type: "array"
-          nullable: true
-          items:
-            type: "string"
-      required:
-        - "page"
-        - "size"
     GetPagesToCrawlRequest:
       type: "object"
       properties:
@@ -680,13 +878,6 @@ components:
           $ref: "#/components/schemas/PageInfoRequest"
       required:
         - "pageInfo"
-    ObjectId:
-      type: "object"
-      properties:
-        timestamp:
-          type: "integer"
-          format: "int32"
-          nullable: true
     Match:
       type: "object"
       properties:
@@ -709,14 +900,14 @@ components:
           items:
             type: "string"
         tournamentId:
-          nullable: true
           $ref: "#/components/schemas/ObjectId"
         objectId:
-          nullable: true
           $ref: "#/components/schemas/ObjectId"
       required:
         - "time"
         - "playerUids"
+        - "tournamentId"
+        - "objectId"
     PaginatedQueryResult_Match:
       type: "object"
       properties:
@@ -757,7 +948,7 @@ components:
             - "HAVIROV"
         lastUpdate:
           type: "string"
-          format: "date"
+          format: "date-time"
         disabled:
           type: "boolean"
           nullable: true
@@ -814,7 +1005,7 @@ components:
           $ref: "#/components/schemas/PageInfoRequest"
       required:
         - "pageInfo"
-    TournamentFull:
+    Tournament:
       type: "object"
       properties:
         date:
@@ -822,17 +1013,32 @@ components:
           format: "date"
         place:
           type: "string"
-        matches:
-          type: "array"
-          items:
-            $ref: "#/components/schemas/Match"
         objectId:
           $ref: "#/components/schemas/ObjectId"
       required:
         - "date"
         - "place"
-        - "matches"
         - "objectId"
+    TournamentFull:
+      type: "object"
+      properties:
+        place:
+          nullable: true
+          $ref: "#/components/schemas/Place"
+        tournament:
+          $ref: "#/components/schemas/Tournament"
+        matches:
+          type: "array"
+          items:
+            $ref: "#/components/schemas/Match"
+        bets:
+          type: "array"
+          items:
+            $ref: "#/components/schemas/Bet"
+      required:
+        - "tournament"
+        - "matches"
+        - "bets"
     PaginatedQueryResult_TournamentFull:
       type: "object"
       properties:
@@ -1021,20 +1227,6 @@ components:
           $ref: "#/components/schemas/PageInfoRequest"
       required:
         - "pageInfo"
-    Tournament:
-      type: "object"
-      properties:
-        date:
-          type: "string"
-          format: "date"
-        place:
-          type: "string"
-        objectId:
-          nullable: true
-          $ref: "#/components/schemas/ObjectId"
-      required:
-        - "date"
-        - "place"
     PaginatedQueryResult_Tournament:
       type: "object"
       properties:
@@ -1044,7 +1236,7 @@ components:
             $ref: "#/components/schemas/Tournament"
         pageInfo:
           $ref: "#/components/schemas/PageInfo"
-    PlaceTournamentMatches:
+    TournamentToday:
       type: "object"
       properties:
         place:
@@ -1056,16 +1248,21 @@ components:
           type: "array"
           items:
             $ref: "#/components/schemas/Match"
+        bets:
+          type: "array"
+          items:
+            $ref: "#/components/schemas/Bet"
       required:
         - "place"
         - "matches"
-    PaginatedQueryResult_PlaceTournamentMatches:
+        - "bets"
+    PaginatedQueryResult_TournamentToday:
       type: "object"
       properties:
         results:
           type: "array"
           items:
-            $ref: "#/components/schemas/PlaceTournamentMatches"
+            $ref: "#/components/schemas/TournamentToday"
         pageInfo:
           $ref: "#/components/schemas/PageInfo"
     User:
