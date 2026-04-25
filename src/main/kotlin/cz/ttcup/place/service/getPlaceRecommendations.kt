@@ -53,7 +53,6 @@ suspend fun getPlaceRecommendations(request: GetPlaceRecommendationsRequest): Pa
                         TournamentMatches::matches.fieldName,
                     )
                 ),
-                logDebug = true,
             )
     }
 }

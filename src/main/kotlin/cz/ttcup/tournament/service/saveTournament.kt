@@ -1,13 +1,11 @@
 package cz.ttcup.tournament.service
 
-import com.mongodb.client.model.Filters
-import com.mongodb.client.model.FindOneAndUpdateOptions
-import com.mongodb.client.model.ReturnDocument
+import com.mongodb.client.model.*
 import cz.ttcup.context.service.withDatabase
+import cz.ttcup.crawl.schema.crawlPages
 import cz.ttcup.database.util.eq
 import cz.ttcup.database.util.set
 import cz.ttcup.match.model.Match
-import cz.ttcup.match.schema.matches
 import cz.ttcup.tournament.model.Tournament
 import cz.ttcup.tournament.schema.tournaments
 
@@ -25,13 +23,22 @@ suspend fun saveTournament(tournament: Tournament, matches: List<Match>) {
                     .returnDocument(ReturnDocument.AFTER)
             )!!.objectId!!
 
-        database.matches
-            .deleteMany(
-                Match::tournamentId eq tournamentId,
-            )
-        database.matches
-            .insertMany(
-                matches.map { it.copy(tournamentId = tournamentId) }
+        database.crawlPages
+            .bulkWrite(
+                matches
+                    .map { it.copy(tournamentId = tournamentId) }
+                    .map {
+                        UpdateOneModel(
+                            Match::tournamentId eq tournamentId,
+                            Updates.combine(
+                                Match::sets set it.sets,
+                                Match::points set it.points,
+                                Match::playerUids set it.playerUids,
+                                Match::time set it.time,
+                            ),
+                            UpdateOptions().upsert(true)
+                        )
+                    }
             )
     }
 }
