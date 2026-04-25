@@ -4,10 +4,7 @@ import com.mongodb.client.model.Accumulators
 import com.mongodb.client.model.Aggregates
 import com.mongodb.client.model.Field
 import cz.ttcup.context.service.withDatabase
-import cz.ttcup.database.util.contains
-import cz.ttcup.database.util.desc
-import cz.ttcup.database.util.exists
-import cz.ttcup.database.util.fieldName
+import cz.ttcup.database.util.*
 import cz.ttcup.match.model.Match
 import cz.ttcup.match.schema.MATCHES
 import cz.ttcup.place.model.GetPlaceRecommendationsRequest
@@ -33,7 +30,7 @@ suspend fun getPlaceRecommendations(request: GetPlaceRecommendationsRequest): Pa
                         "$${Tournament::place.fieldName}",
                         Accumulators.first(TournamentMatches::tournament.fieldName, "\$\$ROOT")
                     ),
-                    Aggregates.lookup(
+                    lookup(
                         PLACES,
                         "tournament.${Tournament::place.fieldName}",
                         Place::uid.fieldName,
@@ -46,11 +43,14 @@ suspend fun getPlaceRecommendations(request: GetPlaceRecommendationsRequest): Pa
                         )
                     ),
                     Aggregates.match(TournamentFull::place.exists(false)),
-                    Aggregates.lookup(
+                    lookup(
                         MATCHES,
                         "tournament.${Tournament::objectId.fieldName}",
                         Match::tournamentId.fieldName,
                         TournamentMatches::matches.fieldName,
+                        listOf(
+                            Aggregates.sort(Match::time.asc())
+                        )
                     )
                 ),
             )

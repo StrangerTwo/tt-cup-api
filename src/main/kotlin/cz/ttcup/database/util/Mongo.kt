@@ -151,3 +151,24 @@ fun not(value: Any): Document {
         value
     )
 }
+
+fun lookup(
+    from: String,
+    localField: String,
+    foreignField: String,
+    `as`: String,
+    pipeline: List<Bson>? = null
+): Document = Document(
+    "\$lookup",
+    Document(
+        mutableMapOf<String, Any>(
+            "from" to from,
+            "localField" to localField,
+            "foreignField" to foreignField,
+            "as" to `as`,
+        ).let {
+            pipeline?.let { pipeline -> it.put("pipeline", pipeline) }
+            it
+        }
+    )
+)

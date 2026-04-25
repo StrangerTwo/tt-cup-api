@@ -7,10 +7,7 @@ import com.mongodb.client.model.Projections
 import cz.ttcup.bet.model.Bet
 import cz.ttcup.bet.schema.BETS
 import cz.ttcup.context.service.withDatabase
-import cz.ttcup.database.util.eq
-import cz.ttcup.database.util.fieldName
-import cz.ttcup.database.util.gte
-import cz.ttcup.database.util.ne
+import cz.ttcup.database.util.*
 import cz.ttcup.match.model.Match
 import cz.ttcup.match.schema.MATCHES
 import cz.ttcup.place.model.Place
@@ -47,18 +44,13 @@ suspend fun getTournamentsToday(request: GetTournamentsRequest): PaginatedQueryR
                     )
                 },
                 postSortAggregate = listOf(
-                    Document(
-                        "\$lookup",
-                        Document(
-                            mapOf(
-                                "from" to TOURNAMENTS,
-                                "localField" to "place.${Place::uid.fieldName}",
-                                "foreignField" to Tournament::place.fieldName,
-                                "as" to TournamentToday::tournament.fieldName,
-                                "pipeline" to listOf(
-                                    Aggregates.match(Tournament::date gte LocalDate.now()),
-                                )
-                            )
+                    lookup(
+                        TOURNAMENTS,
+                        "place.${Place::uid.fieldName}",
+                        Tournament::place.fieldName,
+                        TournamentToday::tournament.fieldName,
+                        listOf(
+                            Aggregates.match(Tournament::date gte LocalDate.now()),
                         )
                     ),
                     Aggregates.addFields(
@@ -67,13 +59,16 @@ suspend fun getTournamentsToday(request: GetTournamentsRequest): PaginatedQueryR
                             Document("\$first", "$${TournamentToday::tournament.fieldName}")
                         )
                     ),
-                    Aggregates.lookup(
+                    lookup(
                         MATCHES,
                         "tournament.${Tournament::objectId.fieldName}",
                         Match::tournamentId.fieldName,
                         TournamentToday::matches.fieldName,
+                        listOf(
+                            Aggregates.sort(Match::time.asc())
+                        )
                     ),
-                    Aggregates.lookup(
+                    lookup(
                         BETS,
                         "tournament.${Tournament::objectId.fieldName}",
                         Bet::tournamentId.fieldName,

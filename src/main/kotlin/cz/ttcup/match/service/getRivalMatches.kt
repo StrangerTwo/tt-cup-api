@@ -13,7 +13,6 @@ import cz.ttcup.player.model.Player
 import cz.ttcup.player.schema.PLAYERS
 import cz.ttcup.util.model.PaginatedQueryResult
 import cz.ttcup.util.service.queryPaginated
-import org.bson.Document
 
 suspend fun getRivalMatches(
     request: GetPlayerRivalsRequest,
@@ -27,7 +26,7 @@ suspend fun getRivalMatches(
                 Aggregates.unwind("$${Match::playerUids.fieldName}"),
                 Aggregates.match(Match::playerUids ne player.uid),
                 Aggregates.group("$${Match::playerUids.fieldName}"),
-                Aggregates.lookup(
+                lookup(
                     PLAYERS,
                     "_id",
                     Player::uid.fieldName,
@@ -46,19 +45,14 @@ suspend fun getRivalMatches(
                 Filters.and(it)
             },
             postSortAggregate = listOf(
-                Document(
-                    "\$lookup",
-                    Document(
-                        mapOf(
-                            "from" to MATCHES,
-                            "localField" to "rival.uid",
-                            "foreignField" to Match::playerUids.fieldName,
-                            "as" to "matches",
-                            "pipeline" to listOf(
-                                Aggregates.match(Match::playerUids eq player.uid),
-                                Aggregates.sort(Match::time.asc())
-                            )
-                        )
+                lookup(
+                    MATCHES,
+                    "rival.uid",
+                    Match::playerUids.fieldName,
+                    RivalMatches::matches.fieldName,
+                    listOf(
+                        Aggregates.match(Match::playerUids eq player.uid),
+                        Aggregates.sort(Match::time.asc())
                     )
                 )
             )
