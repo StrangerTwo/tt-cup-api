@@ -40,11 +40,11 @@ fun Route.playerRoutes() {
     route("{playerUid}") {
         // getPlayer
         get {
-            try {
-                player().let { call.respond(it) }
-            } catch (e: Exception) {
-                call.respond(HttpStatusCode.NotFound)
-            }
+            val playerUid = call.parameters["playerUid"] ?: throw IllegalArgumentException("playerUid can't be null")
+
+            getPlayer(playerUid)
+                ?.let { call.respond(it) }
+                ?: call.respond(HttpStatusCode.NotFound)
         }
         // setPlayerFavourite
         patch("favourite") {
@@ -78,13 +78,13 @@ fun Route.playerRoutes() {
                 getPlayerRivals(player, request)
                     .let { call.respond(it) }
             }
-            // getPlayerRival
+            // getRivalrySummary
             get("{rivalUid}") {
-                val player = player()
+                val playerUid =
+                    call.parameters["playerUid"] ?: throw IllegalArgumentException("playerUid can't be null")
                 val rivalUid = call.parameters["rivalUid"] ?: throw IllegalArgumentException("Rival uid not provided")
-                val rival = getPlayer(rivalUid) ?: throw IllegalArgumentException("Rival not found")
 
-                getPlayerRival(player, rival)
+                getRivalrySummary(playerUid, rivalUid)
                     .let { call.respond(it) }
             }
         }

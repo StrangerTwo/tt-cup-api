@@ -10,7 +10,7 @@ import cz.ttcup.match.context.match
 import cz.ttcup.place.service.getPlace
 import cz.ttcup.tournament.context.tournament
 import cz.ttcup.tournament.service.getTournament
-import io.ktor.server.plugins.*
+import io.ktor.http.*
 import io.ktor.server.request.*
 import io.ktor.server.response.*
 import io.ktor.server.routing.*
@@ -29,7 +29,7 @@ fun Route.betRoutes() {
             val match = match()
             getBet(matchId = match.objectId)
                 ?.let { call.respond(it) }
-                ?: throw NotFoundException("Bet not found")
+                ?: call.respond(HttpStatusCode.NotFound)
         }
         // setBet
         patch {

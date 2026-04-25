@@ -2,13 +2,12 @@ package cz.ttcup.match.service
 
 import cz.ttcup.match.model.Match
 import cz.ttcup.match.model.MatchesSummary
-import cz.ttcup.player.model.Player
 
 fun calculateMatchesSummary(
     matches: List<Match>,
-    player: Player
+    playerUid: String
 ): MatchesSummary {
-    val wins = matches.mapNotNull { it.isWin(player.uid) }
+    val wins = matches.mapNotNull { it.isWin(playerUid) }
 
     var longestWinStreak = 0
     var longestLoseStreak = 0

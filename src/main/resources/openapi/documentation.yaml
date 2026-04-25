@@ -363,18 +363,18 @@ paths:
             '*/*':
               schema:
                 type: "string"
-        "404":
-          description: "Not Found"
-          content:
-            '*/*':
-              schema:
-                type: "object"
         "200":
           description: "OK"
           content:
             '*/*':
               schema:
                 $ref: "#/components/schemas/Player"
+        "404":
+          description: "Not Found"
+          content:
+            '*/*':
+              schema:
+                type: "object"
     patch:
       description: "editPlayer"
       parameters:
@@ -478,7 +478,7 @@ paths:
                 $ref: "#/components/schemas/PaginatedQueryResult_RivalMatchesSummary"
   /player/{playerUid}/rival/{rivalUid}:
     get:
-      description: "getPlayerRival"
+      description: "getRivalrySummary"
       parameters:
         - name: "playerUid"
           in: "path"
@@ -497,18 +497,12 @@ paths:
             '*/*':
               schema:
                 type: "string"
-        "404":
-          description: "Not Found"
-          content:
-            '*/*':
-              schema:
-                type: "object"
         "200":
           description: "OK"
           content:
             '*/*':
               schema:
-                $ref: "#/components/schemas/RivalMatchesSummary"
+                $ref: "#/components/schemas/MatchesSummary"
   /player/{playerUid}/summary:
     get:
       description: "getPlayerMatchesSummary"

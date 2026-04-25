@@ -13,6 +13,8 @@ fun Application.configureDatabaseIndexes() {
         withDatabase {
             database.matches
                 .createIndex(Indexes.ascending(Match::tournamentId.fieldName))
+            database.matches
+                .createIndex(Indexes.ascending(Match::playerUids.fieldName))
         }
     }
 }

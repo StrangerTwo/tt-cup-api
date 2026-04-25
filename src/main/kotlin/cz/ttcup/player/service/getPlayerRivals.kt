@@ -17,7 +17,7 @@ suspend fun getPlayerRivals(
         RivalMatchesSummary(
             rivalUid,
             rival,
-            calculateMatchesSummary(matches, player)
+            calculateMatchesSummary(matches, player.uid)
         )
     }
 }

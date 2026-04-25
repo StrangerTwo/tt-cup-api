@@ -9,5 +9,5 @@ import cz.ttcup.player.model.Player
 
 suspend fun getPlayerMatchesSummary(player: Player): MatchesSummary {
     val matches = getAllMatches(Match::playerUids eq player.uid)
-    return calculateMatchesSummary(matches, player)
+    return calculateMatchesSummary(matches, player.uid)
 }
