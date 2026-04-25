@@ -26,10 +26,12 @@ suspend fun saveTournament(tournament: Tournament, matches: List<Match>) {
         database.matches
             .bulkWrite(
                 matches
-                    .map { it.copy(tournamentId = tournamentId) }
                     .map {
                         UpdateOneModel(
-                            Match::tournamentId eq tournamentId,
+                            Filters.and(
+                                Match::tournamentId eq tournamentId,
+                                Match::time eq it.time,
+                            ),
                             Updates.combine(
                                 Match::sets set it.sets,
                                 Match::points set it.points,

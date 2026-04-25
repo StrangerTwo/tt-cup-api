@@ -33,16 +33,6 @@ fun Application.module() {
 
     configureDatabaseIndexes()
 
-//    runBlocking {
-//        withDatabase {
-//            saveCrawlPages(
-//                getTournaments(done = false).map {
-//                    CrawlPage("https://ttcup.com/schedule/${it.date.toString("dd.MM.yyyy")}/${it.place}/")
-//                }
-//            )
-//        }
-//    }
-
     launchPageCrawlers()
 }
 
