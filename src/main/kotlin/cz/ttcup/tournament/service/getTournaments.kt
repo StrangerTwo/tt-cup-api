@@ -12,6 +12,7 @@ import cz.ttcup.util.service.queryPaginated
 import kotlinx.coroutines.flow.toList
 import org.bson.BsonDocument
 import org.bson.conversions.Bson
+import java.time.LocalDate
 
 suspend fun getTournaments(request: GetTournamentsRequest): PaginatedQueryResult<Tournament> {
     withDatabase {
@@ -32,6 +33,7 @@ suspend fun getTournaments(request: GetTournamentsRequest): PaginatedQueryResult
 suspend fun getTournaments(
     place: String? = null,
     done: Boolean? = null,
+    date: LocalDate? = null,
     sort: Bson? = null,
 ): List<Tournament> {
     withDatabase {
@@ -40,6 +42,7 @@ suspend fun getTournaments(
                 listOfNotNull(
                     place?.let { Tournament::place eq it },
                     done?.let { if (done) Tournament::done eq true else Tournament::done ne true },
+                    date?.let { Tournament::date eq it },
                 ).takeIf {
                     it.isNotEmpty()
                 }?.let {

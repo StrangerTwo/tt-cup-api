@@ -1,9 +1,13 @@
 package cz.ttcup.crawl.module
 
+import cz.ttcup.crawl.model.CrawlPage
+import cz.ttcup.crawl.service.saveCrawlPages
 import cz.ttcup.tournament.service.getTournaments
 import cz.ttcup.util.module.launchRecursive
+import cz.ttcup.util.toString
 import io.ktor.server.application.*
 import java.time.Duration
+import java.time.LocalDate
 import java.time.LocalDateTime
 
 fun Application.launchUndoneTournamentsCrawler() {
@@ -27,14 +31,14 @@ fun Application.launchUndoneTournamentsCrawler() {
             )
         }
     ) {
-        val tournaments = getTournaments(done = false)
+        val tournaments = getTournaments(done = false, date = LocalDate.now())
 
 
-//        saveCrawlPages(
-//            tournaments.map {
-//                CrawlPage("https://ttcup.com/schedule/${it.date.toString("dd.MM.yyyy")}/${it.place}/")
-//            }
-//        )
+        saveCrawlPages(
+            tournaments.map {
+                CrawlPage("https://ttcup.com/schedule/${it.date.toString("dd.MM.yyyy")}/${it.place}/")
+            }
+        )
     }
 }
 

@@ -48,7 +48,9 @@ suspend fun captureTournament(table: Element, date: LocalDate, place: String) {
     val players = getPlayers(matches.flatMap { it.playerUids })
     if (players.isEmpty()) return;
 
-    val isDone = matches.all { it.isDone } && (matches.size == 8 || date.isBefore(LocalDate.now()))
+    val finalsShown = table.select("tr.table-date").any { it.text().contains("Final") }
+
+    val isDone = matches.all { it.isDone } && finalsShown
 
     val tournament = Tournament(date, place, isDone, tournamentId);
     logger.info(
