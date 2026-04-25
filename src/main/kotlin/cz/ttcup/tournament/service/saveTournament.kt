@@ -52,7 +52,7 @@ suspend fun saveTournament(tournament: Tournament, matches: List<Match>) {
                     )
             } else {
                 database.matches
-                    .insertOne(match)
+                    .insertOne(match.copy(tournamentId = tournamentId))
             }
         }
         if (oldMatches.isNotEmpty()) {
