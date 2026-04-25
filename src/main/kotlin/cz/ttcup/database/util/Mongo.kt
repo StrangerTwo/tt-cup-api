@@ -1,8 +1,6 @@
 package cz.ttcup.database.util
 
-import com.mongodb.client.model.Filters
-import com.mongodb.client.model.Sorts
-import com.mongodb.client.model.Updates
+import com.mongodb.client.model.*
 import kotlinx.serialization.SerialName
 import org.bson.*
 import org.bson.conversions.Bson
@@ -69,6 +67,10 @@ infix fun <T> KProperty1<*, T>.gte(value: Any): Bson {
 
 infix fun <T> KProperty1<*, T>.lt(value: Any): Bson {
     return Filters.lt(fieldName, value);
+}
+
+infix fun String.lt(value: Any): Bson {
+    return Filters.lt(this, value);
 }
 
 infix fun <T> KProperty1<*, T>.el(value: Int): BsonElement {
@@ -172,3 +174,25 @@ fun lookup(
         }
     )
 )
+
+fun lookupFirst(
+    from: String,
+    localField: String,
+    foreignField: String,
+    `as`: String,
+    pipeline: List<Bson>? = null
+) = listOf(
+    lookup(
+        from = from,
+        localField = localField,
+        foreignField = foreignField,
+        `as` = `as`,
+        pipeline = pipeline
+    ),
+    Aggregates.addFields(
+        Field(
+            `as`,
+            Document("\$first", "$${`as`}")
+        )
+    ),
+).toTypedArray()

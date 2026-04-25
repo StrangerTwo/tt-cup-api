@@ -2,7 +2,6 @@ package cz.ttcup.match.service
 
 import com.mongodb.client.model.Aggregates
 import com.mongodb.client.model.Filters
-import com.mongodb.client.model.Projections
 import cz.ttcup.context.service.withDatabase
 import cz.ttcup.database.util.*
 import cz.ttcup.match.model.Match
@@ -26,14 +25,11 @@ suspend fun getRivalMatches(
                 Aggregates.unwind("$${Match::playerUids.fieldName}"),
                 Aggregates.match(Match::playerUids ne player.uid),
                 Aggregates.group("$${Match::playerUids.fieldName}"),
-                lookup(
+                *lookupFirst(
                     PLAYERS,
                     "_id",
                     Player::uid.fieldName,
                     "rival"
-                ),
-                Aggregates.project(
-                    Projections.computed("rival", Projections.computed("\$first", "\$rival"))
                 ),
             ),
             filter = listOfNotNull(

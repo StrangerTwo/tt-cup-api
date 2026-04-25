@@ -5,6 +5,6 @@ import io.ktor.server.application.*
 fun Application.launchPageCrawlers() {
     launchOutdatedPlacesCrawler()
 
-    launchUndoneTournamentsCrawler()
+    launchOngoingTournamentsCrawler()
 }
 
