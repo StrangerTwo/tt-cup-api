@@ -39,7 +39,7 @@ suspend fun saveTournament(tournament: Tournament, matches: List<Match>) {
                 oldMatches.remove(oldMatch)
                 database.matches
                     .updateOne(
-                        Match::objectId eq match.objectId,
+                        Match::objectId eq oldMatch.objectId,
                         Updates.combine(
                             Match::sets set match.sets,
                             Match::points set match.points,
