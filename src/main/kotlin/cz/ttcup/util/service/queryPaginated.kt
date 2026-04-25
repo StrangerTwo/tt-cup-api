@@ -18,7 +18,6 @@ suspend inline fun <reified T : Any> MongoCollection<T>.queryPaginated(
     pageInfo: PageInfoRequest,
     filter: Bson? = null,
     preFilterAggregate: List<Bson> = emptyList(),
-    aggregate: List<Bson> = emptyList(),
     postSortAggregate: List<Bson> = emptyList(),
     random: Boolean = false,
     logDebug: Boolean = false,
@@ -28,7 +27,6 @@ suspend inline fun <reified T : Any> MongoCollection<T>.queryPaginated(
             listOfNotNull(
                 *preFilterAggregate.toTypedArray(),
                 filter?.let { Aggregates.match(it) },
-                *aggregate.toTypedArray(),
                 pageInfo.sort?.let {
                     Aggregates.sort(
                         Sorts.orderBy(

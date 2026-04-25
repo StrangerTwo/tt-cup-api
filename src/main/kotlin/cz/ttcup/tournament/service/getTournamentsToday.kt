@@ -1,7 +1,6 @@
 package cz.ttcup.tournament.service
 
 import com.mongodb.client.model.Aggregates
-import com.mongodb.client.model.Field
 import com.mongodb.client.model.Filters
 import com.mongodb.client.model.Projections
 import cz.ttcup.bet.model.Bet
@@ -18,7 +17,6 @@ import cz.ttcup.tournament.model.TournamentToday
 import cz.ttcup.tournament.schema.TOURNAMENTS
 import cz.ttcup.util.model.PaginatedQueryResult
 import cz.ttcup.util.service.queryPaginated
-import org.bson.Document
 import java.time.LocalDate
 
 suspend fun getTournamentsToday(request: GetTournamentsRequest): PaginatedQueryResult<TournamentToday> {
@@ -32,31 +30,14 @@ suspend fun getTournamentsToday(request: GetTournamentsRequest): PaginatedQueryR
                     ),
                     Aggregates.project(
                         Projections.computed(TournamentToday::place.fieldName, "\$\$ROOT")
-                    )
-                ),
-                filter = listOfNotNull(
-                    request.location?.let { "place.${Place::location.fieldName}" eq it },
-                ).takeIf {
-                    it.isNotEmpty()
-                }?.let {
-                    Filters.and(
-                        *it.toTypedArray()
-                    )
-                },
-                postSortAggregate = listOf(
-                    lookup(
+                    ),
+                    *lookupFirst(
                         TOURNAMENTS,
                         "place.${Place::uid.fieldName}",
                         Tournament::place.fieldName,
                         TournamentToday::tournament.fieldName,
                         listOf(
                             Aggregates.match(Tournament::date gte LocalDate.now()),
-                        )
-                    ),
-                    Aggregates.addFields(
-                        Field(
-                            TournamentToday::tournament.fieldName,
-                            Document("\$first", "$${TournamentToday::tournament.fieldName}")
                         )
                     ),
                     lookup(
@@ -75,6 +56,21 @@ suspend fun getTournamentsToday(request: GetTournamentsRequest): PaginatedQueryR
                         TournamentToday::bets.fieldName,
                     ),
                 ),
+                filter = listOfNotNull(
+                    request.location?.let { "place.${Place::location.fieldName}" eq it },
+                    request.from?.let { "place.${Place::location.fieldName}" gte it },
+                    request.to?.let { "place.${Place::location.fieldName}" lte it },
+                    request.done?.let {
+                        if (it) "tournament.${Tournament::done.fieldName}" eq true
+                        else "tournament.${Tournament::done.fieldName}" ne true
+                    },
+                ).takeIf {
+                    it.isNotEmpty()
+                }?.let {
+                    Filters.and(
+                        *it.toTypedArray()
+                    )
+                },
             )
     }
 

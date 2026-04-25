@@ -24,6 +24,10 @@ infix fun <T> KProperty1<*, T>.ne(value: T): Bson {
     return Filters.ne(fieldName, value);
 }
 
+infix fun String.ne(value: Any): Bson {
+    return Filters.ne(this, value);
+}
+
 infix fun <T> KProperty1<*, T>.set(value: T): Bson {
     if (value == null) return unset()
     return Updates.set(fieldName, value)
@@ -63,6 +67,18 @@ infix fun <T> KProperty1<*, T>.all(values: Iterable<Any>): Bson {
 
 infix fun <T> KProperty1<*, T>.gte(value: Any): Bson {
     return Filters.gte(fieldName, value);
+}
+
+infix fun String.gte(value: Any): Bson {
+    return Filters.gte(this, value);
+}
+
+infix fun <T> KProperty1<*, T>.lte(value: Any): Bson {
+    return Filters.lte(fieldName, value);
+}
+
+infix fun String.lte(value: Any): Bson {
+    return Filters.lte(this, value);
 }
 
 infix fun <T> KProperty1<*, T>.lt(value: Any): Bson {
