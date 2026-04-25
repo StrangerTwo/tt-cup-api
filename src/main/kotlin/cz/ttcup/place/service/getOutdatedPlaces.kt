@@ -1,8 +1,8 @@
 package cz.ttcup.place.service
 
 import com.mongodb.client.model.Filters
+import cz.ttcup.database.util.eq
 import cz.ttcup.database.util.lt
-import cz.ttcup.database.util.ne
 import cz.ttcup.place.model.OutdatedPlace
 import cz.ttcup.place.model.Place
 import cz.ttcup.util.toString
@@ -12,15 +12,18 @@ suspend fun getOutdatedPlaces(): List<OutdatedPlace> {
     val places = getPlaces(
         Filters.and(
             Place::lastUpdate lt LocalDate.now().atStartOfDay(),
-            Place::disabled ne true,
+            Place::enabled eq true,
         )
     )
 
-    return places.map {
-        OutdatedPlace(
-            it,
-            "https://ttcup.com/schedule/${it.lastUpdate.plusDays(1).toString("dd.MM.yyyy")}/${it.uid}/"
-        )
-    }
+    return places
+        .mapNotNull {
+            OutdatedPlace(
+                it,
+                "https://ttcup.com/schedule/${
+                    it.lastUpdate?.plusDays(1)?.toString("dd.MM.yyyy") ?: return@mapNotNull null
+                }/${it.uid}/"
+            )
+        }
 }
 

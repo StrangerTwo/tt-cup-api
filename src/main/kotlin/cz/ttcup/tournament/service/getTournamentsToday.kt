@@ -28,7 +28,7 @@ suspend fun getTournamentsToday(request: GetTournamentsRequest): PaginatedQueryR
                 request.pageInfo,
                 preFilterAggregate = listOfNotNull(
                     Aggregates.match(
-                        Place::disabled ne true,
+                        Place::enabled eq true,
                     ),
                     Aggregates.project(
                         Projections.computed(TournamentToday::place.fieldName, "\$\$ROOT")
@@ -75,7 +75,6 @@ suspend fun getTournamentsToday(request: GetTournamentsRequest): PaginatedQueryR
                         TournamentToday::bets.fieldName,
                     ),
                 ),
-                logDebug = true,
             )
     }
 

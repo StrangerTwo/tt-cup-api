@@ -19,7 +19,7 @@ suspend fun getPlaces(request: GetPlacesRequest): PaginatedQueryResult<Place> {
             .queryPaginated(
                 request.pageInfo,
                 listOfNotNull(
-                    request.search?.let { Place::uid contains it },
+                    request.search?.let { Place::name contains it },
                     request.location?.let { Place::location eq it },
                 ).takeIf {
                     it.isNotEmpty()

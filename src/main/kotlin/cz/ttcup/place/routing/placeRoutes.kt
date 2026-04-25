@@ -1,10 +1,12 @@
 package cz.ttcup.place.routing
 
 import cz.ttcup.place.context.place
-import cz.ttcup.place.model.CreatePlaceByTournament
-import cz.ttcup.place.model.GetPlaceRecommendationsRequest
+import cz.ttcup.place.model.EditPlace
 import cz.ttcup.place.model.GetPlacesRequest
-import cz.ttcup.place.service.*
+import cz.ttcup.place.service.editPlace
+import cz.ttcup.place.service.getOutdatedPlaces
+import cz.ttcup.place.service.getPlaces
+import cz.ttcup.place.service.setPlaceEnabled
 import cz.ttcup.util.model.Status
 import io.ktor.http.*
 import io.ktor.server.request.*
@@ -36,24 +38,14 @@ fun Route.placeRoutes() {
             setPlaceEnabled(place, request.status)
                 .let { call.respond(Status(it.modifiedCount == 1L)) }
         }
-    }
-    // getPlaceRecommendations
-    post("recommendations") {
-        val request = call.receive<GetPlaceRecommendationsRequest>()
+        // editPlace
+        patch {
+            val place = place()
+            val request = call.receive<EditPlace>()
 
-        getPlaceRecommendations(request)
-            .let { call.respond(it) }
-    }
-    // createPlaceByTournament
-    post("by-tournament") {
-        val request = call.receive<CreatePlaceByTournament>()
-
-        createPlaceFromTournament(request)
-            .let {
-                call.respond(
-                    it.insertedId?.asObjectId()?.value ?: throw IllegalStateException("Place not created")
-                )
-            }
+            editPlace(place, request)
+                .let { call.respond(Status(it.modifiedCount == 1L)) }
+        }
     }
     // getOutdatedPlaces
     get("outdated") {

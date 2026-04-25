@@ -252,6 +252,39 @@ paths:
             '*/*':
               schema:
                 $ref: "#/components/schemas/Place"
+    patch:
+      description: "editPlace"
+      parameters:
+        - name: "placeUid"
+          in: "path"
+          required: true
+          schema:
+            type: "string"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/EditPlace"
+        required: true
+      responses:
+        "400":
+          description: "Bad Request"
+          content:
+            '*/*':
+              schema:
+                type: "string"
+        "404":
+          description: "Not Found"
+          content:
+            '*/*':
+              schema:
+                type: "object"
+        "200":
+          description: "OK"
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/Status"
   /place/{placeUid}/enabled:
     patch:
       description: "setPlaceEnabled"
@@ -286,43 +319,6 @@ paths:
             '*/*':
               schema:
                 $ref: "#/components/schemas/Status"
-  /place/by-tournament:
-    post:
-      description: "createPlaceByTournament"
-      requestBody:
-        content:
-          application/json:
-            schema:
-              $ref: "#/components/schemas/CreatePlaceByTournament"
-        required: true
-      responses:
-        "404":
-          description: "Not Found"
-          content:
-            '*/*':
-              schema:
-                type: "object"
-        "400":
-          description: "Bad Request"
-          content:
-            '*/*':
-              schema:
-                type: "string"
-        "200":
-          description: "OK"
-          content:
-            '*/*':
-              schema:
-                $ref: "#/components/schemas/ObjectId"
-        "500":
-          description: "Internal Server Error"
-          content:
-            text/plain:
-              schema:
-                type: "string"
-              examples:
-                Example#1:
-                  value: ""
   /place/outdated:
     get:
       description: "getOutdatedPlaces"
@@ -335,22 +331,6 @@ paths:
                 type: "array"
                 items:
                   $ref: "#/components/schemas/OutdatedPlace"
-  /place/recommendations:
-    post:
-      description: "getPlaceRecommendations"
-      requestBody:
-        content:
-          application/json:
-            schema:
-              $ref: "#/components/schemas/GetPlaceRecommendationsRequest"
-        required: true
-      responses:
-        "200":
-          description: "OK"
-          content:
-            '*/*':
-              schema:
-                $ref: "#/components/schemas/PaginatedQueryResult_TournamentMatches"
   /player:
     post:
       description: "getPlayers"
@@ -939,6 +919,11 @@ components:
       properties:
         uid:
           type: "string"
+        name:
+          type: "string"
+        startTime:
+          type: "string"
+          format: "partial-time"
         location:
           type: "string"
           nullable: true
@@ -949,12 +934,14 @@ components:
         lastUpdate:
           type: "string"
           format: "date-time"
-        disabled:
+          nullable: true
+        enabled:
           type: "boolean"
           nullable: true
       required:
         - "uid"
-        - "lastUpdate"
+        - "name"
+        - "startTime"
     PaginatedQueryResult_Place:
       type: "object"
       properties:
@@ -964,18 +951,9 @@ components:
             $ref: "#/components/schemas/Place"
         pageInfo:
           $ref: "#/components/schemas/PageInfo"
-    Status:
+    EditPlace:
       type: "object"
       properties:
-        status:
-          type: "boolean"
-      required:
-        - "status"
-    CreatePlaceByTournament:
-      type: "object"
-      properties:
-        tournamentId:
-          type: "string"
         location:
           type: "string"
           nullable: true
@@ -983,8 +961,13 @@ components:
             - "HAVLICKUV_BROD"
             - "PRAHA"
             - "HAVIROV"
+    Status:
+      type: "object"
+      properties:
+        status:
+          type: "boolean"
       required:
-        - "tournamentId"
+        - "status"
     OutdatedPlace:
       type: "object"
       properties:
@@ -995,51 +978,6 @@ components:
       required:
         - "place"
         - "updateUrl"
-    GetPlaceRecommendationsRequest:
-      type: "object"
-      properties:
-        search:
-          type: "string"
-          nullable: true
-        pageInfo:
-          $ref: "#/components/schemas/PageInfoRequest"
-      required:
-        - "pageInfo"
-    Tournament:
-      type: "object"
-      properties:
-        date:
-          type: "string"
-          format: "date"
-        place:
-          type: "string"
-        objectId:
-          $ref: "#/components/schemas/ObjectId"
-      required:
-        - "date"
-        - "place"
-        - "objectId"
-    TournamentMatches:
-      type: "object"
-      properties:
-        tournament:
-          $ref: "#/components/schemas/Tournament"
-        matches:
-          type: "array"
-          items:
-            $ref: "#/components/schemas/Match"
-      required:
-        - "tournament"
-        - "matches"
-    PaginatedQueryResult_TournamentMatches:
-      type: "object"
-      properties:
-        results:
-          type: "array"
-          items:
-            $ref: "#/components/schemas/TournamentMatches"
-        pageInfo:
-          $ref: "#/components/schemas/PageInfo"
     GetPlayersRequest:
       type: "object"
       properties:
@@ -1219,6 +1157,23 @@ components:
           $ref: "#/components/schemas/PageInfoRequest"
       required:
         - "pageInfo"
+    Tournament:
+      type: "object"
+      properties:
+        date:
+          type: "string"
+          format: "date"
+        place:
+          type: "string"
+        done:
+          type: "boolean"
+          nullable: true
+        objectId:
+          $ref: "#/components/schemas/ObjectId"
+      required:
+        - "date"
+        - "place"
+        - "objectId"
     PaginatedQueryResult_Tournament:
       type: "object"
       properties:

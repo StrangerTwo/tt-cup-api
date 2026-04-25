@@ -12,7 +12,7 @@ suspend fun setPlaceEnabled(place: Place, enabled: Boolean): UpdateResult {
         return database.places
             .updateOne(
                 Place::uid eq place.uid,
-                Place::disabled set (!enabled)
+                Place::enabled set enabled
             )
     }
 }

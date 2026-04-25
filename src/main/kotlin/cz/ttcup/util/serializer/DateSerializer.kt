@@ -1,7 +1,5 @@
 package cz.ttcup.util.serializer
 
-import cz.ttcup.util.toLocalTime
-import cz.ttcup.util.toString
 import kotlinx.serialization.KSerializer
 import kotlinx.serialization.descriptors.PrimitiveKind
 import kotlinx.serialization.descriptors.PrimitiveSerialDescriptor
@@ -9,7 +7,6 @@ import kotlinx.serialization.descriptors.SerialDescriptor
 import kotlinx.serialization.encoding.Decoder
 import kotlinx.serialization.encoding.Encoder
 import org.bson.BsonDateTime
-import org.bson.BsonString
 import org.bson.codecs.kotlinx.BsonDecoder
 import org.bson.codecs.kotlinx.BsonEncoder
 import java.time.*
@@ -72,14 +69,21 @@ object LocalTimeSerializer : KSerializer<LocalTime> {
 
     override fun serialize(encoder: Encoder, value: LocalTime) {
         when (encoder) {
-            is BsonEncoder -> encoder.encodeBsonValue(BsonString(value.toString("HH:mm")))
+            is BsonEncoder -> encoder.encodeBsonValue(
+                BsonDateTime(
+                    value.atDate(LocalDate.of(1970, 1, 1)).toInstant(ZoneOffset.UTC).toEpochMilli()
+                )
+            )
+
             else -> encoder.encodeString(value.format(DateTimeFormatter.ISO_TIME))
         }
     }
 
     override fun deserialize(decoder: Decoder): LocalTime {
         return when (decoder) {
-            is BsonDecoder -> decoder.decodeBsonValue().asString().value.toLocalTime("HH:mm")
+            is BsonDecoder -> Instant.ofEpochMilli(decoder.decodeBsonValue().asDateTime().value).atZone(ZoneOffset.UTC)
+                .toLocalTime()
+
             else -> LocalTime.parse(decoder.decodeString())
         }
     }

@@ -10,10 +10,12 @@ suspend fun captureSchedule(capture: CaptureDto, restOfUrl: String) {
     val date = dateStr.toLocalDate("dd.MM.yyyy")
     logger.info("Captured a schedule page ${capture.url}")
     val doc = Jsoup.parse(capture.html)
-    val table = doc.selectFirst("table.table tbody")
 
-    if (table != null) {
-        captureTournament(table, date, place)
+    doc.select(".tournaments_on--single").forEach {
+        capturePlace(it)
+    }
+    doc.selectFirst("table.table tbody")?.let {
+        captureTournament(it, date, place)
     }
 }
 
