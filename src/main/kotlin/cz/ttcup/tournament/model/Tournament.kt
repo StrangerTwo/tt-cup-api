@@ -12,6 +12,7 @@ data class Tournament(
     @Serializable(with = LocalDateSerializer::class)
     val date: LocalDate,
     val place: String,
+    val done: Boolean? = null,
 
     @SerialName("_id")
     @Serializable(with = ObjectIdSerializer::class)

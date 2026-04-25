@@ -48,7 +48,9 @@ suspend fun captureTournament(table: Element, date: LocalDate, place: String) {
     val players = getPlayers(matches.flatMap { it.playerUids })
     if (players.isEmpty()) return;
 
-    val tournament = Tournament(date, place, tournamentId);
+    val isDone = matches.all { it.isDone } && (matches.size == 8 || date.isBefore(LocalDate.now()))
+
+    val tournament = Tournament(date, place, isDone, tournamentId);
     logger.info(
         "Saving tournament ${tournament.date}/${tournament.place} for players ${players.joinToString(", ") { it.uid }}"
     )
