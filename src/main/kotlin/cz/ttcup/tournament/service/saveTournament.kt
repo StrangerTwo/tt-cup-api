@@ -2,10 +2,10 @@ package cz.ttcup.tournament.service
 
 import com.mongodb.client.model.*
 import cz.ttcup.context.service.withDatabase
-import cz.ttcup.crawl.schema.crawlPages
 import cz.ttcup.database.util.eq
 import cz.ttcup.database.util.set
 import cz.ttcup.match.model.Match
+import cz.ttcup.match.schema.matches
 import cz.ttcup.tournament.model.Tournament
 import cz.ttcup.tournament.schema.tournaments
 
@@ -23,7 +23,7 @@ suspend fun saveTournament(tournament: Tournament, matches: List<Match>) {
                     .returnDocument(ReturnDocument.AFTER)
             )!!.objectId!!
 
-        database.crawlPages
+        database.matches
             .bulkWrite(
                 matches
                     .map { it.copy(tournamentId = tournamentId) }

@@ -1,7 +1,8 @@
 package cz.ttcup
 
 import cz.ttcup.admin.service.configureSecurity
-import cz.ttcup.crawl.module.launchPlaceCrawler
+import cz.ttcup.crawl.module.launchPageCrawlers
+import cz.ttcup.database.module.configureDatabaseIndexes
 import cz.ttcup.database.module.configureDatabases
 import cz.ttcup.logs.module.configureLogging
 import cz.ttcup.system.module.configureCORS
@@ -30,6 +31,18 @@ fun Application.module() {
     configureStatusPages()
     configureRouting()
 
-    launchPlaceCrawler()
+    configureDatabaseIndexes()
+
+//    runBlocking {
+//        withDatabase {
+//            saveCrawlPages(
+//                getTournaments(done = false).map {
+//                    CrawlPage("https://ttcup.com/schedule/${it.date.toString("dd.MM.yyyy")}/${it.place}/")
+//                }
+//            )
+//        }
+//    }
+
+    launchPageCrawlers()
 }
 

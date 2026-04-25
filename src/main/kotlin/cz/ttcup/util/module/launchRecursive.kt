@@ -1,0 +1,30 @@
+package cz.ttcup.util.module
+
+import cz.ttcup.crawl.module.launchOutdatedPlacesCrawler
+import cz.ttcup.logs.service.logger
+import io.ktor.server.application.*
+import kotlinx.coroutines.*
+import java.time.Duration
+import kotlin.time.toKotlinDuration
+
+@OptIn(DelicateCoroutinesApi::class, ExperimentalCoroutinesApi::class)
+fun Application.launchRecursive(
+    name: String,
+    delayFn: () -> Duration,
+    body: suspend Application.() -> Unit
+) {
+    launch(newSingleThreadContext(name)) {
+        val delay = delayFn()
+        logger.info("$name starting in: $delay")
+        delay(delay.toKotlinDuration());
+
+        body();
+    }.invokeOnCompletion { err ->
+        if (err is CancellationException)
+            return@invokeOnCompletion
+        err?.let { logger.error("$name completed with error", it) }
+        run {
+            launchOutdatedPlacesCrawler()
+        }
+    }
+}

@@ -1,11 +1,17 @@
 package cz.ttcup.tournament.service
 
+import com.mongodb.client.model.Filters
 import cz.ttcup.context.service.withDatabase
+import cz.ttcup.database.util.eq
+import cz.ttcup.database.util.ne
 import cz.ttcup.tournament.model.GetTournamentsRequest
 import cz.ttcup.tournament.model.Tournament
 import cz.ttcup.tournament.schema.tournaments
 import cz.ttcup.util.model.PaginatedQueryResult
 import cz.ttcup.util.service.queryPaginated
+import kotlinx.coroutines.flow.toList
+import org.bson.BsonDocument
+import org.bson.conversions.Bson
 
 suspend fun getTournaments(request: GetTournamentsRequest): PaginatedQueryResult<Tournament> {
     withDatabase {
@@ -20,5 +26,29 @@ suspend fun getTournaments(request: GetTournamentsRequest): PaginatedQueryResult
 //                    Filters.and(it)
 //                }
             )
+    }
+}
+
+suspend fun getTournaments(
+    place: String? = null,
+    done: Boolean? = null,
+    sort: Bson? = null,
+): List<Tournament> {
+    withDatabase {
+        return database.tournaments
+            .find(
+                listOfNotNull(
+                    place?.let { Tournament::place eq it },
+                    done?.let { if (done) Tournament::done eq true else Tournament::done ne true },
+                ).takeIf {
+                    it.isNotEmpty()
+                }?.let {
+                    Filters.and(it)
+                } ?: BsonDocument(),
+            )
+            .apply {
+                sort?.let { this.sort(it) }
+            }
+            .toList()
     }
 }
