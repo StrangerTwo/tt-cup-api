@@ -10,6 +10,7 @@ import cz.ttcup.util.toLocalTime
 import org.bson.types.ObjectId
 import org.jsoup.nodes.Element
 import java.time.LocalDate
+import java.time.LocalTime
 
 suspend fun captureTournament(table: Element, date: LocalDate, place: String) {
     val tournamentId = ObjectId()
@@ -58,6 +59,6 @@ suspend fun captureTournament(table: Element, date: LocalDate, place: String) {
     )
 
     saveTournament(tournament, matches)
-    placeUpdated(place, tournament)
+    placeUpdated(place, tournament.date.atTime(LocalTime.now()))
 }
 
