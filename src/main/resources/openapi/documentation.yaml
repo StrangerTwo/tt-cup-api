@@ -613,7 +613,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: "#/components/schemas/GetTournamentsRequest"
+              $ref: "#/components/schemas/GetTournamentsTodayRequest"
         required: true
       responses:
         "200":
@@ -1147,17 +1147,6 @@ components:
             - "HAVLICKUV_BROD"
             - "PRAHA"
             - "HAVIROV"
-        done:
-          type: "boolean"
-          nullable: true
-        from:
-          type: "string"
-          format: "partial-time"
-          nullable: true
-        to:
-          type: "string"
-          format: "partial-time"
-          nullable: true
         pageInfo:
           $ref: "#/components/schemas/PageInfoRequest"
       required:
@@ -1208,6 +1197,31 @@ components:
         - "tournament"
         - "matches"
         - "bets"
+    GetTournamentsTodayRequest:
+      type: "object"
+      properties:
+        location:
+          type: "string"
+          nullable: true
+          enum:
+            - "HAVLICKUV_BROD"
+            - "PRAHA"
+            - "HAVIROV"
+        done:
+          type: "boolean"
+          nullable: true
+        from:
+          type: "string"
+          format: "partial-time"
+          nullable: true
+        to:
+          type: "string"
+          format: "partial-time"
+          nullable: true
+        pageInfo:
+          $ref: "#/components/schemas/PageInfoRequest"
+      required:
+        - "pageInfo"
     TournamentToday:
       type: "object"
       properties:

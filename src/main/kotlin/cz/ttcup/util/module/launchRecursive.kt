@@ -1,6 +1,5 @@
 package cz.ttcup.util.module
 
-import cz.ttcup.crawl.module.launchOutdatedPlacesCrawler
 import cz.ttcup.logs.service.logger
 import io.ktor.server.application.*
 import kotlinx.coroutines.*
@@ -24,7 +23,9 @@ fun Application.launchRecursive(
             return@invokeOnCompletion
         err?.let { logger.error("$name completed with error", it) }
         run {
-            launchOutdatedPlacesCrawler()
+            launchRecursive(
+                name, delayFn, body
+            )
         }
     }
 }

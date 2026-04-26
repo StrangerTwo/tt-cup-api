@@ -40,39 +40,42 @@ fun Application.launchOngoingTournamentsCrawler() {
             )
         }
     ) {
-
-        val tournaments = withDatabase {
-            database.tournaments
-                .aggregate<Tournament>(
-                    listOf(
-                        Aggregates.match(
-                            Filters.and(
-                                Tournament::done ne true,
-                                Tournament::date eq LocalDate.now()
-                            )
-                        ),
-                        *lookupFirst(
-                            PLACES,
-                            Tournament::place.fieldName,
-                            Place::uid.fieldName,
-                            "fullPlace",
-                        ),
-                        Aggregates.match(
-                            Filters.and(
-                                "fullPlace.${Place::startTime.fieldName}" lt LocalTime.now().minusMinutes(5),
-                            )
-                        ),
-                    )
-                )
-                .toList()
-        }
-
-        saveCrawlPages(
-            tournaments.map {
-                CrawlPage("https://ttcup.com/schedule/${it.date.toString("dd.MM.yyyy")}/${it.place}/")
-            }
-        )
+        ongoingTournamentsCrawler()
     }
+}
+
+suspend fun ongoingTournamentsCrawler() {
+    val tournaments = withDatabase {
+        database.tournaments
+            .aggregate<Tournament>(
+                listOf(
+                    Aggregates.match(
+                        Filters.and(
+                            Tournament::done ne true,
+                            Tournament::date eq LocalDate.now()
+                        )
+                    ),
+                    *lookupFirst(
+                        PLACES,
+                        Tournament::place.fieldName,
+                        Place::uid.fieldName,
+                        "fullPlace",
+                    ),
+                    Aggregates.match(
+                        Filters.and(
+                            "fullPlace.${Place::startTime.fieldName}" lt LocalTime.now().minusMinutes(5),
+                        )
+                    ),
+                )
+            )
+            .toList()
+    }
+
+    saveCrawlPages(
+        tournaments.map {
+            CrawlPage("https://ttcup.com/schedule/${it.date.toString("dd.MM.yyyy")}/${it.place}/")
+        }
+    )
 }
 
 

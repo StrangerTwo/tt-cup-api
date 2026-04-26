@@ -11,7 +11,7 @@ import cz.ttcup.match.model.Match
 import cz.ttcup.match.schema.MATCHES
 import cz.ttcup.place.model.Place
 import cz.ttcup.place.schema.PLACES
-import cz.ttcup.tournament.model.GetTournamentsRequest
+import cz.ttcup.tournament.model.GetTournamentsTodayRequest
 import cz.ttcup.tournament.model.Tournament
 import cz.ttcup.tournament.model.TournamentToday
 import cz.ttcup.tournament.schema.TOURNAMENTS
@@ -19,7 +19,7 @@ import cz.ttcup.util.model.PaginatedQueryResult
 import cz.ttcup.util.service.queryPaginated
 import java.time.LocalDate
 
-suspend fun getTournamentsToday(request: GetTournamentsRequest): PaginatedQueryResult<TournamentToday> {
+suspend fun getTournamentsToday(request: GetTournamentsTodayRequest): PaginatedQueryResult<TournamentToday> {
     withDatabase {
         return database.getCollection<TournamentToday>(PLACES)
             .queryPaginated(
@@ -58,8 +58,8 @@ suspend fun getTournamentsToday(request: GetTournamentsRequest): PaginatedQueryR
                 ),
                 filter = listOfNotNull(
                     request.location?.let { "place.${Place::location.fieldName}" eq it },
-                    request.from?.let { "place.${Place::location.fieldName}" gte it },
-                    request.to?.let { "place.${Place::location.fieldName}" lte it },
+                    request.from?.let { "place.${Place::startTime.fieldName}" gte it },
+                    request.to?.let { "place.${Place::startTime.fieldName}" lte it },
                     request.done?.let {
                         if (it) "tournament.${Tournament::done.fieldName}" eq true
                         else "tournament.${Tournament::done.fieldName}" ne true
@@ -73,5 +73,5 @@ suspend fun getTournamentsToday(request: GetTournamentsRequest): PaginatedQueryR
                 },
             )
     }
-
 }
+

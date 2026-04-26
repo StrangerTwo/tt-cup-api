@@ -2,6 +2,7 @@ package cz.ttcup.tournament.routing
 
 import cz.ttcup.tournament.context.tournamentFull
 import cz.ttcup.tournament.model.GetTournamentsRequest
+import cz.ttcup.tournament.model.GetTournamentsTodayRequest
 import cz.ttcup.tournament.service.getTournaments
 import cz.ttcup.tournament.service.getTournamentsToday
 import io.ktor.server.request.*
@@ -24,7 +25,7 @@ fun Route.tournamentRoutes() {
     }
     // getTournamentsToday
     post("today") {
-        val request = call.receive<GetTournamentsRequest>()
+        val request = call.receive<GetTournamentsTodayRequest>()
 
         getTournamentsToday(request)
             .let { call.respond(it) }
