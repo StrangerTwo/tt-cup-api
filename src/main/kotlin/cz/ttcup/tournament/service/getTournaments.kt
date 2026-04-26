@@ -28,7 +28,13 @@ suspend fun getTournaments(request: GetTournamentsRequest): PaginatedQueryResult
         return database.getCollection<TournamentFull>(TOURNAMENTS)
             .queryPaginated(
                 request.pageInfo,
-                preFilterAggregate = listOf(
+                preFilterAggregate = listOfNotNull(
+                    request.done?.let {
+                        Aggregates.match(
+                            if (it) Tournament::done eq true
+                            else Tournament::done ne true
+                        )
+                    },
                     Aggregates.project(
                         Projections.computed(TournamentFull::tournament.fieldName, "\$\$ROOT")
                     ),
@@ -38,6 +44,13 @@ suspend fun getTournaments(request: GetTournamentsRequest): PaginatedQueryResult
                         Place::uid.fieldName,
                         TournamentFull::place.fieldName,
                     ),
+                    request.location?.let {
+                        Aggregates.match(
+                            "place.${Place::location.fieldName}" eq it
+                        )
+                    },
+                ),
+                postPaginatedAggregate = listOf(
                     lookup(
                         MATCHES,
                         "tournament.${Tournament::objectId.fieldName}",
@@ -54,19 +67,6 @@ suspend fun getTournaments(request: GetTournamentsRequest): PaginatedQueryResult
                         TournamentFull::bets.fieldName,
                     )
                 ),
-                filter = listOfNotNull(
-                    request.location?.let { "place.${Place::location.fieldName}" eq it },
-                    request.done?.let {
-                        if (it) "tournament.${Tournament::done.fieldName}" eq true
-                        else "tournament.${Tournament::done.fieldName}" ne true
-                    },
-                ).takeIf {
-                    it.isNotEmpty()
-                }?.let {
-                    Filters.and(
-                        *it.toTypedArray()
-                    )
-                },
                 logDebug = true
             )
     }

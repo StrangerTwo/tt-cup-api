@@ -18,7 +18,7 @@ suspend inline fun <reified T : Any> MongoCollection<T>.queryPaginated(
     pageInfo: PageInfoRequest,
     filter: Bson? = null,
     preFilterAggregate: List<Bson> = emptyList(),
-    postSortAggregate: List<Bson> = emptyList(),
+    postPaginatedAggregate: List<Bson> = emptyList(),
     random: Boolean = false,
     logDebug: Boolean = false,
 ): PaginatedQueryResult<T> {
@@ -38,21 +38,22 @@ suspend inline fun <reified T : Any> MongoCollection<T>.queryPaginated(
                         )
                     )
                 },
-                *postSortAggregate.toTypedArray(),
                 Aggregates.facet(
                     Facet(
                         "results",
                         if (random) listOf(
-                            Aggregates.sample(pageInfo.size)
+                            Aggregates.sample(pageInfo.size),
+                            *postPaginatedAggregate.toTypedArray(),
                         ) else listOf(
                             Aggregates.skip(pageInfo.page * pageInfo.size),
-                            Aggregates.limit(pageInfo.size)
+                            Aggregates.limit(pageInfo.size),
+                            *postPaginatedAggregate.toTypedArray(),
                         )
                     ),
                     Facet(
                         "totalElements",
                         Aggregates.count()
-                    )
+                    ),
                 ),
                 Aggregates.project(
                     Projections.fields(

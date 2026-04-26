@@ -40,21 +40,6 @@ suspend fun getTournamentsToday(request: GetTournamentsTodayRequest): PaginatedQ
                             Aggregates.match(Tournament::date gte LocalDate.now()),
                         )
                     ),
-                    lookup(
-                        MATCHES,
-                        "tournament.${Tournament::objectId.fieldName}",
-                        Match::tournamentId.fieldName,
-                        TournamentToday::matches.fieldName,
-                        listOf(
-                            Aggregates.sort(Match::time.asc())
-                        )
-                    ),
-                    lookup(
-                        BETS,
-                        "tournament.${Tournament::objectId.fieldName}",
-                        Bet::tournamentId.fieldName,
-                        TournamentToday::bets.fieldName,
-                    ),
                 ),
                 filter = listOfNotNull(
                     request.location?.let { "place.${Place::location.fieldName}" eq it },
@@ -71,6 +56,23 @@ suspend fun getTournamentsToday(request: GetTournamentsTodayRequest): PaginatedQ
                         *it.toTypedArray()
                     )
                 },
+                postPaginatedAggregate = listOf(
+                    lookup(
+                        MATCHES,
+                        "tournament.${Tournament::objectId.fieldName}",
+                        Match::tournamentId.fieldName,
+                        TournamentToday::matches.fieldName,
+                        listOf(
+                            Aggregates.sort(Match::time.asc())
+                        )
+                    ),
+                    lookup(
+                        BETS,
+                        "tournament.${Tournament::objectId.fieldName}",
+                        Bet::tournamentId.fieldName,
+                        TournamentToday::bets.fieldName,
+                    ),
+                )
             )
     }
 }
