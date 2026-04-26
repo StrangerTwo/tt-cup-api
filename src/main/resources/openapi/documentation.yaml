@@ -577,7 +577,7 @@ paths:
           content:
             '*/*':
               schema:
-                $ref: "#/components/schemas/PaginatedQueryResult_Tournament"
+                $ref: "#/components/schemas/PaginatedQueryResult_TournamentFull"
   /tournament/{tournamentId}:
     get:
       description: "getTournament"
@@ -1147,6 +1147,9 @@ components:
             - "HAVLICKUV_BROD"
             - "PRAHA"
             - "HAVIROV"
+        done:
+          type: "boolean"
+          nullable: true
         pageInfo:
           $ref: "#/components/schemas/PageInfoRequest"
       required:
@@ -1168,20 +1171,10 @@ components:
         - "date"
         - "place"
         - "objectId"
-    PaginatedQueryResult_Tournament:
-      type: "object"
-      properties:
-        results:
-          type: "array"
-          items:
-            $ref: "#/components/schemas/Tournament"
-        pageInfo:
-          $ref: "#/components/schemas/PageInfo"
     TournamentFull:
       type: "object"
       properties:
         place:
-          nullable: true
           $ref: "#/components/schemas/Place"
         tournament:
           $ref: "#/components/schemas/Tournament"
@@ -1194,9 +1187,19 @@ components:
           items:
             $ref: "#/components/schemas/Bet"
       required:
+        - "place"
         - "tournament"
         - "matches"
         - "bets"
+    PaginatedQueryResult_TournamentFull:
+      type: "object"
+      properties:
+        results:
+          type: "array"
+          items:
+            $ref: "#/components/schemas/TournamentFull"
+        pageInfo:
+          $ref: "#/components/schemas/PageInfo"
     GetTournamentsTodayRequest:
       type: "object"
       properties:

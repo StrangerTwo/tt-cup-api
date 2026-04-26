@@ -7,5 +7,6 @@ import kotlinx.serialization.Serializable
 @Serializable
 data class GetTournamentsRequest(
     val location: Location? = null,
+    val done: Boolean? = null,
     val pageInfo: PageInfoRequest
 )

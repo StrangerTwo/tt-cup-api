@@ -14,6 +14,7 @@ import cz.ttcup.place.schema.PLACES
 import cz.ttcup.tournament.model.GetTournamentsRequest
 import cz.ttcup.tournament.model.Tournament
 import cz.ttcup.tournament.model.TournamentFull
+import cz.ttcup.tournament.schema.TOURNAMENTS
 import cz.ttcup.tournament.schema.tournaments
 import cz.ttcup.util.model.PaginatedQueryResult
 import cz.ttcup.util.service.queryPaginated
@@ -22,9 +23,9 @@ import org.bson.BsonDocument
 import org.bson.conversions.Bson
 import java.time.LocalDate
 
-suspend fun getTournaments(request: GetTournamentsRequest): PaginatedQueryResult<Tournament> {
+suspend fun getTournaments(request: GetTournamentsRequest): PaginatedQueryResult<TournamentFull> {
     withDatabase {
-        return database.tournaments
+        return database.getCollection<TournamentFull>(TOURNAMENTS)
             .queryPaginated(
                 request.pageInfo,
                 preFilterAggregate = listOf(
@@ -33,7 +34,7 @@ suspend fun getTournaments(request: GetTournamentsRequest): PaginatedQueryResult
                     ),
                     *lookupFirst(
                         PLACES,
-                        Tournament::place.fieldName,
+                        "tournament.${Tournament::place.fieldName}",
                         Place::uid.fieldName,
                         TournamentFull::place.fieldName,
                     ),
@@ -55,6 +56,10 @@ suspend fun getTournaments(request: GetTournamentsRequest): PaginatedQueryResult
                 ),
                 filter = listOfNotNull(
                     request.location?.let { "place.${Place::location.fieldName}" eq it },
+                    request.done?.let {
+                        if (it) "tournament.${Tournament::done.fieldName}" eq true
+                        else "tournament.${Tournament::done.fieldName}" ne true
+                    },
                 ).takeIf {
                     it.isNotEmpty()
                 }?.let {
@@ -62,6 +67,7 @@ suspend fun getTournaments(request: GetTournamentsRequest): PaginatedQueryResult
                         *it.toTypedArray()
                     )
                 },
+                logDebug = true
             )
     }
 }

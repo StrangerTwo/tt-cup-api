@@ -24,7 +24,7 @@ suspend fun saveTournament(tournament: Tournament, matches: List<Match>) {
                 ),
                 Updates.combine(
                     Tournament::place set tournament.place,
-                    Tournament::done set tournament.done
+                    Tournament::done set tournament.done,
                 ),
                 FindOneAndUpdateOptions()
                     .upsert(true)

@@ -7,7 +7,7 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class TournamentFull(
-    val place: Place? = null,
+    val place: Place,
     val tournament: Tournament,
     val matches: List<Match>,
     val bets: List<Bet>,
