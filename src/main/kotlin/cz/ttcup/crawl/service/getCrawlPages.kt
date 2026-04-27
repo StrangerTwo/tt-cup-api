@@ -54,7 +54,7 @@ suspend fun getCrawlPages(request: GetPagesToCrawlRequest): PaginatedQueryResult
             )
 
         return result.copy(
-            results = result.results.subList(0, request.pageInfo.size),
+            results = result.results.subList(0, request.pageInfo.size.coerceAtMost(result.results.size)),
             pageInfo = result.pageInfo.copy(
                 size = min(request.pageInfo.size, result.results.size),
             )
