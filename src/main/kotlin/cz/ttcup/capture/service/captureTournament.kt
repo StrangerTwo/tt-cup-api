@@ -51,7 +51,7 @@ suspend fun captureTournament(table: Element, date: LocalDate, place: String) {
 
     val finalsShown = table.select("tr.table-date").any { it.text().contains("Final") }
 
-    val isDone = matches.all { it.isDone } && finalsShown
+    val isDone = date.isBefore(LocalDate.now().minusDays(1)) || matches.all { it.isDone } && finalsShown
 
     val tournament = Tournament(date, place, isDone, tournamentId);
     logger.info(
