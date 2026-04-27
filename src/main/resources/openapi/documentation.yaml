@@ -598,7 +598,7 @@ paths:
           content:
             '*/*':
               schema:
-                $ref: "#/components/schemas/PaginatedQueryResult_TournamentFull"
+                $ref: "#/components/schemas/Tournaments"
   /tournament/{tournamentId}:
     get:
       description: "getTournament"
@@ -642,7 +642,7 @@ paths:
           content:
             '*/*':
               schema:
-                $ref: "#/components/schemas/PaginatedQueryResult_TournamentToday"
+                $ref: "#/components/schemas/TournamentsToday"
   /user:
     get:
       description: "getUser"
@@ -1247,7 +1247,7 @@ components:
         - "tournament"
         - "matches"
         - "bets"
-    PaginatedQueryResult_TournamentFull:
+    Tournaments:
       type: "object"
       properties:
         results:
@@ -1256,6 +1256,14 @@ components:
             $ref: "#/components/schemas/TournamentFull"
         pageInfo:
           $ref: "#/components/schemas/PageInfo"
+        players:
+          type: "array"
+          items:
+            $ref: "#/components/schemas/Player"
+      required:
+        - "results"
+        - "pageInfo"
+        - "players"
     GetTournamentsTodayRequest:
       type: "object"
       properties:
@@ -1301,7 +1309,7 @@ components:
         - "place"
         - "matches"
         - "bets"
-    PaginatedQueryResult_TournamentToday:
+    TournamentsToday:
       type: "object"
       properties:
         results:
@@ -1310,6 +1318,14 @@ components:
             $ref: "#/components/schemas/TournamentToday"
         pageInfo:
           $ref: "#/components/schemas/PageInfo"
+        players:
+          type: "array"
+          items:
+            $ref: "#/components/schemas/Player"
+      required:
+        - "results"
+        - "pageInfo"
+        - "players"
     User:
       type: "object"
       properties:

@@ -11,17 +11,18 @@ import cz.ttcup.match.model.Match
 import cz.ttcup.match.schema.MATCHES
 import cz.ttcup.place.model.Place
 import cz.ttcup.place.schema.PLACES
+import cz.ttcup.player.service.getPlayers
 import cz.ttcup.tournament.model.GetTournamentsTodayRequest
 import cz.ttcup.tournament.model.Tournament
 import cz.ttcup.tournament.model.TournamentToday
+import cz.ttcup.tournament.model.TournamentsToday
 import cz.ttcup.tournament.schema.TOURNAMENTS
-import cz.ttcup.util.model.PaginatedQueryResult
 import cz.ttcup.util.service.queryPaginated
 import java.time.LocalDate
 
-suspend fun getTournamentsToday(request: GetTournamentsTodayRequest): PaginatedQueryResult<TournamentToday> {
+suspend fun getTournamentsToday(request: GetTournamentsTodayRequest): TournamentsToday {
     withDatabase {
-        return database.getCollection<TournamentToday>(PLACES)
+        val (results, pageInfo) = database.getCollection<TournamentToday>(PLACES)
             .queryPaginated(
                 request.pageInfo,
                 preFilterAggregate = listOfNotNull(
@@ -74,6 +75,14 @@ suspend fun getTournamentsToday(request: GetTournamentsTodayRequest): PaginatedQ
                     ),
                 )
             )
+
+        val players = getPlayers(results.flatMap { it.matches }.flatMap { it.playerUids }.distinct())
+
+        return TournamentsToday(
+            results,
+            pageInfo,
+            players
+        )
     }
 }
 

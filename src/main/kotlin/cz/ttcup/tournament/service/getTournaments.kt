@@ -11,21 +11,22 @@ import cz.ttcup.match.model.Match
 import cz.ttcup.match.schema.MATCHES
 import cz.ttcup.place.model.Place
 import cz.ttcup.place.schema.PLACES
+import cz.ttcup.player.service.getPlayers
 import cz.ttcup.tournament.model.GetTournamentsRequest
 import cz.ttcup.tournament.model.Tournament
 import cz.ttcup.tournament.model.TournamentFull
+import cz.ttcup.tournament.model.Tournaments
 import cz.ttcup.tournament.schema.TOURNAMENTS
 import cz.ttcup.tournament.schema.tournaments
-import cz.ttcup.util.model.PaginatedQueryResult
 import cz.ttcup.util.service.queryPaginated
 import kotlinx.coroutines.flow.toList
 import org.bson.BsonDocument
 import org.bson.conversions.Bson
 import java.time.LocalDate
 
-suspend fun getTournaments(request: GetTournamentsRequest): PaginatedQueryResult<TournamentFull> {
+suspend fun getTournaments(request: GetTournamentsRequest): Tournaments {
     withDatabase {
-        return database.getCollection<TournamentFull>(TOURNAMENTS)
+        val (results, pageInfo) = database.getCollection<TournamentFull>(TOURNAMENTS)
             .queryPaginated(
                 request.pageInfo,
                 preFilterAggregate = listOfNotNull(
@@ -69,6 +70,14 @@ suspend fun getTournaments(request: GetTournamentsRequest): PaginatedQueryResult
                 ),
                 logDebug = true
             )
+
+        val players = getPlayers(results.flatMap { it.matches }.flatMap { it.playerUids }.distinct())
+
+        return Tournaments(
+            results,
+            pageInfo,
+            players
+        )
     }
 }
 
@@ -97,3 +106,4 @@ suspend fun getTournaments(
             .toList()
     }
 }
+
