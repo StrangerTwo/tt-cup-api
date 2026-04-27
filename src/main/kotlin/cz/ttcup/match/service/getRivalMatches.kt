@@ -40,7 +40,7 @@ suspend fun getRivalMatches(
             }?.let {
                 Filters.and(it)
             },
-            postPaginatedAggregate = listOf(
+            resultFacetPipeline = listOf(
                 lookup(
                     MATCHES,
                     "rival.uid",

@@ -56,7 +56,7 @@ suspend fun getTournamentsToday(request: GetTournamentsTodayRequest): PaginatedQ
                         *it.toTypedArray()
                     )
                 },
-                postPaginatedAggregate = listOf(
+                resultFacetPipeline = listOf(
                     lookup(
                         MATCHES,
                         "tournament.${Tournament::objectId.fieldName}",

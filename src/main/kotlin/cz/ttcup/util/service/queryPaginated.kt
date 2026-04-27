@@ -2,7 +2,7 @@ package cz.ttcup.util.service
 
 import com.mongodb.client.model.Aggregates
 import com.mongodb.client.model.Facet
-import com.mongodb.client.model.Projections
+import com.mongodb.client.model.Field
 import com.mongodb.client.model.Sorts
 import com.mongodb.kotlin.client.coroutine.MongoCollection
 import cz.ttcup.util.model.PageInfo
@@ -11,6 +11,7 @@ import cz.ttcup.util.model.PaginatedQueryResult
 import kotlinx.coroutines.flow.first
 import org.bson.BsonDocument
 import org.bson.BsonDocumentReader
+import org.bson.Document
 import org.bson.codecs.DecoderContext
 import org.bson.conversions.Bson
 
@@ -18,7 +19,7 @@ suspend inline fun <reified T : Any> MongoCollection<T>.queryPaginated(
     pageInfo: PageInfoRequest,
     filter: Bson? = null,
     preFilterAggregate: List<Bson> = emptyList(),
-    postPaginatedAggregate: List<Bson> = emptyList(),
+    resultFacetPipeline: List<Bson> = emptyList(),
     random: Boolean = false,
     logDebug: Boolean = false,
 ): PaginatedQueryResult<T> {
@@ -43,11 +44,11 @@ suspend inline fun <reified T : Any> MongoCollection<T>.queryPaginated(
                         "results",
                         if (random) listOf(
                             Aggregates.sample(pageInfo.size),
-                            *postPaginatedAggregate.toTypedArray(),
+                            *resultFacetPipeline.toTypedArray(),
                         ) else listOf(
                             Aggregates.skip(pageInfo.page * pageInfo.size),
                             Aggregates.limit(pageInfo.size),
-                            *postPaginatedAggregate.toTypedArray(),
+                            *resultFacetPipeline.toTypedArray(),
                         )
                     ),
                     Facet(
@@ -55,15 +56,12 @@ suspend inline fun <reified T : Any> MongoCollection<T>.queryPaginated(
                         Aggregates.count()
                     ),
                 ),
-                Aggregates.project(
-                    Projections.fields(
-                        Projections.include("results"),
-                        Projections.computed(
-                            "totalElements",
-                            Projections.computed("\$first", "\$totalElements.count")
-                        )
+                Aggregates.addFields(
+                    Field(
+                        "totalElements",
+                        Document("\$first", "\$totalElements.count")
                     )
-                )
+                ),
             ).let {
                 if (logDebug) println(it.joinToString(",\n") { it.toBsonDocument().toJson() })
                 it

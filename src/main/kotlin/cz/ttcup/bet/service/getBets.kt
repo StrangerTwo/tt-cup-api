@@ -35,7 +35,7 @@ suspend fun getBets(request: GetBetsRequest): PaginatedQueryResult<BetFull> {
                 }?.let {
                     Filters.and(it)
                 },
-                postPaginatedAggregate = listOf(
+                resultFacetPipeline = listOf(
                     Aggregates.project(
                         Projections.computed(BetFull::bet.fieldName, "\$\$ROOT")
                     ),
