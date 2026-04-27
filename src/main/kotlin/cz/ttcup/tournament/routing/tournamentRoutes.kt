@@ -20,7 +20,8 @@ fun Route.tournamentRoutes() {
     route("{tournamentId}") {
         // getTournament
         get {
-            tournamentFull().let { call.respond(it) }
+            val players = call.queryParameters.get("players")?.toBoolean() ?: false
+            tournamentFull(players).let { call.respond(it) }
         }
     }
     // getTournamentsToday

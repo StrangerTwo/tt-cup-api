@@ -43,7 +43,7 @@ suspend fun getRivalMatches(
             resultFacetPipeline = listOf(
                 lookup(
                     MATCHES,
-                    "rival.uid",
+                    "_id",
                     Match::playerUids.fieldName,
                     RivalMatches::matches.fieldName,
                     listOf(

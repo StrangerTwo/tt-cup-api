@@ -10,17 +10,22 @@ import cz.ttcup.match.model.Match
 import cz.ttcup.match.schema.MATCHES
 import cz.ttcup.place.model.Place
 import cz.ttcup.place.schema.PLACES
+import cz.ttcup.player.model.Player
+import cz.ttcup.player.schema.PLAYERS
 import cz.ttcup.tournament.model.Tournament
 import cz.ttcup.tournament.model.TournamentFull
 import cz.ttcup.tournament.schema.tournaments
 import kotlinx.coroutines.flow.firstOrNull
 import org.bson.types.ObjectId
 
-suspend fun getTournamentFull(tournamentId: String): TournamentFull? {
+suspend fun getTournamentFull(
+    tournamentId: String,
+    players: Boolean = false,
+): TournamentFull? {
     withDatabase {
         return database.tournaments
             .aggregate<TournamentFull>(
-                listOf(
+                listOfNotNull(
                     Aggregates.match(
                         Tournament::objectId eq ObjectId(tournamentId)
                     ),
@@ -47,7 +52,15 @@ suspend fun getTournamentFull(tournamentId: String): TournamentFull? {
                         "tournament.${Tournament::objectId.fieldName}",
                         Bet::tournamentId.fieldName,
                         TournamentFull::bets.fieldName,
-                    )
+                    ),
+                    players.takeIf { it }?.let {
+                        lookup(
+                            PLAYERS,
+                            "${TournamentFull::matches.fieldName}.${Match::playerUids.fieldName}",
+                            Player::uid.fieldName,
+                            TournamentFull::players.fieldName,
+                        )
+                    }
                 )
             )
             .firstOrNull()

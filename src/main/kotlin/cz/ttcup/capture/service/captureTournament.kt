@@ -15,7 +15,7 @@ import java.time.LocalTime
 suspend fun captureTournament(table: Element, date: LocalDate, place: String) {
     val tournamentId = ObjectId()
     val matches = table.select("tr:not(.table-date)").mapNotNull { row ->
-        val time = row.child(1).text().trim().toLocalTime("HH:mm")
+        val time = row.child(1).text().trim().takeLast(5).toLocalTime("HH:mm")
 
         val vsLink = row.child(2).selectFirst("a")!!.attr("href")
         val (player1Uid, player2Uid) = ".+/([^\\/]+)/vs/([^\\/]+)".toRegex().find(vsLink)?.destructured

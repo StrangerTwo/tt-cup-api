@@ -603,6 +603,11 @@ paths:
     get:
       description: "getTournament"
       parameters:
+        - name: "players"
+          in: "query"
+          required: false
+          schema:
+            type: "boolean"
         - name: "tournamentId"
           in: "path"
           required: true
@@ -1242,6 +1247,11 @@ components:
           type: "array"
           items:
             $ref: "#/components/schemas/Bet"
+        players:
+          type: "array"
+          nullable: true
+          items:
+            $ref: "#/components/schemas/Player"
       required:
         - "place"
         - "tournament"
