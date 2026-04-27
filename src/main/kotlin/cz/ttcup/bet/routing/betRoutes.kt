@@ -2,14 +2,13 @@ package cz.ttcup.bet.routing
 
 import cz.ttcup.bet.model.GetBetsRequest
 import cz.ttcup.bet.model.NewBet
-import cz.ttcup.bet.service.getBet
-import cz.ttcup.bet.service.getBets
-import cz.ttcup.bet.service.getTournamentBets
-import cz.ttcup.bet.service.setBet
+import cz.ttcup.bet.service.*
 import cz.ttcup.match.context.match
 import cz.ttcup.place.service.getPlace
+import cz.ttcup.player.model.Location
 import cz.ttcup.tournament.context.tournament
 import cz.ttcup.tournament.service.getTournament
+import cz.ttcup.util.getByShortName
 import io.ktor.http.*
 import io.ktor.server.request.*
 import io.ktor.server.response.*
@@ -21,6 +20,13 @@ fun Route.betRoutes() {
         val request = call.receive<GetBetsRequest>()
 
         getBets(request)
+            .let { call.respond(it) }
+    }
+    // getBetsSummary
+    get {
+        val location = call.queryParameters["location"]?.let { getByShortName<Location>(it) }
+
+        getBetsSummary(location)
             .let { call.respond(it) }
     }
     route("{matchId}") {

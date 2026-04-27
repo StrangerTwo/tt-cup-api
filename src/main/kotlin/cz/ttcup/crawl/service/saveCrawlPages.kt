@@ -11,7 +11,7 @@ import cz.ttcup.logs.service.logger
 
 suspend fun saveCrawlPages(crawlPages: List<CrawlPage>) {
     if (crawlPages.isEmpty()) return
-    logger.info("Saving pages to crawl: ${crawlPages.joinToString(", ") { it.url }}")
+    logger.info("Saving ${crawlPages.size} pages to crawl")
     withDatabase {
         database.crawlPages
             .bulkWrite(

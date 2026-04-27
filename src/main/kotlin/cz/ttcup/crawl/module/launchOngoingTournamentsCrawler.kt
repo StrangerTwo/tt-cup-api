@@ -5,7 +5,10 @@ import com.mongodb.client.model.Filters
 import cz.ttcup.context.service.withDatabase
 import cz.ttcup.crawl.model.CrawlPage
 import cz.ttcup.crawl.service.saveCrawlPages
-import cz.ttcup.database.util.*
+import cz.ttcup.database.util.fieldName
+import cz.ttcup.database.util.lookupFirst
+import cz.ttcup.database.util.lt
+import cz.ttcup.database.util.ne
 import cz.ttcup.place.model.Place
 import cz.ttcup.place.schema.PLACES
 import cz.ttcup.tournament.model.Tournament
@@ -52,7 +55,6 @@ suspend fun ongoingTournamentsCrawler() {
                     Aggregates.match(
                         Filters.and(
                             Tournament::done ne true,
-                            Tournament::date eq LocalDate.now()
                         )
                     ),
                     *lookupFirst(
@@ -62,7 +64,8 @@ suspend fun ongoingTournamentsCrawler() {
                         "fullPlace",
                     ),
                     Aggregates.match(
-                        Filters.and(
+                        Filters.or(
+                            Tournament::date lt LocalDate.now(),
                             "fullPlace.${Place::startTime.fieldName}" lt LocalTime.now().minusMinutes(5),
                         )
                     ),

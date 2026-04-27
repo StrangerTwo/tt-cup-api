@@ -21,6 +21,7 @@ suspend fun setBet(
         match.objectId,
         match.playerUids,
         request.type,
+        Bet.isWin(request.type, match),
         ObjectId()
     )
     if (request.type == BetType.NO_BET)

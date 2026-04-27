@@ -20,6 +20,27 @@ paths:
                 Example#1:
                   value: ""
   /bet:
+    get:
+      description: "getBetsSummary"
+      parameters:
+        - name: "location"
+          in: "query"
+          required: false
+          schema:
+            type: "string"
+      responses:
+        "400":
+          description: "Bad Request"
+          content:
+            '*/*':
+              schema:
+                type: "string"
+        "200":
+          description: "OK"
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/BetSummary"
     post:
       description: "getBets"
       requestBody:
@@ -34,7 +55,7 @@ paths:
           content:
             '*/*':
               schema:
-                $ref: "#/components/schemas/PaginatedQueryResult_Bet"
+                $ref: "#/components/schemas/PaginatedQueryResult_BetFull"
   /bet/{matchId}:
     get:
       description: "getBet"
@@ -662,6 +683,22 @@ paths:
                   value: ""
 components:
   schemas:
+    BetSummary:
+      type: "object"
+      properties:
+        betsWon:
+          type: "integer"
+          format: "int32"
+        betsLost:
+          type: "integer"
+          format: "int32"
+        betsUnresolved:
+          type: "integer"
+          format: "int32"
+      required:
+        - "betsWon"
+        - "betsLost"
+        - "betsUnresolved"
     PageInfoRequest:
       type: "object"
       properties:
@@ -708,6 +745,12 @@ components:
             - "NO_BET"
             - "WIN_1"
             - "WIN_2"
+        win:
+          type: "boolean"
+          nullable: true
+        resolved:
+          type: "boolean"
+          nullable: true
         pageInfo:
           $ref: "#/components/schemas/PageInfoRequest"
       required:
@@ -743,6 +786,9 @@ components:
             - "NO_BET"
             - "WIN_1"
             - "WIN_2"
+        win:
+          type: "boolean"
+          nullable: true
         objectId:
           $ref: "#/components/schemas/ObjectId"
       required:
@@ -751,6 +797,46 @@ components:
         - "playerUids"
         - "type"
         - "objectId"
+    Match:
+      type: "object"
+      properties:
+        time:
+          type: "string"
+          format: "date-time"
+        playerUids:
+          type: "array"
+          items:
+            type: "string"
+        sets:
+          type: "array"
+          nullable: true
+          items:
+            type: "integer"
+            format: "int32"
+        points:
+          type: "array"
+          nullable: true
+          items:
+            type: "string"
+        tournamentId:
+          $ref: "#/components/schemas/ObjectId"
+        objectId:
+          $ref: "#/components/schemas/ObjectId"
+      required:
+        - "time"
+        - "playerUids"
+        - "tournamentId"
+        - "objectId"
+    BetFull:
+      type: "object"
+      properties:
+        bet:
+          $ref: "#/components/schemas/Bet"
+        match:
+          $ref: "#/components/schemas/Match"
+      required:
+        - "bet"
+        - "match"
     PageInfo:
       type: "object"
       properties:
@@ -787,13 +873,13 @@ components:
       required:
         - "results"
         - "pageInfo"
-    PaginatedQueryResult_Bet:
+    PaginatedQueryResult_BetFull:
       type: "object"
       properties:
         results:
           type: "array"
           items:
-            $ref: "#/components/schemas/Bet"
+            $ref: "#/components/schemas/BetFull"
         pageInfo:
           $ref: "#/components/schemas/PageInfo"
     NewBet:
@@ -852,36 +938,6 @@ components:
           $ref: "#/components/schemas/PageInfoRequest"
       required:
         - "pageInfo"
-    Match:
-      type: "object"
-      properties:
-        time:
-          type: "string"
-          format: "date-time"
-        playerUids:
-          type: "array"
-          items:
-            type: "string"
-        sets:
-          type: "array"
-          nullable: true
-          items:
-            type: "integer"
-            format: "int32"
-        points:
-          type: "array"
-          nullable: true
-          items:
-            type: "string"
-        tournamentId:
-          $ref: "#/components/schemas/ObjectId"
-        objectId:
-          $ref: "#/components/schemas/ObjectId"
-      required:
-        - "time"
-        - "playerUids"
-        - "tournamentId"
-        - "objectId"
     PaginatedQueryResult_Match:
       type: "object"
       properties:

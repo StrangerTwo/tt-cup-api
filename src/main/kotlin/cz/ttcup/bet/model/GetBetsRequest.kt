@@ -11,5 +11,7 @@ data class GetBetsRequest(
     val matchId: String? = null,
     val playerUids: List<String>? = null,
     val type: BetType? = null,
+    val win: Boolean? = null,
+    val resolved: Boolean? = null,
     val pageInfo: PageInfoRequest
 )

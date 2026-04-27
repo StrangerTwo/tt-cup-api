@@ -4,6 +4,8 @@ import com.mongodb.client.model.Filters
 import com.mongodb.client.model.FindOneAndUpdateOptions
 import com.mongodb.client.model.ReturnDocument
 import com.mongodb.client.model.Updates
+import cz.ttcup.bet.model.Bet
+import cz.ttcup.bet.schema.bets
 import cz.ttcup.context.service.withDatabase
 import cz.ttcup.database.util.eq
 import cz.ttcup.database.util.`in`
@@ -31,6 +33,9 @@ suspend fun saveTournament(tournament: Tournament, matches: List<Match>) {
                     .returnDocument(ReturnDocument.AFTER)
             )!!.objectId
 
+        val bets = database.bets
+            .find(Bet::tournamentId eq tournamentId)
+            .toList()
         val oldMatches = database.matches
             .find(Match::tournamentId eq tournamentId)
             .toList()
@@ -47,9 +52,16 @@ suspend fun saveTournament(tournament: Tournament, matches: List<Match>) {
                             Match::sets set match.sets,
                             Match::points set match.points,
                             Match::playerUids set match.playerUids,
-                            Match::time set match.time,
                         ),
                     )
+
+                val bet = bets.find { it.matchId == oldMatch.objectId }
+                if (bet != null) {
+                    database.bets.updateOne(
+                        Bet::objectId eq bet.objectId,
+                        Bet::win set bet.isWin(match)
+                    )
+                }
             } else {
                 database.matches
                     .insertOne(match.copy(tournamentId = tournamentId))

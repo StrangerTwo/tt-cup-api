@@ -1,5 +1,6 @@
 package cz.ttcup.bet.model
 
+import cz.ttcup.match.model.Match
 import cz.ttcup.player.model.Location
 import cz.ttcup.util.ShortNamedEnum
 import cz.ttcup.util.serializer.ObjectIdSerializer
@@ -19,11 +20,27 @@ data class Bet(
     val playerUids: List<String>,
 
     val type: BetType,
+    val win: Boolean? = null,
 
     @SerialName("_id")
     @Serializable(with = ObjectIdSerializer::class)
     val objectId: ObjectId,
-)
+) {
+    fun isWin(match: Match): Boolean? {
+        return isWin(type, match)
+    }
+
+    companion object {
+        fun isWin(type: BetType, match: Match): Boolean? {
+            return when (type) {
+                BetType.WIN_1 -> match.sets?.get(0)?.let { it == 3 }
+                BetType.WIN_2 -> match.sets?.get(1)?.let { it == 3 }
+                BetType.NO_BET -> null
+                else -> null
+            }
+        }
+    }
+}
 
 @Serializable(with = BetType.Companion.Serializer::class)
 enum class BetType(

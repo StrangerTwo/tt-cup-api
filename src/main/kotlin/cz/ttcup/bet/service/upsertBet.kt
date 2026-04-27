@@ -22,6 +22,7 @@ suspend fun upsertBet(bet: Bet): UpdateResult {
                     Bet::tournamentId set bet.tournamentId,
                     Bet::playerUids set bet.playerUids,
                     Bet::type set bet.type,
+                    Bet::win set bet.win,
                 ),
                 UpdateOptions().upsert(true)
             )
