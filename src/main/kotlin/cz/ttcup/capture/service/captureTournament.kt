@@ -58,7 +58,9 @@ suspend fun captureTournament(table: Element, date: LocalDate, place: String) {
         "Saving tournament ${tournament.date}/${tournament.place} for players ${players.joinToString(", ") { it.uid }}"
     )
 
-    saveTournament(tournament, matches)
+    saveTournament(tournament, matches.map {
+        it.copy(time = if (it.time.isBefore(matches.first().time)) it.time.plusDays(1) else it.time)
+    })
     placeUpdated(place, tournament.date.atTime(LocalTime.now()))
 }
 

@@ -42,7 +42,7 @@ suspend fun saveTournament(tournament: Tournament, matches: List<Match>) {
             .toMutableList()
 
         for (match in matches) {
-            val oldMatch = oldMatches.find { it.time == match.time }
+            val oldMatch = oldMatches.find { it.time.toLocalTime() == match.time.toLocalTime() }
             if (oldMatch != null) {
                 oldMatches.remove(oldMatch)
                 database.matches
@@ -52,6 +52,7 @@ suspend fun saveTournament(tournament: Tournament, matches: List<Match>) {
                             Match::sets set match.sets,
                             Match::points set match.points,
                             Match::playerUids set match.playerUids,
+                            Match::time set match.time,
                         ),
                     )
 
