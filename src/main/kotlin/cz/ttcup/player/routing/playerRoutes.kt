@@ -28,6 +28,7 @@ fun Route.playerRoutes() {
             it.copy(uid = it.uid.trim())
         }
         if (player.uid.isBlank() || player.uid.length < 5) throw IllegalArgumentException("Invalid uid")
+        if (player.uid.contains(" ")) throw IllegalArgumentException("Nesmí obsahovat mezery")
 
         saveNewPlayer(player)
             .let {
