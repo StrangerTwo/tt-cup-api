@@ -584,6 +584,43 @@ paths:
                 Example#1:
                   value: ""
   /tournament:
+    get:
+      description: "getQueryTournament"
+      parameters:
+        - name: "place"
+          in: "query"
+          required: false
+          schema:
+            type: "string"
+        - name: "date"
+          in: "query"
+          required: false
+          schema:
+            type: "string"
+        - name: "players"
+          in: "query"
+          required: false
+          schema:
+            type: "boolean"
+      responses:
+        "400":
+          description: "Bad Request"
+          content:
+            '*/*':
+              schema:
+                type: "string"
+        "200":
+          description: "OK"
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/TournamentFull"
+        "404":
+          description: "Not Found"
+          content:
+            '*/*':
+              schema:
+                type: "object"
     post:
       description: "getTournaments"
       requestBody:
@@ -1198,23 +1235,6 @@ components:
             - "HAVIROV"
       required:
         - "uid"
-    GetTournamentsRequest:
-      type: "object"
-      properties:
-        location:
-          type: "string"
-          nullable: true
-          enum:
-            - "HAVLICKUV_BROD"
-            - "PRAHA"
-            - "HAVIROV"
-        done:
-          type: "boolean"
-          nullable: true
-        pageInfo:
-          $ref: "#/components/schemas/PageInfoRequest"
-      required:
-        - "pageInfo"
     Tournament:
       type: "object"
       properties:
@@ -1257,6 +1277,23 @@ components:
         - "tournament"
         - "matches"
         - "bets"
+    GetTournamentsRequest:
+      type: "object"
+      properties:
+        location:
+          type: "string"
+          nullable: true
+          enum:
+            - "HAVLICKUV_BROD"
+            - "PRAHA"
+            - "HAVIROV"
+        done:
+          type: "boolean"
+          nullable: true
+        pageInfo:
+          $ref: "#/components/schemas/PageInfoRequest"
+      required:
+        - "pageInfo"
     Tournaments:
       type: "object"
       properties:

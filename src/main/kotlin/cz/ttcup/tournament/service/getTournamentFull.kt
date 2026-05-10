@@ -1,6 +1,7 @@
 package cz.ttcup.tournament.service
 
 import com.mongodb.client.model.Aggregates
+import com.mongodb.client.model.Filters
 import com.mongodb.client.model.Projections
 import cz.ttcup.bet.model.Bet
 import cz.ttcup.bet.schema.BETS
@@ -17,18 +18,29 @@ import cz.ttcup.tournament.model.TournamentFull
 import cz.ttcup.tournament.schema.tournaments
 import kotlinx.coroutines.flow.firstOrNull
 import org.bson.types.ObjectId
+import java.time.LocalDate
 
 suspend fun getTournamentFull(
-    tournamentId: String,
+    tournamentId: String? = null,
+    place: String? = null,
+    date: LocalDate? = null,
     players: Boolean = false,
 ): TournamentFull? {
     withDatabase {
         return database.tournaments
             .aggregate<TournamentFull>(
                 listOfNotNull(
-                    Aggregates.match(
-                        Tournament::objectId eq ObjectId(tournamentId)
-                    ),
+                    listOfNotNull(
+                        tournamentId?.let { Tournament::objectId eq ObjectId(it) },
+                        place?.let { Tournament::place eq it },
+                        date?.let { Tournament::date eq it },
+                    ).takeIf {
+                        it.isNotEmpty()
+                    }?.let {
+                        Aggregates.match(
+                            Filters.and(it)
+                        )
+                    },
                     Aggregates.project(
                         Projections.computed(TournamentFull::tournament.fieldName, "\$\$ROOT")
                     ),

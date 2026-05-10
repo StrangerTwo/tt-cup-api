@@ -10,5 +10,5 @@ suspend fun RoutingContext.tournamentFull(
 ): TournamentFull {
     val tournamentId = call.parameters["tournamentId"] ?: throw IllegalArgumentException("tournamentId can't be null")
 
-    return getTournamentFull(tournamentId, players) ?: throw NotFoundException()
+    return getTournamentFull(tournamentId, players = players) ?: throw NotFoundException()
 }
