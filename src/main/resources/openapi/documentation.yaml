@@ -194,6 +194,28 @@ paths:
             '*/*':
               schema:
                 $ref: "#/components/schemas/PaginatedQueryResult_CrawlPage"
+  /crawl/{url}:
+    get:
+      description: "getIsCrawlPage"
+      parameters:
+        - name: "url"
+          in: "path"
+          required: true
+          schema:
+            type: "string"
+      responses:
+        "400":
+          description: "Bad Request"
+          content:
+            '*/*':
+              schema:
+                type: "string"
+        "200":
+          description: "OK"
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/Status"
   /match:
     post:
       description: "getMatches"
@@ -968,6 +990,13 @@ components:
           $ref: "#/components/schemas/PageInfoRequest"
       required:
         - "pageInfo"
+    Status:
+      type: "object"
+      properties:
+        status:
+          type: "boolean"
+      required:
+        - "status"
     GetMatchesRequest:
       type: "object"
       properties:
@@ -1053,13 +1082,6 @@ components:
             - "HAVLICKUV_BROD"
             - "PRAHA"
             - "HAVIROV"
-    Status:
-      type: "object"
-      properties:
-        status:
-          type: "boolean"
-      required:
-        - "status"
     OutdatedPlace:
       type: "object"
       properties:
