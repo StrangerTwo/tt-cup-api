@@ -45,15 +45,27 @@ suspend fun recalculatePlayerSummary(playerUid: String) {
                             UpdateOptions().upsert(true)
                         )
                     },
-                    *opponentMatches.map { (rivalUid, matches) ->
+                    *opponentMatches.flatMap { (rivalUid, matches) ->
                         val summary = calculateMatchesSummary(matches, playerUid)
-                        UpdateOneModel<Summary>(
-                            Filters.and(
-                                Summary::playerUid eq playerUid,
-                                Summary::rivalUid eq rivalUid,
+                        val rivalSummary = calculateMatchesSummary(matches, rivalUid)
+
+                        listOf(
+                            UpdateOneModel<Summary>(
+                                Filters.and(
+                                    Summary::playerUid eq playerUid,
+                                    Summary::rivalUid eq rivalUid,
+                                ),
+                                Summary(playerUid, rivalUid, summary).toUpdateBson(),
+                                UpdateOptions().upsert(true)
                             ),
-                            Summary(playerUid, rivalUid, summary).toUpdateBson(),
-                            UpdateOptions().upsert(true)
+                            UpdateOneModel<Summary>(
+                                Filters.and(
+                                    Summary::rivalUid eq playerUid,
+                                    Summary::playerUid eq rivalUid,
+                                ),
+                                Summary(rivalUid, playerUid, rivalSummary).toUpdateBson(),
+                                UpdateOptions().upsert(true)
+                            )
                         )
                     }.toTypedArray()
                 )

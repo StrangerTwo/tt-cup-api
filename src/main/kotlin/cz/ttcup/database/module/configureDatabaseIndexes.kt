@@ -34,7 +34,7 @@ fun Application.configureDatabaseIndexes() {
             database.tournaments
                 .createIndex(Indexes.descending(Tournament::date.fieldName))
             database.tournaments
-                .createIndex(Indexes.ascending(Tournament::done.fieldName))
+                .createIndex(Indexes.descending(Tournament::done.fieldName, Tournament::date.fieldName))
             database.tournaments
                 .createIndex(Indexes.ascending(Tournament::place.fieldName))
             database.bets

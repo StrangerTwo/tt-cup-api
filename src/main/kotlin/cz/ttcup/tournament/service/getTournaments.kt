@@ -12,6 +12,7 @@ import cz.ttcup.match.schema.MATCHES
 import cz.ttcup.place.model.Place
 import cz.ttcup.place.schema.PLACES
 import cz.ttcup.player.service.getPlayers
+import cz.ttcup.summary.service.getSummaries
 import cz.ttcup.tournament.model.GetTournamentsRequest
 import cz.ttcup.tournament.model.Tournament
 import cz.ttcup.tournament.model.TournamentFull
@@ -72,11 +73,15 @@ suspend fun getTournaments(request: GetTournamentsRequest): Tournaments {
             )
 
         val players = getPlayers(results.flatMap { it.matches }.flatMap { it.playerUids }.distinct())
+        val summaries = getSummaries(
+            results.flatMap { it.matches }.map { it.playerUids[0] to it.playerUids[1] }.distinct()
+        )
 
         return Tournaments(
             results,
             pageInfo,
-            players
+            players,
+            summaries
         )
     }
 }

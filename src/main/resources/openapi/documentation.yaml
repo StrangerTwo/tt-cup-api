@@ -1186,6 +1186,7 @@ components:
         winRate:
           type: "number"
           format: "double"
+          nullable: true
       required:
         - "playerUid"
         - "matchesWon"
@@ -1194,7 +1195,6 @@ components:
         - "longestLoseStreak"
         - "currentWinStreak"
         - "currentLoseStreak"
-        - "winRate"
     PlayerSummary:
       type: "object"
       properties:
@@ -1383,10 +1383,15 @@ components:
           type: "array"
           items:
             $ref: "#/components/schemas/Player"
+        summaries:
+          type: "array"
+          items:
+            $ref: "#/components/schemas/Summary"
       required:
         - "results"
         - "pageInfo"
         - "players"
+        - "summaries"
     GetTournamentsTodayRequest:
       type: "object"
       properties:
@@ -1445,10 +1450,15 @@ components:
           type: "array"
           items:
             $ref: "#/components/schemas/Player"
+        summaries:
+          type: "array"
+          items:
+            $ref: "#/components/schemas/Summary"
       required:
         - "results"
         - "pageInfo"
         - "players"
+        - "summaries"
     User:
       type: "object"
       properties:
