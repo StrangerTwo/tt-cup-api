@@ -4,6 +4,7 @@ import cz.ttcup.logs.service.logger
 import cz.ttcup.match.model.Match
 import cz.ttcup.place.service.placeUpdated
 import cz.ttcup.player.service.getPlayers
+import cz.ttcup.summary.service.recalculatePlayerSummary
 import cz.ttcup.tournament.model.Tournament
 import cz.ttcup.tournament.service.saveTournament
 import cz.ttcup.util.toLocalTime
@@ -62,5 +63,6 @@ suspend fun captureTournament(table: Element, date: LocalDate, place: String) {
         it.copy(time = if (it.time.isBefore(matches.first().time)) it.time.plusDays(1) else it.time)
     })
     placeUpdated(place, tournament.date.atTime(LocalTime.now()))
+    players.forEach { recalculatePlayerSummary(it.uid) }
 }
 

@@ -41,6 +41,10 @@ infix fun <T> KProperty1<*, T>.`in`(value: List<T>): Bson {
     return Filters.`in`(fieldName, value);
 }
 
+infix fun String.`in`(value: List<String>): Bson {
+    return Filters.`in`(this, value);
+}
+
 infix fun <T> KProperty1<*, T>.contains(value: String): Bson {
     return this.regex(".*$value.*".toRegex(RegexOption.IGNORE_CASE))
 }

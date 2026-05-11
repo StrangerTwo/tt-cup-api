@@ -8,6 +8,7 @@ import cz.ttcup.player.model.GetPlayerRivalsRequest
 import cz.ttcup.player.model.GetPlayersRequest
 import cz.ttcup.player.model.NewPlayer
 import cz.ttcup.player.service.*
+import cz.ttcup.summary.service.getSummary
 import cz.ttcup.util.model.Status
 import io.ktor.http.*
 import io.ktor.server.request.*
@@ -19,7 +20,7 @@ fun Route.playerRoutes() {
     post {
         val request = call.receive<GetPlayersRequest>()
 
-        getPlayers(request)
+        getPlayersSummaries(request)
             .let { call.respond(it) }
     }
     // newPlayer
@@ -63,12 +64,13 @@ fun Route.playerRoutes() {
             editPlayer(player, request)
                 .let { call.respond(Status(it.modifiedCount == 1L)) }
         }
-        // getPlayerMatchesSummary
+        // getSummaryForPlayer
         get("summary") {
             val player = player()
 
-            getPlayerMatchesSummary(player)
-                .let { call.respond(it) }
+            getSummary(player)
+                ?.let { call.respond(it) }
+                ?: call.respond(HttpStatusCode.NotFound)
         }
         route("rival") {
             // getPlayerRivals
@@ -79,14 +81,15 @@ fun Route.playerRoutes() {
                 getPlayerRivals(player, request)
                     .let { call.respond(it) }
             }
-            // getRivalrySummary
+            // getSummaryForRivalry
             get("{rivalUid}") {
                 val playerUid =
                     call.parameters["playerUid"] ?: throw IllegalArgumentException("playerUid can't be null")
                 val rivalUid = call.parameters["rivalUid"] ?: throw IllegalArgumentException("Rival uid not provided")
 
-                getRivalrySummary(playerUid, rivalUid)
-                    .let { call.respond(it) }
+                getSummary(playerUid = playerUid, rivalUid = rivalUid)
+                    ?.let { call.respond(it) }
+                    ?: call.respond(HttpStatusCode.NotFound)
             }
         }
     }

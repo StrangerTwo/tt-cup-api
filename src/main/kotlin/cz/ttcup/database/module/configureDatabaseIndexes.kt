@@ -11,6 +11,8 @@ import cz.ttcup.place.model.Place
 import cz.ttcup.place.schema.places
 import cz.ttcup.player.model.Player
 import cz.ttcup.player.schema.players
+import cz.ttcup.summary.model.Summary
+import cz.ttcup.summary.schema.summaries
 import cz.ttcup.tournament.model.Tournament
 import cz.ttcup.tournament.schema.tournaments
 import io.ktor.server.application.*
@@ -41,6 +43,10 @@ fun Application.configureDatabaseIndexes() {
                 .createIndex(Indexes.ascending(Bet::tournamentId.fieldName))
             database.bets
                 .createIndex(Indexes.ascending(Bet::playerUids.fieldName))
+            database.summaries
+                .createIndex(Indexes.ascending(Summary::playerUid.fieldName, Summary::rivalUid.fieldName))
+            database.summaries
+                .createIndex(Indexes.descending(Summary::winRate.fieldName))
         }
     }
 }

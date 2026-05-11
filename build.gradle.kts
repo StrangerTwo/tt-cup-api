@@ -47,6 +47,7 @@ dependencies {
 
     implementation("org.mongodb:mongodb-driver-kotlin-coroutine:$mongo_version")
     implementation("org.mongodb:bson-kotlinx:$mongo_version")
+    implementation("io.projectreactor:reactor-core:3.6.6")
 
     implementation("ch.qos.logback:logback-classic:${logback_version}")
     implementation("dev.kord:kord-core:0.15.0")
