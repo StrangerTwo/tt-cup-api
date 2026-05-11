@@ -77,10 +77,18 @@ suspend fun getTournamentsToday(request: GetTournamentsTodayRequest): Tournament
                 )
             )
 
-        val players = getPlayers(results.flatMap { it.matches }.flatMap { it.playerUids }.distinct())
-        val summaries = getSummaries(
-            results.flatMap { it.matches }.map { it.playerUids[0] to it.playerUids[1] }.distinct()
-        )
+        val players = results
+            .flatMap { it.matches }
+            .flatMap { it.playerUids }
+            .distinct()
+            .takeIf { it.isNotEmpty() }
+            ?.let { getPlayers(it) } ?: listOf()
+        val summaries = results
+            .flatMap { it.matches }
+            .map { it.playerUids[0] to it.playerUids[1] }
+            .distinct()
+            .takeIf { it.isNotEmpty() }
+            ?.let { getSummaries(it) } ?: listOf()
 
         return TournamentsToday(
             results,
