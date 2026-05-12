@@ -232,6 +232,22 @@ paths:
             '*/*':
               schema:
                 $ref: "#/components/schemas/PaginatedQueryResult_Match"
+  /match/top:
+    post:
+      description: "getTopMatches"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/GetTopMatchesRequest"
+        required: true
+      responses:
+        "200":
+          description: "OK"
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/PaginatedQueryResult_Match"
   /openapi.yaml:
     get:
       description: "getOpenapi"
@@ -1024,6 +1040,21 @@ components:
             $ref: "#/components/schemas/Match"
         pageInfo:
           $ref: "#/components/schemas/PageInfo"
+    CustomFilter:
+      type: "object"
+      properties: { }
+    GetTopMatchesRequest:
+      type: "object"
+      properties:
+        filters:
+          type: "array"
+          items:
+            $ref: "#/components/schemas/CustomFilter"
+        pageInfo:
+          $ref: "#/components/schemas/PageInfoRequest"
+      required:
+        - "filters"
+        - "pageInfo"
     GetPlacesRequest:
       type: "object"
       properties:
