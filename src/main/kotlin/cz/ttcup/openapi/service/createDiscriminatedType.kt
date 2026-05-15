@@ -1,6 +1,6 @@
 package cz.ttcup.openapi.service
 
-import cz.ttcup.match.model.CustomFilter
+import cz.ttcup.match.model.MatchFilter
 import cz.ttcup.util.ShortNamedEnum
 import cz.ttcup.util.getByShortName
 import kotlinx.serialization.SerialName
@@ -10,7 +10,7 @@ import kotlin.reflect.full.memberProperties
 import kotlin.reflect.full.primaryConstructor
 
 inline fun <reified T> createDiscriminatedType(
-    schemas: MutableMap<String, MutableMap<String, Any>>, klass: KClass<CustomFilter>
+    schemas: MutableMap<String, MutableMap<String, Any>>, klass: KClass<MatchFilter>
 ) where T : Enum<T>, T : ShortNamedEnum {
     val subclasses = klass.sealedSubclasses;
     subclasses.forEach { subclass ->
@@ -32,7 +32,7 @@ inline fun <reified T> createDiscriminatedType(
             put("required", properties.keys.toList())
         }
     }
-    schemas[CustomFilter::class.simpleName]?.apply {
+    schemas[MatchFilter::class.simpleName]?.apply {
         remove("properties")
         put("oneOf", subclasses.map { subclass ->
             mapOf("\$ref" to "#/components/schemas/${subclass.simpleName!!}")

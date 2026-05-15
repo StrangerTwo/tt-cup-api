@@ -5,6 +5,6 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class GetTopMatchesRequest(
-    val filters: List<CustomFilter>,
+    val filters: List<MatchFilter>,
     val pageInfo: PageInfoRequest
 )

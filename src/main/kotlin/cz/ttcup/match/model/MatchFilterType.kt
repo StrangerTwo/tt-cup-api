@@ -5,8 +5,8 @@ import cz.ttcup.util.serializer.shortNameEnumSerializer
 import kotlinx.serialization.KSerializer
 import kotlinx.serialization.Serializable
 
-@Serializable(with = CustomFilterType.Companion.Serializer::class)
-enum class CustomFilterType(
+@Serializable(with = MatchFilterType.Companion.Serializer::class)
+enum class MatchFilterType(
     override val shortName: String,
 ) : ShortNamedEnum {
     STAR_PLAYER("*"),
@@ -17,6 +17,6 @@ enum class CustomFilterType(
     ;
 
     companion object {
-        object Serializer : KSerializer<CustomFilterType> by shortNameEnumSerializer()
+        object Serializer : KSerializer<MatchFilterType> by shortNameEnumSerializer()
     }
 }

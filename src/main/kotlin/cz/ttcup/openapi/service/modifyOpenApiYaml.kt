@@ -1,8 +1,8 @@
 package cz.ttcup.openapi.service
 
 import cz.ttcup.bet.model.BetType
-import cz.ttcup.match.model.CustomFilter
-import cz.ttcup.match.model.CustomFilterType
+import cz.ttcup.match.model.MatchFilter
+import cz.ttcup.match.model.MatchFilterType
 import cz.ttcup.player.model.Location
 
 internal fun modifyOpenApiYaml(map: Map<*, *>) {
@@ -33,9 +33,9 @@ internal fun modifyOpenApiYaml(map: Map<*, *>) {
 
     createCustomEnum<Location>(schemas)
     createCustomEnum<BetType>(schemas)
-    createCustomEnum<CustomFilterType>(schemas)
+    createCustomEnum<MatchFilterType>(schemas)
 
-    createDiscriminatedType<CustomFilterType>(schemas, CustomFilter::class)
+    createDiscriminatedType<MatchFilterType>(schemas, MatchFilter::class)
 
     schemas.entries.forEach { (schemaName, schema) ->
         val properties = schema["properties"] as MutableMap<String, MutableMap<String, *>>?

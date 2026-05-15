@@ -248,6 +248,38 @@ paths:
             '*/*':
               schema:
                 $ref: "#/components/schemas/PaginatedQueryResult_Match"
+  /match/top/config:
+    get:
+      description: "getMatchFilters"
+      responses:
+        "200":
+          description: "OK"
+          content:
+            '*/*':
+              schema:
+                type: "array"
+                items:
+                  $ref: "#/components/schemas/MatchFilter"
+    put:
+      description: "setMatchFilters"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/SetTopMatchConfigRequest"
+        required: true
+      responses:
+        "200":
+          description: "OK"
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/Status"
+              examples:
+                Example#1:
+                  description: ""
+                  value:
+                    status: true
   /openapi.yaml:
     get:
       description: "getOpenapi"
@@ -267,6 +299,12 @@ paths:
               examples:
                 Example#1:
                   value: ""
+        "400":
+          description: "Bad Request"
+          content:
+            '*/*':
+              schema:
+                type: "string"
   /place:
     post:
       description: "getPlaces"
@@ -1040,7 +1078,7 @@ components:
             $ref: "#/components/schemas/Match"
         pageInfo:
           $ref: "#/components/schemas/PageInfo"
-    CustomFilter:
+    MatchFilter:
       type: "object"
       properties: { }
     GetTopMatchesRequest:
@@ -1049,12 +1087,21 @@ components:
         filters:
           type: "array"
           items:
-            $ref: "#/components/schemas/CustomFilter"
+            $ref: "#/components/schemas/MatchFilter"
         pageInfo:
           $ref: "#/components/schemas/PageInfoRequest"
       required:
         - "filters"
         - "pageInfo"
+    SetTopMatchConfigRequest:
+      type: "object"
+      properties:
+        filters:
+          type: "array"
+          items:
+            $ref: "#/components/schemas/MatchFilter"
+      required:
+        - "filters"
     GetPlacesRequest:
       type: "object"
       properties:
