@@ -4,6 +4,7 @@ import com.mongodb.client.model.Filters
 import com.mongodb.client.model.UpdateOneModel
 import com.mongodb.client.model.UpdateOptions
 import cz.ttcup.context.service.withDatabase
+import cz.ttcup.database.util.asc
 import cz.ttcup.database.util.eq
 import cz.ttcup.database.util.exists
 import cz.ttcup.database.util.gte
@@ -25,6 +26,7 @@ suspend fun recalculatePlayerSummary(playerUid: String) {
                     Match::time gte LocalDateTime.now().minusYears(1),
                 )
             )
+            .sort(Match::time.asc())
             .toList()
 
         val opponentMatches = matches.groupBy { it.playerUids.first { rivalUid -> rivalUid != playerUid } }
