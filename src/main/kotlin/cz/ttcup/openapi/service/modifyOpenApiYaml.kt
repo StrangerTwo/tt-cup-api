@@ -71,7 +71,13 @@ internal fun modifyOpenApiYaml(map: Map<*, *>) {
                 operationMap["description"] = "";
                 operationMap["operationId"] = description;
             }
+
+            if (description == "getQueryTournament") {
+                (operationMap["parameters"] as List<MutableMap<String, Any>>)
+                    .find { it["name"] == "place" }!!["required"] = true
+            }
         }
+
     }
 }
 
