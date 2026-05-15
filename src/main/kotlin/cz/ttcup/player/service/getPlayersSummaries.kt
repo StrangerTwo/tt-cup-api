@@ -34,14 +34,15 @@ suspend fun getPlayersSummaries(request: GetPlayersRequest): PaginatedQueryResul
                     ),
                 ),
                 filter = listOfNotNull(
-                    request.search?.let { "player.${Player::name}" contains it },
-                    request.location?.let { "player.${Player::location}" eq it },
-                    request.uids?.let { "player.${Player::uid}" `in` it },
+                    request.search?.let { "player.${Player::name.fieldName}" contains it },
+                    request.location?.let { "player.${Player::location.fieldName}" eq it },
+                    request.uids?.let { "player.${Player::uid.fieldName}" `in` it },
                 ).takeIf {
                     it.isNotEmpty()
                 }?.let {
                     Filters.and(it)
                 },
+                logDebug = true
             )
     }
 }
