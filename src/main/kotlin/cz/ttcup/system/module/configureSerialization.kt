@@ -36,6 +36,7 @@ fun Application.configureSerialization() {
                 contextual(LocalDateTime::class, LocalDateTimeSerializer)
                 contextual(LocalTime::class, LocalTimeSerializer)
                 contextual(ObjectId::class, ObjectIdSerializer)
+                classDiscriminator = "type"
             }
         })
     }

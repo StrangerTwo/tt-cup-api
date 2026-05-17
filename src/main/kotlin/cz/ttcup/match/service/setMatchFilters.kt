@@ -10,7 +10,8 @@ suspend fun setMatchFilters(config: SetTopMatchConfigRequest) {
         database.matchFilters
             .deleteMany(Filters.empty())
 
-        database.matchFilters
-            .insertMany(config.filters)
+        if (config.filters.isNotEmpty())
+            database.matchFilters
+                .insertMany(config.filters)
     }
 }
