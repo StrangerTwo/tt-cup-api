@@ -6,5 +6,6 @@ import kotlinx.serialization.Serializable
 @Serializable
 data class GetTopMatchesRequest(
     val filters: List<MatchFilter>,
+    val done: Boolean? = null,
     val pageInfo: PageInfoRequest
 )

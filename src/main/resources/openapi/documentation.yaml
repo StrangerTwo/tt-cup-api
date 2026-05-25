@@ -247,7 +247,7 @@ paths:
           content:
             '*/*':
               schema:
-                $ref: "#/components/schemas/PaginatedQueryResult_Match"
+                $ref: "#/components/schemas/TopMatches"
   /match/top/config:
     get:
       description: "getMatchFilters"
@@ -1088,11 +1088,121 @@ components:
           type: "array"
           items:
             $ref: "#/components/schemas/MatchFilter"
+        done:
+          type: "boolean"
+          nullable: true
         pageInfo:
           $ref: "#/components/schemas/PageInfoRequest"
       required:
         - "filters"
         - "pageInfo"
+    TopMatch:
+      type: "object"
+      properties:
+        match:
+          $ref: "#/components/schemas/Match"
+        bet:
+          nullable: true
+          $ref: "#/components/schemas/Bet"
+      required:
+        - "match"
+    Player:
+      type: "object"
+      properties:
+        uid:
+          type: "string"
+        name:
+          type: "string"
+          nullable: true
+        ranking:
+          type: "integer"
+          format: "int32"
+          nullable: true
+        elo:
+          type: "integer"
+          format: "int32"
+          nullable: true
+        favourite:
+          type: "boolean"
+          nullable: true
+        location:
+          type: "string"
+          nullable: true
+          enum:
+            - "HAVLICKUV_BROD"
+            - "PRAHA"
+            - "HAVIROV"
+        note:
+          type: "string"
+          nullable: true
+        stisId:
+          type: "string"
+          nullable: true
+        recrawl:
+          type: "boolean"
+          nullable: true
+      required:
+        - "uid"
+    Summary:
+      type: "object"
+      properties:
+        playerUid:
+          type: "string"
+        rivalUid:
+          type: "string"
+          nullable: true
+        matchesWon:
+          type: "integer"
+          format: "int32"
+        matchesLost:
+          type: "integer"
+          format: "int32"
+        longestWinStreak:
+          type: "integer"
+          format: "int32"
+        longestLoseStreak:
+          type: "integer"
+          format: "int32"
+        currentWinStreak:
+          type: "integer"
+          format: "int32"
+        currentLoseStreak:
+          type: "integer"
+          format: "int32"
+        winRate:
+          type: "number"
+          format: "double"
+          nullable: true
+      required:
+        - "playerUid"
+        - "matchesWon"
+        - "matchesLost"
+        - "longestWinStreak"
+        - "longestLoseStreak"
+        - "currentWinStreak"
+        - "currentLoseStreak"
+    TopMatches:
+      type: "object"
+      properties:
+        results:
+          type: "array"
+          items:
+            $ref: "#/components/schemas/TopMatch"
+        pageInfo:
+          $ref: "#/components/schemas/PageInfo"
+        players:
+          type: "array"
+          items:
+            $ref: "#/components/schemas/Player"
+        summaries:
+          type: "array"
+          items:
+            $ref: "#/components/schemas/Summary"
+      required:
+        - "results"
+        - "pageInfo"
+        - "players"
+        - "summaries"
     SetTopMatchConfigRequest:
       type: "object"
       properties:
@@ -1198,81 +1308,6 @@ components:
           $ref: "#/components/schemas/PageInfoRequest"
       required:
         - "pageInfo"
-    Player:
-      type: "object"
-      properties:
-        uid:
-          type: "string"
-        name:
-          type: "string"
-          nullable: true
-        ranking:
-          type: "integer"
-          format: "int32"
-          nullable: true
-        elo:
-          type: "integer"
-          format: "int32"
-          nullable: true
-        favourite:
-          type: "boolean"
-          nullable: true
-        location:
-          type: "string"
-          nullable: true
-          enum:
-            - "HAVLICKUV_BROD"
-            - "PRAHA"
-            - "HAVIROV"
-        note:
-          type: "string"
-          nullable: true
-        stisId:
-          type: "string"
-          nullable: true
-        recrawl:
-          type: "boolean"
-          nullable: true
-      required:
-        - "uid"
-    Summary:
-      type: "object"
-      properties:
-        playerUid:
-          type: "string"
-        rivalUid:
-          type: "string"
-          nullable: true
-        matchesWon:
-          type: "integer"
-          format: "int32"
-        matchesLost:
-          type: "integer"
-          format: "int32"
-        longestWinStreak:
-          type: "integer"
-          format: "int32"
-        longestLoseStreak:
-          type: "integer"
-          format: "int32"
-        currentWinStreak:
-          type: "integer"
-          format: "int32"
-        currentLoseStreak:
-          type: "integer"
-          format: "int32"
-        winRate:
-          type: "number"
-          format: "double"
-          nullable: true
-      required:
-        - "playerUid"
-        - "matchesWon"
-        - "matchesLost"
-        - "longestWinStreak"
-        - "longestLoseStreak"
-        - "currentWinStreak"
-        - "currentLoseStreak"
     PlayerSummary:
       type: "object"
       properties:

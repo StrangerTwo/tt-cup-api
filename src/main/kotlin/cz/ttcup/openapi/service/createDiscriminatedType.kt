@@ -6,7 +6,6 @@ import cz.ttcup.util.getByShortName
 import kotlinx.serialization.SerialName
 import kotlin.reflect.KClass
 import kotlin.reflect.full.findAnnotation
-import kotlin.reflect.full.memberProperties
 import kotlin.reflect.full.primaryConstructor
 
 inline fun <reified T> createDiscriminatedType(
@@ -20,7 +19,7 @@ inline fun <reified T> createDiscriminatedType(
         schemas[subclass.simpleName!!] = mutableMapOf<String, Any>().apply {
             put("type", "object")
             val properties = mutableMapOf(
-                "type" to mapOf(klass.memberProperties.first().name to "string", "const" to enumType.shortName),
+                "type" to mapOf("type" to "string", "const" to enumType.shortName),
             )
             subclass.primaryConstructor
                 ?.parameters
