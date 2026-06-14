@@ -160,6 +160,13 @@ fun lt(valueA: Any, valueB: Any): Document {
     )
 }
 
+fun max(valueA: Any, valueB: Any): Document {
+    return Document(
+        "\$max",
+        listOf(valueA, valueB),
+    )
+}
+
 fun cond(condition: Any, ifTrue: Any, ifFalse: Any): Document {
     return Document(
         "\$cond",
@@ -171,6 +178,37 @@ fun not(value: Any): Document {
     return Document(
         "\$not",
         value
+    )
+}
+
+fun abs(value: Any): Document {
+    return Document(
+        "\$abs",
+        value
+    )
+}
+
+fun subtract(a: String, b: String): Document {
+    return Document(
+        "\$subtract",
+        listOf(a, b)
+    )
+}
+
+fun getField(field: String, input: Any): Document {
+    return Document(
+        "\$getField",
+        mapOf(
+            "field" to field,
+            "input" to input,
+        )
+    )
+}
+
+fun arrayElemAt(from: String, index: Int): Document {
+    return Document(
+        "\$arrayElemAt",
+        listOf(from, index)
     )
 }
 
