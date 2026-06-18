@@ -27,9 +27,9 @@ suspend fun getRivalMatches(
                 Aggregates.group("$${Match::playerUids.fieldName}"),
                 *lookupFirst(
                     PLAYERS,
+                    "rival",
                     "_id",
-                    Player::uid.fieldName,
-                    "rival"
+                    Player::uid.fieldName
                 ),
             ),
             filter = listOfNotNull(
@@ -43,9 +43,9 @@ suspend fun getRivalMatches(
             resultFacetPipeline = listOf(
                 lookup(
                     MATCHES,
+                    RivalMatches::matches.fieldName,
                     "_id",
                     Match::playerUids.fieldName,
-                    RivalMatches::matches.fieldName,
                     listOf(
                         Aggregates.match(Match::playerUids eq player.uid),
                         Aggregates.sort(Match::time.asc())

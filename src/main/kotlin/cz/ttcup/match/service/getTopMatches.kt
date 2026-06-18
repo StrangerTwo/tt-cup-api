@@ -46,20 +46,21 @@ suspend fun getTopMatches(request: GetTopMatchesRequest): TopMatches {
                                 TopMatch::players -> listOf(
                                     lookup(
                                         PLAYERS,
+                                        TopMatch::players.fieldName,
                                         "${TopMatch::match.fieldName}.${Match::playerUids.fieldName}",
                                         Player::uid.fieldName,
-                                        TopMatch::players.fieldName,
                                     )
                                 )
 
                                 TopMatch::summary -> listOf(
                                     *lookupFirst(
                                         SUMMARIES,
-                                        "${TopMatch::match.fieldName}.${Match::playerUids.fieldName}.0",
-                                        Summary::playerUid.fieldName,
-                                        TopMatch::summary.fieldName,
-                                        listOf(
+                                        `as` = TopMatch::summary.fieldName,
+                                        pipeline = listOf(
                                             Aggregates.match(Summary::rivalUid eq "${TopMatch::match.fieldName}.${Match::playerUids.fieldName}.1"),
+                                        ),
+                                        let = mapOf(
+                                            
                                         )
                                     )
                                 )

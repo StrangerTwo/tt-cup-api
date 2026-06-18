@@ -41,9 +41,9 @@ suspend fun getBets(request: GetBetsRequest): PaginatedQueryResult<BetFull> {
                     ),
                     *lookupFirst(
                         MATCHES,
+                        BetFull::match.fieldName,
                         "bet.${Bet::matchId.fieldName}",
                         Match::objectId.fieldName,
-                        BetFull::match.fieldName,
                     )
                 ),
             )

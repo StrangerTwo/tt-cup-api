@@ -214,20 +214,22 @@ fun arrayElemAt(from: String, index: Int): Document {
 
 fun lookup(
     from: String,
-    localField: String,
-    foreignField: String,
     `as`: String,
-    pipeline: List<Bson>? = null
+    localField: String? = null,
+    foreignField: String? = null,
+    pipeline: List<Bson>? = null,
+    let: Map<String, Any>? = null,
 ): Document = Document(
     "\$lookup",
     Document(
         mutableMapOf<String, Any>(
             "from" to from,
-            "localField" to localField,
-            "foreignField" to foreignField,
             "as" to `as`,
         ).let {
+            localField?.let { localField -> it.put("localField", localField) }
+            foreignField?.let { foreignField -> it.put("foreignField", foreignField) }
             pipeline?.let { pipeline -> it.put("pipeline", pipeline) }
+            let?.let { let -> it.put("let", let) }
             it
         }
     )
@@ -235,17 +237,19 @@ fun lookup(
 
 fun lookupFirst(
     from: String,
-    localField: String,
-    foreignField: String,
     `as`: String,
-    pipeline: List<Bson>? = null
+    localField: String? = null,
+    foreignField: String? = null,
+    pipeline: List<Bson>? = null,
+    let: Map<String, Any>? = null,
 ) = listOf(
     lookup(
         from = from,
+        `as` = `as`,
         localField = localField,
         foreignField = foreignField,
-        `as` = `as`,
-        pipeline = pipeline
+        pipeline = pipeline,
+        let = let,
     ),
     Aggregates.addFields(
         Field(
