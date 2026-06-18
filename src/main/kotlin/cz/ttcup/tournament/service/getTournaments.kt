@@ -55,18 +55,18 @@ suspend fun getTournaments(request: GetTournamentsRequest): Tournaments {
                 resultFacetPipeline = listOf(
                     lookup(
                         MATCHES,
-                        TournamentFull::matches.fieldName,
                         "tournament.${Tournament::objectId.fieldName}",
                         Match::tournamentId.fieldName,
+                        TournamentFull::matches.fieldName,
                         listOf(
                             Aggregates.sort(Match::time.asc())
                         )
                     ),
                     lookup(
                         BETS,
-                        TournamentFull::bets.fieldName,
                         "tournament.${Tournament::objectId.fieldName}",
                         Bet::tournamentId.fieldName,
+                        TournamentFull::bets.fieldName,
                     )
                 ),
                 logDebug = true

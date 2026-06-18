@@ -61,18 +61,18 @@ suspend fun getTournamentsToday(request: GetTournamentsTodayRequest): Tournament
                 resultFacetPipeline = listOf(
                     lookup(
                         MATCHES,
-                        TournamentToday::matches.fieldName,
                         "tournament.${Tournament::objectId.fieldName}",
                         Match::tournamentId.fieldName,
+                        TournamentToday::matches.fieldName,
                         listOf(
                             Aggregates.sort(Match::time.asc())
                         )
                     ),
                     lookup(
                         BETS,
-                        TournamentToday::bets.fieldName,
                         "tournament.${Tournament::objectId.fieldName}",
                         Bet::tournamentId.fieldName,
+                        TournamentToday::bets.fieldName,
                     ),
                 )
             )

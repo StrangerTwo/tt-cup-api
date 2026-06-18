@@ -52,25 +52,25 @@ suspend fun getTournamentFull(
                     ),
                     lookup(
                         MATCHES,
-                        TournamentFull::matches.fieldName,
                         "tournament.${Tournament::objectId.fieldName}",
                         Match::tournamentId.fieldName,
+                        TournamentFull::matches.fieldName,
                         listOf(
                             Aggregates.sort(Match::time.asc())
                         )
                     ),
                     lookup(
                         BETS,
-                        TournamentFull::bets.fieldName,
                         "tournament.${Tournament::objectId.fieldName}",
                         Bet::tournamentId.fieldName,
+                        TournamentFull::bets.fieldName,
                     ),
                     players.takeIf { it }?.let {
                         lookup(
                             PLAYERS,
-                            TournamentFull::players.fieldName,
                             "${TournamentFull::matches.fieldName}.${Match::playerUids.fieldName}",
                             Player::uid.fieldName,
+                            TournamentFull::players.fieldName,
                         )
                     }
                 )

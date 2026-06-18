@@ -212,11 +212,17 @@ fun arrayElemAt(from: String, index: Int): Document {
     )
 }
 
+fun expr(body: Any): Document {
+    return Document(
+        "\$expr", body
+    )
+}
+
 fun lookup(
     from: String,
-    `as`: String,
     localField: String? = null,
     foreignField: String? = null,
+    `as`: String,
     pipeline: List<Bson>? = null,
     let: Map<String, Any>? = null,
 ): Document = Document(
@@ -237,9 +243,9 @@ fun lookup(
 
 fun lookupFirst(
     from: String,
-    `as`: String,
     localField: String? = null,
     foreignField: String? = null,
+    `as`: String,
     pipeline: List<Bson>? = null,
     let: Map<String, Any>? = null,
 ) = listOf(

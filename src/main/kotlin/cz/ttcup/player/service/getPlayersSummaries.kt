@@ -25,9 +25,9 @@ suspend fun getPlayersSummaries(request: GetPlayersRequest): PaginatedQueryResul
                     ),
                     *lookupFirst(
                         SUMMARIES,
-                        PlayerSummary::summary.fieldName,
                         "player.${Player::uid.fieldName}",
                         Summary::playerUid.fieldName,
+                        PlayerSummary::summary.fieldName,
                         listOf(
                             Aggregates.match(Summary::rivalUid.exists(false)),
                         )
