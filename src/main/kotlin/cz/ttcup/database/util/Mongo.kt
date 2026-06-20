@@ -146,9 +146,23 @@ fun eq(valueA: Any, valueB: Any): Document {
     )
 }
 
+fun add(valueA: Any, valueB: Any): Document {
+    return Document(
+        "\$add",
+        listOf(valueA, valueB),
+    )
+}
+
 fun gt(valueA: Any, valueB: Any): Document {
     return Document(
         "\$gt",
+        listOf(valueA, valueB),
+    )
+}
+
+fun gte(valueA: Any, valueB: Any): Document {
+    return Document(
+        "\$gte",
         listOf(valueA, valueB),
     )
 }

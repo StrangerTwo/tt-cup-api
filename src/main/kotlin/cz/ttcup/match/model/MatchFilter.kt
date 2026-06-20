@@ -2,6 +2,7 @@ package cz.ttcup.match.model
 
 import com.mongodb.client.model.Aggregates
 import com.mongodb.client.model.Field
+import com.mongodb.client.model.Filters
 import cz.ttcup.database.util.*
 import cz.ttcup.player.model.Player
 import cz.ttcup.summary.model.Summary
@@ -12,8 +13,8 @@ import kotlin.reflect.KProperty1
 
 @Serializable
 sealed interface MatchFilter {
-    fun getLookups(): List<KProperty1<TopMatch, *>> = emptyList()
-    fun toFilters(): List<Bson> = emptyList()
+    fun getLookups(): List<KProperty1<TopMatch, *>>
+    fun toFilters(): List<Bson>
 }
 
 @Serializable
@@ -40,7 +41,7 @@ data class EloDifferenceFilter(val value: Int) : MatchFilter {
     }
 
     override fun toFilters(): List<Bson> {
-        return filterDifference(Player::elo.fieldName, value)
+        return filterPlayerDifference(Player::elo.fieldName, value)
     }
 }
 
@@ -52,7 +53,7 @@ data class RankDifferenceFilter(val value: Int) : MatchFilter {
     }
 
     override fun toFilters(): List<Bson> {
-        return filterDifference(Player::ranking.fieldName, value)
+        return filterPlayerDifference(Player::ranking.fieldName, value)
     }
 }
 
@@ -84,10 +85,47 @@ data class BilanceFilter(val value: Int) : MatchFilter {
 @Serializable
 @SerialName("L_WON")
 object LastMatchStrongLostFilter : MatchFilter {
+    override fun getLookups(): List<KProperty1<TopMatch, *>> {
+        return listOf(TopMatch::summary);
+    }
+
+    override fun toFilters(): List<Bson> {
+        val absoluteMatchesWonDiff = 4
+        return listOf(
+            Aggregates.match(
+                Filters.or(
+                    Filters.and(
+                        "${TopMatch::summary.fieldName}.${Summary::currentWinStreak.fieldName}" gte 1,
+                        expr(
+                            gte(
+                                "$${TopMatch::summary.fieldName}.${Summary::matchesLost.fieldName}",
+                                add(
+                                    "$${TopMatch::summary.fieldName}.${Summary::matchesWon.fieldName}",
+                                    absoluteMatchesWonDiff
+                                )
+                            )
+                        )
+                    ),
+                    Filters.and(
+                        "${TopMatch::summary.fieldName}.${Summary::currentLoseStreak.fieldName}" gte 1,
+                        expr(
+                            gte(
+                                "$${TopMatch::summary.fieldName}.${Summary::matchesWon.fieldName}",
+                                add(
+                                    "$${TopMatch::summary.fieldName}.${Summary::matchesLost.fieldName}",
+                                    absoluteMatchesWonDiff
+                                )
+                            )
+                        )
+                    )
+                )
+            )
+        );
+    }
 }
 
 
-private fun filterDifference(fieldName: String, value: Int): List<Bson> = listOf(
+private fun filterPlayerDifference(fieldName: String, value: Int): List<Bson> = listOf(
     Aggregates.addFields(
         Field(
             "p0$fieldName",
