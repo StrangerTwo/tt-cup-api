@@ -1,6 +1,6 @@
 # Use the official gradle image to create a build artifact.
 # https://hub.docker.com/_/gradle
-FROM gradle:8.5 as builder
+FROM gradle:8.5 AS builder
 LABEL stage=builder
 
 # 1. Only dependency-related files first
