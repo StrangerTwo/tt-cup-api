@@ -13,6 +13,7 @@ data class Tournament(
     val date: LocalDate,
     val place: String,
     val done: Boolean? = null,
+    val playersUids: List<String>? = null,
 
     @SerialName("_id")
     @Serializable(with = ObjectIdSerializer::class)

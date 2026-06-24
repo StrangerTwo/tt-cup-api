@@ -2,18 +2,16 @@ package cz.ttcup.capture.service
 
 import cz.ttcup.logs.service.logger
 import cz.ttcup.match.model.Match
-import cz.ttcup.place.service.placeUpdated
+import cz.ttcup.player.model.Player
 import cz.ttcup.player.service.getPlayers
-import cz.ttcup.summary.service.recalculatePlayerSummary
 import cz.ttcup.tournament.model.Tournament
 import cz.ttcup.tournament.service.saveTournament
 import cz.ttcup.util.toLocalTime
 import org.bson.types.ObjectId
 import org.jsoup.nodes.Element
 import java.time.LocalDate
-import java.time.LocalTime
 
-suspend fun captureTournament(table: Element, date: LocalDate, place: String) {
+suspend fun captureTournament(table: Element, date: LocalDate, place: String): Pair<Tournament, List<Player>>? {
     val tournamentId = ObjectId()
     val matches = table.select("tr:not(.table-date)").mapNotNull { row ->
         val time = row.child(1).text().trim().takeLast(5).toLocalTime("HH:mm")
@@ -48,13 +46,13 @@ suspend fun captureTournament(table: Element, date: LocalDate, place: String) {
     }
 
     val players = getPlayers(matches.flatMap { it.playerUids })
-    if (players.isEmpty()) return;
+    if (players.isEmpty()) return null;
 
     val finalsShown = table.select("tr.table-date").any { it.text().contains("Final") }
 
     val isDone = date.isBefore(LocalDate.now().minusDays(1)) || matches.all { it.isDone } && finalsShown
 
-    val tournament = Tournament(date, place, isDone, tournamentId);
+    val tournament = Tournament(date, place, isDone, players.map { it.uid }, tournamentId);
     logger.info(
         "Saving tournament ${tournament.date}/${tournament.place} for players ${players.joinToString(", ") { it.uid }}"
     )
@@ -62,7 +60,7 @@ suspend fun captureTournament(table: Element, date: LocalDate, place: String) {
     saveTournament(tournament, matches.map {
         it.copy(time = if (it.time.isBefore(matches.first().time)) it.time.plusDays(1) else it.time)
     })
-    placeUpdated(place, tournament.date.atTime(LocalTime.now()))
-    players.forEach { recalculatePlayerSummary(it.uid) }
+
+    return tournament to players;
 }
 
