@@ -2,14 +2,14 @@
 
 > This file is generated from Git commit messages containing `/spend ...` entries.
 
-Generated at: **25. 6. 2026 17:49:36**
+Generated at: **25. 6. 2026 19:13:34**
 
 ## Summary
 
 | Metric | Value |
 | --- | ---: |
-| Total count | **51h55m** |
-| Spend entries / Total commits | 50 / 102 (49.02%) |
+| Total count | **53h25m** |
+| Spend entries / Total commits | 51 / 104 (49.04%) |
 | Issues with tracked time | 17 |
 
 ## Chart by issue
@@ -21,11 +21,11 @@ Generated at: **25. 6. 2026 17:49:36**
 | [StrangerTwo/tt-cup-app#39](https://github.com/StrangerTwo/tt-cup-app/issues/39) - top matches | **4h** | 14. 6. 2026 - 20. 6. 2026 | `███████░░░░░░░░░░░░░░░░░░░░░░░` |
 | [StrangerTwo/tt-cup-app#12](https://github.com/StrangerTwo/tt-cup-app/issues/12) - update page | **4h** | 20. 4. 2026 - 23. 4. 2026 | `███████░░░░░░░░░░░░░░░░░░░░░░░` |
 | [StrangerTwo/tt-cup-app#4](https://github.com/StrangerTwo/tt-cup-app/issues/4) - matches summary | **4h** | 18. 4. 2026 | `███████░░░░░░░░░░░░░░░░░░░░░░░` |
+| [StrangerTwo/tt-cup-app#46](https://github.com/StrangerTwo/tt-cup-app/issues/46) - player behavior stats | **3h15m** | 24. 6. 2026 - 25. 6. 2026 | `██████░░░░░░░░░░░░░░░░░░░░░░░░` |
 | [StrangerTwo/tt-cup-app#33](https://github.com/StrangerTwo/tt-cup-app/issues/33) - launch recursive fix | **3h5m** | 25. 4. 2026 - 26. 4. 2026 | `█████░░░░░░░░░░░░░░░░░░░░░░░░░` |
 | [StrangerTwo/tt-cup-app#26](https://github.com/StrangerTwo/tt-cup-app/issues/26) - performance | **2h45m** | 27. 4. 2026 | `█████░░░░░░░░░░░░░░░░░░░░░░░░░` |
 | [StrangerTwo/tt-cup-app#7](https://github.com/StrangerTwo/tt-cup-app/issues/7) - player location | **2h** | 18. 4. 2026 | `███░░░░░░░░░░░░░░░░░░░░░░░░░░░` |
 | [StrangerTwo/tt-cup-app#34](https://github.com/StrangerTwo/tt-cup-app/issues/34) - bets summary | **1h50m** | 26. 4. 2026 - 27. 4. 2026 | `███░░░░░░░░░░░░░░░░░░░░░░░░░░░` |
-| [StrangerTwo/tt-cup-app#46](https://github.com/StrangerTwo/tt-cup-app/issues/46) - player behavior stats | **1h45m** | 24. 6. 2026 - 25. 6. 2026 | `███░░░░░░░░░░░░░░░░░░░░░░░░░░░` |
 | [StrangerTwo/tt-cup-app#40](https://github.com/StrangerTwo/tt-cup-app/issues/40) - custom filters | **1h30m** | 12. 5. 2026 | `███░░░░░░░░░░░░░░░░░░░░░░░░░░░` |
 | [StrangerTwo/tt-cup-app#13](https://github.com/StrangerTwo/tt-cup-app/issues/13) - tournaments page | **1h30m** | 23. 4. 2026 | `███░░░░░░░░░░░░░░░░░░░░░░░░░░░` |
 | [StrangerTwo/tt-cup-app#22](https://github.com/StrangerTwo/tt-cup-app/issues/22) | **1h30m** | 22. 4. 2026 | `███░░░░░░░░░░░░░░░░░░░░░░░░░░░` |
