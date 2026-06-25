@@ -34,11 +34,12 @@ suspend fun recalculatePlayerBehavior(playerUid: String) {
             val playerMatches = matches.filter { it.playerUids.contains(playerUid) }
             if (playerMatches.size != 4) return@map null
 
-            PlayerBehaviorType.entries.associateWith {
-                it.instance.calculateTournamentBehavior(playerUid, matches)
+            val result = PlayerBehaviorType.entries.associateWith {
+                it.instance.calculateTournamentBehavior(playerUid, matches).toList()
             }
+
+            return@map result
         }
 
-        println("$playerUid behaviors: $behaviors")
     }
 }
