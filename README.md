@@ -2,14 +2,14 @@
 
 > This file is generated from Git commit messages containing `/spend ...` entries.
 
-Generated at: **24. 6. 2026 19:26:14**
+Generated at: **25. 6. 2026 17:49:36**
 
 ## Summary
 
 | Metric | Value |
 | --- | ---: |
-| Total count | **51h40m** |
-| Spend entries / Total commits | 49 / 100 (49.00%) |
+| Total count | **51h55m** |
+| Spend entries / Total commits | 50 / 102 (49.02%) |
 | Issues with tracked time | 17 |
 
 ## Chart by issue
@@ -25,7 +25,7 @@ Generated at: **24. 6. 2026 19:26:14**
 | [StrangerTwo/tt-cup-app#26](https://github.com/StrangerTwo/tt-cup-app/issues/26) - performance | **2h45m** | 27. 4. 2026 | `█████░░░░░░░░░░░░░░░░░░░░░░░░░` |
 | [StrangerTwo/tt-cup-app#7](https://github.com/StrangerTwo/tt-cup-app/issues/7) - player location | **2h** | 18. 4. 2026 | `███░░░░░░░░░░░░░░░░░░░░░░░░░░░` |
 | [StrangerTwo/tt-cup-app#34](https://github.com/StrangerTwo/tt-cup-app/issues/34) - bets summary | **1h50m** | 26. 4. 2026 - 27. 4. 2026 | `███░░░░░░░░░░░░░░░░░░░░░░░░░░░` |
-| [StrangerTwo/tt-cup-app#46](https://github.com/StrangerTwo/tt-cup-app/issues/46) - player behavior stats | **1h30m** | 24. 6. 2026 | `███░░░░░░░░░░░░░░░░░░░░░░░░░░░` |
+| [StrangerTwo/tt-cup-app#46](https://github.com/StrangerTwo/tt-cup-app/issues/46) - player behavior stats | **1h45m** | 24. 6. 2026 - 25. 6. 2026 | `███░░░░░░░░░░░░░░░░░░░░░░░░░░░` |
 | [StrangerTwo/tt-cup-app#40](https://github.com/StrangerTwo/tt-cup-app/issues/40) - custom filters | **1h30m** | 12. 5. 2026 | `███░░░░░░░░░░░░░░░░░░░░░░░░░░░` |
 | [StrangerTwo/tt-cup-app#13](https://github.com/StrangerTwo/tt-cup-app/issues/13) - tournaments page | **1h30m** | 23. 4. 2026 | `███░░░░░░░░░░░░░░░░░░░░░░░░░░░` |
 | [StrangerTwo/tt-cup-app#22](https://github.com/StrangerTwo/tt-cup-app/issues/22) | **1h30m** | 22. 4. 2026 | `███░░░░░░░░░░░░░░░░░░░░░░░░░░░` |
