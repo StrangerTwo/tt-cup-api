@@ -16,7 +16,11 @@ data class PlayerBehaviorItem(
     val losses: Int,
 ) {
     constructor() : this(null, 0, 0)
-    constructor(wins: Int, losses: Int) : this(wins.toDouble() / (wins + losses).toDouble(), wins, losses)
+    constructor(wins: Int, losses: Int) : this(
+        if (wins + losses == 0) null else wins.toDouble() / (wins + losses).toDouble(),
+        wins, losses
+    )
+
     constructor(isWin: Boolean?) : this((isWin == true).toInt(), (isWin == false).toInt())
 
 

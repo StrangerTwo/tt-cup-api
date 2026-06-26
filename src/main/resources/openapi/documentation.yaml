@@ -505,6 +505,34 @@ paths:
             '*/*':
               schema:
                 $ref: "#/components/schemas/Status"
+  /player/{playerUid}/behavior:
+    get:
+      description: "getBehaviorForPlayer"
+      parameters:
+        - name: "playerUid"
+          in: "path"
+          required: true
+          schema:
+            type: "string"
+      responses:
+        "400":
+          description: "Bad Request"
+          content:
+            '*/*':
+              schema:
+                type: "string"
+        "404":
+          description: "Not Found"
+          content:
+            '*/*':
+              schema:
+                type: "object"
+        "200":
+          description: "OK"
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/Behavior"
   /player/{playerUid}/favourite:
     patch:
       description: "setPlayerFavourite"
@@ -1096,16 +1124,6 @@ components:
       required:
         - "filters"
         - "pageInfo"
-    TopMatch:
-      type: "object"
-      properties:
-        match:
-          $ref: "#/components/schemas/Match"
-        bet:
-          nullable: true
-          $ref: "#/components/schemas/Bet"
-      required:
-        - "match"
     Player:
       type: "object"
       properties:
@@ -1181,6 +1199,24 @@ components:
         - "longestLoseStreak"
         - "currentWinStreak"
         - "currentLoseStreak"
+    TopMatch:
+      type: "object"
+      properties:
+        match:
+          $ref: "#/components/schemas/Match"
+        bet:
+          nullable: true
+          $ref: "#/components/schemas/Bet"
+        players:
+          type: "array"
+          nullable: true
+          items:
+            $ref: "#/components/schemas/Player"
+        summary:
+          nullable: true
+          $ref: "#/components/schemas/Summary"
+      required:
+        - "match"
     TopMatches:
       type: "object"
       properties:
@@ -1343,6 +1379,54 @@ components:
         stisId:
           type: "string"
           nullable: true
+    PlayerBehaviorItem:
+      type: "object"
+      properties:
+        winRate:
+          type: "number"
+          format: "double"
+          nullable: true
+        wins:
+          type: "integer"
+          format: "int32"
+        losses:
+          type: "integer"
+          format: "int32"
+      required:
+        - "wins"
+        - "losses"
+    PlayerBehavior:
+      type: "object"
+      properties:
+        type:
+          type: "string"
+          enum:
+            - "ZERO_WINS"
+            - "ONE_WINS"
+            - "TWO_WINS"
+            - "THREE_WINS"
+        items:
+          type: "array"
+          items:
+            $ref: "#/components/schemas/PlayerBehaviorItem"
+      required:
+        - "type"
+        - "items"
+    Behavior:
+      type: "object"
+      properties:
+        playerUid:
+          type: "string"
+        behaviors:
+          type: "array"
+          items:
+            $ref: "#/components/schemas/PlayerBehavior"
+        objectId:
+          $ref: "#/components/schemas/ObjectId"
+      required:
+        - "playerUid"
+        - "behaviors"
+        - "objectId"
     GetPlayerRivalsRequest:
       type: "object"
       properties:
@@ -1435,6 +1519,11 @@ components:
         done:
           type: "boolean"
           nullable: true
+        playersUids:
+          type: "array"
+          nullable: true
+          items:
+            type: "string"
         objectId:
           $ref: "#/components/schemas/ObjectId"
       required:

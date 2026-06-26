@@ -1,5 +1,6 @@
 package cz.ttcup.player.routing
 
+import cz.ttcup.behavior.service.getBehavior
 import cz.ttcup.crawl.model.CrawlPage
 import cz.ttcup.crawl.service.saveCrawlPages
 import cz.ttcup.player.context.player
@@ -69,6 +70,14 @@ fun Route.playerRoutes() {
             val player = player()
 
             getSummary(player)
+                ?.let { call.respond(it) }
+                ?: call.respond(HttpStatusCode.NotFound)
+        }
+        // getBehaviorForPlayer
+        get("behavior") {
+            val player = player()
+
+            getBehavior(player)
                 ?.let { call.respond(it) }
                 ?: call.respond(HttpStatusCode.NotFound)
         }

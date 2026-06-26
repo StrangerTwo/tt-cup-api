@@ -1,5 +1,6 @@
 package cz.ttcup.openapi.service
 
+import cz.ttcup.behavior.model.PlayerBehaviorType
 import cz.ttcup.bet.model.BetType
 import cz.ttcup.match.model.MatchFilter
 import cz.ttcup.match.model.MatchFilterType
@@ -34,6 +35,7 @@ internal fun modifyOpenApiYaml(map: Map<*, *>) {
     createCustomEnum<Location>(schemas)
     createCustomEnum<BetType>(schemas)
     createCustomEnum<MatchFilterType>(schemas)
+    createCustomEnum<PlayerBehaviorType>(schemas)
 
     createDiscriminatedType<MatchFilterType>(schemas, MatchFilter::class)
 
