@@ -2,15 +2,15 @@
 
 > This file is generated from Git commit messages containing `/spend ...` entries.
 
-Generated at: **26. 6. 2026 14:35:46**
+Generated at: **28. 6. 2026 9:35:27**
 
 ## Summary
 
 | Metric | Value |
 | --- | ---: |
-| Total count | **56h10m** |
-| Spend entries / Total commits | 53 / 110 (48.18%) |
-| Issues with tracked time | 17 |
+| Total count | **56h30m** |
+| Spend entries / Total commits | 54 / 112 (48.21%) |
+| Issues with tracked time | 18 |
 
 ## Chart by issue
 
@@ -31,5 +31,6 @@ Generated at: **26. 6. 2026 14:35:46**
 | [StrangerTwo/tt-cup-app#22](https://github.com/StrangerTwo/tt-cup-app/issues/22) | **1h30m** | 22. 4. 2026 | `███░░░░░░░░░░░░░░░░░░░░░░░░░░░` |
 | [StrangerTwo/tt-cup-app#35](https://github.com/StrangerTwo/tt-cup-app/issues/35) - bad time in db | **1h10m** | 21. 6. 2026 | `██░░░░░░░░░░░░░░░░░░░░░░░░░░░░` |
 | [StrangerTwo/tt-cup-app#37](https://github.com/StrangerTwo/tt-cup-app/issues/37) - midnight time | **45m** | 2. 5. 2026 | `█░░░░░░░░░░░░░░░░░░░░░░░░░░░░░` |
+| [StrangerTwo/tt-cup-app#47](https://github.com/StrangerTwo/tt-cup-app/issues/47) - tournament isDone error | **20m** | 28. 6. 2026 | `█░░░░░░░░░░░░░░░░░░░░░░░░░░░░░` |
 | [StrangerTwo/tt-cup-app#44](https://github.com/StrangerTwo/tt-cup-app/issues/44) - fix summaries data | **15m** | 15. 5. 2026 | `█░░░░░░░░░░░░░░░░░░░░░░░░░░░░░` |
 | [StrangerTwo/tt-cup-app#24](https://github.com/StrangerTwo/tt-cup-app/issues/24) - updating places | **15m** | 22. 4. 2026 | `█░░░░░░░░░░░░░░░░░░░░░░░░░░░░░` |
