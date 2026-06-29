@@ -2,15 +2,15 @@
 
 > This file is generated from Git commit messages containing `/spend ...` entries.
 
-Generated at: **28. 6. 2026 9:35:27**
+Generated at: **29. 6. 2026 16:52:47**
 
 ## Summary
 
 | Metric | Value |
 | --- | ---: |
-| Total count | **56h30m** |
-| Spend entries / Total commits | 54 / 112 (48.21%) |
-| Issues with tracked time | 18 |
+| Total count | **60h** |
+| Spend entries / Total commits | 55 / 114 (48.25%) |
+| Issues with tracked time | 19 |
 
 ## Chart by issue
 
@@ -22,6 +22,7 @@ Generated at: **28. 6. 2026 9:35:27**
 | [StrangerTwo/tt-cup-app#39](https://github.com/StrangerTwo/tt-cup-app/issues/39) - top matches | **4h** | 14. 6. 2026 - 20. 6. 2026 | `███████░░░░░░░░░░░░░░░░░░░░░░░` |
 | [StrangerTwo/tt-cup-app#12](https://github.com/StrangerTwo/tt-cup-app/issues/12) - update page | **4h** | 20. 4. 2026 - 23. 4. 2026 | `███████░░░░░░░░░░░░░░░░░░░░░░░` |
 | [StrangerTwo/tt-cup-app#4](https://github.com/StrangerTwo/tt-cup-app/issues/4) - matches summary | **4h** | 18. 4. 2026 | `███████░░░░░░░░░░░░░░░░░░░░░░░` |
+| [StrangerTwo/tt-cup-app#48](https://github.com/StrangerTwo/tt-cup-app/issues/48) - xg score migration | **3h30m** | 29. 6. 2026 | `██████░░░░░░░░░░░░░░░░░░░░░░░░` |
 | [StrangerTwo/tt-cup-app#33](https://github.com/StrangerTwo/tt-cup-app/issues/33) - launch recursive fix | **3h5m** | 25. 4. 2026 - 26. 4. 2026 | `█████░░░░░░░░░░░░░░░░░░░░░░░░░` |
 | [StrangerTwo/tt-cup-app#26](https://github.com/StrangerTwo/tt-cup-app/issues/26) - performance | **2h45m** | 27. 4. 2026 | `█████░░░░░░░░░░░░░░░░░░░░░░░░░` |
 | [StrangerTwo/tt-cup-app#7](https://github.com/StrangerTwo/tt-cup-app/issues/7) - player location | **2h** | 18. 4. 2026 | `███░░░░░░░░░░░░░░░░░░░░░░░░░░░` |
