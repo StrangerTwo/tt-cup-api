@@ -814,6 +814,101 @@ paths:
               examples:
                 Example#1:
                   value: ""
+  /xg/tips:
+    get:
+      description: "getTips"
+      responses:
+        "200":
+          description: "OK"
+          content:
+            '*/*':
+              schema:
+                type: "array"
+                items:
+                  $ref: "#/components/schemas/XgTip"
+  /xg/tips/favourite/{tipId}:
+    patch:
+      description: "favouriteTip"
+      parameters:
+        - name: "tipId"
+          in: "path"
+          required: true
+          schema:
+            type: "string"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/UpdateFavouriteTip"
+        required: true
+      responses:
+        "500":
+          description: "Internal Server Error"
+          content:
+            text/plain:
+              schema:
+                type: "string"
+              examples:
+                Example#1:
+                  value: ""
+                Example#2:
+                  value: ""
+        "200":
+          description: "OK"
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/Status"
+              examples:
+                Example#1:
+                  description: ""
+                  value:
+                    status: true
+  /xg/tips/favourites:
+    get:
+      description: "getFavouriteTips"
+      responses:
+        "500":
+          description: "Internal Server Error"
+          content:
+            text/plain:
+              schema:
+                type: "string"
+              examples:
+                Example#1:
+                  value: ""
+        "200":
+          description: "OK"
+          content:
+            '*/*':
+              schema:
+                type: "array"
+                items:
+                  $ref: "#/components/schemas/FavouriteTip"
+  /xg/tips/refresh:
+    post:
+      description: "refreshTips"
+      responses:
+        "500":
+          description: "Internal Server Error"
+          content:
+            text/plain:
+              schema:
+                type: "string"
+              examples:
+                Example#1:
+                  value: ""
+        "200":
+          description: "OK"
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/Status"
+              examples:
+                Example#1:
+                  description: ""
+                  value:
+                    status: true
   /{...}:
     get:
       description: ""
@@ -1668,3 +1763,96 @@ components:
           type: "string"
       required:
         - "uid"
+    TipTournament:
+      type: "object"
+      properties:
+        logo:
+          type: "string"
+        name:
+          type: "string"
+        country:
+          type: "string"
+          nullable: true
+      required:
+        - "logo"
+        - "name"
+    TipTeam:
+      type: "object"
+      properties:
+        name:
+          type: "string"
+        logo:
+          type: "string"
+        forecastScore:
+          type: "number"
+          format: "double"
+      required:
+        - "name"
+        - "logo"
+        - "forecastScore"
+    XgTip:
+      type: "object"
+      properties:
+        id:
+          type: "string"
+        datetime:
+          type: "string"
+          format: "date-time"
+        recommendation:
+          type: "string"
+        recommendationChance:
+          type: "number"
+          format: "double"
+        url:
+          type: "string"
+        tournament:
+          $ref: "#/components/schemas/TipTournament"
+        homeTeam:
+          $ref: "#/components/schemas/TipTeam"
+        awayTeam:
+          $ref: "#/components/schemas/TipTeam"
+        objectId:
+          nullable: true
+          $ref: "#/components/schemas/ObjectId"
+      required:
+        - "id"
+        - "datetime"
+        - "recommendation"
+        - "recommendationChance"
+        - "url"
+        - "tournament"
+        - "homeTeam"
+        - "awayTeam"
+    UpdateFavouriteTip:
+      type: "object"
+      properties:
+        favourite:
+          type: "boolean"
+        tickets:
+          type: "array"
+          nullable: true
+          items:
+            type: "integer"
+            format: "int32"
+      required:
+        - "favourite"
+    FavouriteTip:
+      type: "object"
+      properties:
+        userId:
+          type: "string"
+        tipId:
+          type: "string"
+        tickets:
+          type: "array"
+          nullable: true
+          items:
+            type: "integer"
+            format: "int32"
+        timestamp:
+          type: "string"
+          format: "date-time"
+      required:
+        - "userId"
+        - "tipId"
+        - "timestamp"

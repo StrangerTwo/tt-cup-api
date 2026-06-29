@@ -10,6 +10,7 @@ import cz.ttcup.openapi.routing.openApiRouting
 import cz.ttcup.place.routing.placeRoutes
 import cz.ttcup.player.routing.playerRoutes
 import cz.ttcup.tournament.routing.tournamentRoutes
+import cz.ttcup.xg.tips.routing.xgTipsRoutes
 import io.ktor.http.*
 import io.ktor.server.application.*
 import io.ktor.server.auth.*
@@ -52,6 +53,11 @@ fun Application.configureRouting() {
             }
             route("bet") {
                 betRoutes()
+            }
+            route("xg") {
+                route("tips") {
+                    xgTipsRoutes()
+                }
             }
             openApiRouting()
             get("{...}") {
