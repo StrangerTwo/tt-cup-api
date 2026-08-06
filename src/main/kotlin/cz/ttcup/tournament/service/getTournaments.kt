@@ -98,6 +98,7 @@ suspend fun getTournaments(
     place: String? = null,
     done: Boolean? = null,
     date: LocalDate? = null,
+    dateGte: LocalDate? = null,
     sort: Bson? = null,
 ): List<Tournament> {
     withDatabase {
@@ -107,6 +108,7 @@ suspend fun getTournaments(
                     place?.let { Tournament::place eq it },
                     done?.let { if (done) Tournament::done eq true else Tournament::done ne true },
                     date?.let { Tournament::date eq it },
+                    dateGte?.let { Tournament::date gte it },
                 ).takeIf {
                     it.isNotEmpty()
                 }?.let {
