@@ -2,14 +2,14 @@
 
 > This file is generated from Git commit messages containing `/spend ...` entries.
 
-Generated at: **7. 8. 2026 16:55:17**
+Generated at: **7. 8. 2026 17:01:57**
 
 ## Summary
 
 | Metric | Value |
 | --- | ---: |
 | Total count | **60h** |
-| Spend entries / Total commits | 55 / 118 (46.61%) |
+| Spend entries / Total commits | 55 / 120 (45.83%) |
 | Issues with tracked time | 19 |
 
 ## Chart by issue
