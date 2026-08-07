@@ -6,7 +6,6 @@ services:
       - "6957:8080"
     networks:
       docker-mongo_network_mongo:
-      network_mongo:
         ipv4_address: 172.20.0.4
     container_name: tt-cup-api
     env_file: .env
