@@ -3,7 +3,7 @@ package cz.ttcup.crawl.module
 import cz.ttcup.crawl.model.CrawlPage
 import cz.ttcup.crawl.service.saveCrawlPages
 import cz.ttcup.place.service.getOutdatedPlaces
-import cz.ttcup.util.module.launchRecursive
+import cz.ttcup.util.module.launchRepeating
 import io.ktor.server.application.*
 import java.time.Duration
 import java.time.LocalDate
@@ -11,7 +11,7 @@ import java.time.LocalDateTime
 import java.time.LocalTime
 
 fun Application.launchOutdatedPlacesCrawler() {
-    launchRecursive(
+    launchRepeating(
         "Outdated Places Crawler",
         delayFn = {
             Duration.between(

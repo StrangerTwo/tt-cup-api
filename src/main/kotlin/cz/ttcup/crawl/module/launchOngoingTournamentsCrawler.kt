@@ -13,7 +13,7 @@ import cz.ttcup.place.model.Place
 import cz.ttcup.place.schema.PLACES
 import cz.ttcup.tournament.model.Tournament
 import cz.ttcup.tournament.schema.tournaments
-import cz.ttcup.util.module.launchRecursive
+import cz.ttcup.util.module.launchRepeating
 import cz.ttcup.util.toString
 import io.ktor.server.application.*
 import kotlinx.coroutines.flow.toList
@@ -23,7 +23,7 @@ import java.time.LocalDateTime
 import java.time.LocalTime
 
 fun Application.launchOngoingTournamentsCrawler() {
-    launchRecursive(
+    launchRepeating(
         "Ongoing Tournaments Crawler",
         delayFn = {
             Duration.between(
