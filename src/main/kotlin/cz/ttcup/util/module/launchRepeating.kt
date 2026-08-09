@@ -12,7 +12,7 @@ fun Application.launchRepeating(
     delayFn: () -> Duration,
     body: suspend Application.() -> Unit
 ) {
-    launch(CoroutineName(name)) {
+    launch(newSingleThreadContext(name)) {
         while (isActive) {
             try {
                 val delay = delayFn()
